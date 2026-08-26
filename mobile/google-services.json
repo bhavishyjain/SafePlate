@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1003692614721",
+    "firebase_url": "https://delivery-kpg-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "delivery-kpg",
+    "storage_bucket": "delivery-kpg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003692614721:android:24cb8d7fd6877de66cd2c0",
+        "android_client_info": {
+          "package_name": "com.deliverykpg.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003692614721-2rcct3ooh6jh563kajl10e0c2qmo16u6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7edRjbDHPtfXgup6wUvsyZsxayOuC0-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003692614721-2rcct3ooh6jh563kajl10e0c2qmo16u6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

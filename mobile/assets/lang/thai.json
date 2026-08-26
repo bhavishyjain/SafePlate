@@ -1,0 +1,674 @@
+{
+  "language": {
+    "english": "English",
+    "thai": "Thai",
+    "burmese": "Burmese"
+  },
+  "auth": {
+    "register": {
+      "button": "Register",
+      "driverRegistrationRedirect": {
+        "title": "Driver Registration",
+        "message": "To ensure accurate verification and smooth onboarding, driver registration is completed through our secure registration form. This allows us to validate required details and complete necessary back-office checks before activating a driver profile. You will now be redirected to the official DeliveryKPG registration page."
+      }
+    },
+    "login": {
+      "title": "Login to Delivery KPG",
+      "subtitle": "Enter your WhatsApp or Thai phone number with country code",
+      "selectCountry": "Select your country",
+      "searchCountry": "Search your country",
+      "phonePlaceholder": "Enter your WhatsApp or Thai phone",
+      "button": "Login",
+      "loading": "Logging in...",
+      "changeLanguage": "Change Language"
+    },
+    "otp": {
+      "title": "Login to Delivery KPG",
+      "subtitle": "Enter your WhatsApp or Thai phone number\nwith country code",
+      "verify": "Verify OTP",
+      "verifying": "Verifying OTP...",
+      "resend": "Resend OTP",
+      "resendIn": "Resend OTP in {{seconds}}"
+    },
+    "logout": {
+      "title": "Logging out...",
+      "subtitle": "See you soon 👋"
+    }
+  },
+  "toast": {
+    "loginError": {
+      "title": "Login Error",
+      "selectCountry": "Please select your country",
+      "enterPhone": "Please enter your phone number",
+      "notFound": "Delivery partner not found for this number",
+      "notFoundDesc": "Please verify your number or contact support.",
+      "otpFailed": "Failed to generate OTP. Please try again."
+    },
+    "otp": {
+      "invalid": "Invalid OTP",
+      "loginError": "Error logging in",
+      "waitTitle": "Please wait",
+      "waitMessage": "You can resend OTP in {{seconds}} seconds",
+      "resendSuccessTitle": "Success",
+      "resendSuccessMessage": "OTP has been resent to your phone"
+    }
+  },
+  "permissions": {
+    "background": {
+      "title": "Allow All The Time",
+      "message": "This app needs continuous location access to assign nearby delivery orders even when the app is closed."
+    },
+    "required": {
+      "title": "Permission Required",
+      "message": "Location permission is mandatory to use this app."
+    },
+    "locationMessage": "Location is tracked continuously while logged in to enable real-time dispatch and manual order assignment"
+  },
+  "common": {
+    "exit": "Exit",
+    "openSettings": "Open Settings",
+    "allow": "Allow",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "update": "Update",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "seconds": "seconds",
+    "minutes": "minutes",
+    "hours": "hours",
+    "days": "days",
+    "minutesShort": "mins",
+    "hoursShort": "hrs",
+    "daysShort": "d",
+    "retry": "Retry"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "vacation": "Vacation",
+    "paused": "Paused"
+  },
+  "tabs": {
+    "assigned": "Assigned",
+    "pickedUp": "Picked Up",
+    "account": "Account",
+    "more": "More"
+  },
+  "orders": {
+    "loading": "Searching your orders...",
+    "assigned": {
+      "title": "Assigned Orders",
+      "empty": "No assigned orders"
+    },
+    "pickedUp": {
+      "title": "Picked Up Orders",
+      "empty": "No picked up orders"
+    }
+  },
+  "more": {
+    "vacationEnabled": "Vacation Mode Enabled",
+
+    "reportProblem": {
+      "title": "Report a problem",
+      "subtitle": "Get help & support"
+    },
+    "productivity": {
+      "title": "Productivity",
+      "subtitle": "Your performance summary",
+      "page": {
+        "title": "Delivery Summary",
+        "greeting": "Hello, {{name}}",
+        "defaultName": "Driver",
+        "selectPeriod": "Select Period",
+        "statistics": "Statistics",
+        "registrationDays": "Registration Days",
+        "workingDays": "Working Days",
+        "avgPickupTime": "Average Pickup Time",
+        "avgDeliverTime": "Average Deliver Time",
+        "orderProcessTime": "Order Process Time",
+        "avgOrdersPerDay": "Average Orders Per Day",
+        "days": "days",
+        "mins": "mins",
+        "earnings": "Earnings",
+        "commissionEarnings": "Commission Earnings",
+        "tipEarnings": "Tip Earnings",
+        "bonusEarnings": "Bonus Earnings",
+        "gasEarnings": "Gas Earnings",
+        "deductions": "Deductions",
+        "penalty": "Penalty",
+        "localTax": "Local Tax",
+        "totalEarnings": "Total Earnings",
+        "toast": {
+          "errorFetching": "Error fetching summary",
+          "unexpectedError": "An unexpected error occurred"
+        }
+      }
+    },
+    "schedule": {
+      "title": "Schedule / Vacation",
+      "subtitle": "Manage availability",
+      "availabilityTitle": "Availability Management",
+      "availabilityDesc": "Manage your working hours and time off",
+      "menu": {
+        "workSchedule": {
+          "title": "Work Schedule",
+          "subtitle": "Set your working schedule"
+        },
+        "break": {
+          "title": "Take a Break",
+          "subtitle": "Take a short break from work"
+        },
+        "vacation": {
+          "title": "Vacation",
+          "subtitle": "Go on a vacation"
+        }
+      },
+      "break": {
+        "title": "Take a Break",
+        "pauseSchedule": "Pause Schedule",
+        "resumeSchedule": "Resume Schedule",
+        "breakActive": "Break Active",
+        "readyToWork": "Ready to Work",
+        "recentRecords": "Your recent break records",
+        "historyWillAppear": "Your break history will appear here",
+        "isPausedMessage": "Your schedule is currently paused. You will not receive new orders during this time.",
+        "notPausedMessage": "Taking a break will pause your delivery schedule, and you won't receive new orders for the selected duration.",
+        "breakHistory": "Break History",
+        "noHistory": "No break history available",
+        "modalTitle": "How long do you need a break?",
+        "mins": "mins",
+        "takeBreak": "Take A Break",
+        "cancel": "Cancel",
+        "toast": {
+          "pausedTitle": "Schedule Paused",
+          "pausedMessage": "You won't receive new orders for {{minutes}} minutes",
+          "resumedTitle": "Schedule Resumed",
+          "resumedMessage": "You will now receive new orders",
+          "actionFailed": "Action Failed",
+          "fetchLogsFailed": "Failed to Fetch Logs"
+        }
+      },
+      "vacation": {
+        "title": "Vacation",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "endVacation": "End Vacation",
+        "update": "Update",
+        "setVacation": "Set Vacation",
+        "activeVacation": "Vacation Mode Active",
+        "activeVacationDesc": "You won't receive new orders during this period",
+        "vacationPeriod": "Vacation Period",
+        "infoMessage": "Set your vacation dates. You won't receive any delivery orders during this time. You can update or end your vacation anytime.",
+        "toast": {
+          "errorLoading": "Error loading vacation",
+          "vacationEnded": "Vacation Ended",
+          "vacationEndedDesc": "Your vacation has been ended successfully",
+          "actionFailed": "Action Failed",
+          "invalidDates": "Invalid Dates",
+          "invalidDatesDesc": "End date must be after start date",
+          "vacationUpdated": "Vacation Updated",
+          "vacationUpdatedDesc": "Your vacation has been updated successfully",
+          "updateFailed": "Update Failed"
+        }
+      },
+      "workSchedule": {
+        "title": "Work Schedule",
+        "addSlot": "Add Slot",
+        "open": "Open",
+        "close": "Close",
+        "update": "Update",
+        "toast": {
+          "errorLoading": "Error loading schedule",
+          "scheduleUpdated": "Schedule Updated",
+          "scheduleUpdatedDesc": "Your work schedule has been updated successfully",
+          "updateFailed": "Update Failed"
+        }
+      }
+    },
+    "finance": {
+      "title": "Finance",
+      "subtitle": "Payments & earnings",
+      "page": {
+        "title": "Finance",
+        "compensationTitle": "Compensation & Rates",
+        "compensationDesc": "Your current earnings structure",
+        "reportsTitle": "Financial Reports",
+        "reportsDesc": "View your earnings and transaction history",
+        "fixedSalary": "Fixed Salary P.O.",
+        "commissionRate": "Commission Rate",
+        "penaltyActive": "Penalty Active",
+        "gasRate": "Gas Rate",
+        "weeklyBonusBoost": "Weekly Bonus Boost",
+        "localTaxRate": "Local Tax Rate",
+        "no": "NO",
+        "menu": {
+          "orders": {
+            "title": "Orders",
+            "subtitle": "Check your orderwise earnings and deductions"
+          },
+          "statement": {
+            "title": "Statement",
+            "subtitle": "Check your money flow per order and settlement"
+          },
+          "payout": {
+            "title": "Payouts",
+            "subtitle": "View your payout history"
+          }
+        }
+      },
+      "statement": {
+        "title": "Statement Report",
+        "balanceLabel": "PAYMENT BALANCE",
+        "receiveFromCompany": "Receive from Company {{currency}} {{amount}}",
+        "payableToCompany": "Payable to Company {{currency}} {{amount}}",
+        "transactionHistory": "Transaction History",
+        "transactionHistoryDesc": "All your payment and collection transactions",
+        "empty": "No Statements Yet",
+        "emptyDescription": "Your financial statements will appear here",
+        "toast": {
+          "errorLoading": "Error while loading statements"
+        }
+      },
+      "order": {
+        "title": "Completed Orders",
+        "noMoreOrders": "No more orders",
+        "card": {
+          "orderNumber": "#{orderNumber}}",
+          "timeAgo": "{{time}}",
+          "cashOrTransfer": "Cash or Thai Bank Transfer",
+          "onlinePayment": "Online Payment",
+          "completed": "Completed",
+          "closed": "Closed",
+          "totalEarning": "Total Earning",
+          "timeTaken": "Time Taken",
+          "timeTakenInfo": "Time taken is counted from order pickup to delivery completion",
+          "deliveryCharge": "Delivery Charge",
+          "tip": "Tip",
+          "gas": "Gas",
+          "bonusBoost": "Bonus Boost",
+          "fixedSalary": "Fixed Salary",
+          "earningsBreakdown": "EARNINGS BREAKDOWN",
+          "deductions": "DEDUCTIONS",
+          "localTax": "Local Tax",
+          "penalty": "Penalty",
+          "payToCompany": "Pay to Company",
+          "receiveFromCompany": "Receive from Company"
+        },
+        "toast": {
+          "errorFetching": "Error fetching orders"
+        }
+      },
+      "payouts": {
+        "title": "Payout History",
+        "totalPayouts": "Total Payouts Received",
+        "empty": "No Payouts Yet",
+        "emptyDesc": "Your payout requests will appear here",
+        "requested": "Requested",
+        "completed": "Completed",
+        "transactionMode": "Transaction Mode",
+        "toast": {
+          "errorLoading": "Error loading payouts"
+        }
+      }
+    },
+    "bonus": {
+      "title": "Bonus Program",
+      "subtitle": "Rewards & incentives",
+      "walletLabel": "BONUS WALLET",
+      "tapToView": "Tap to view transactions",
+      "programsTitle": "Bonus Programs",
+      "programsDesc": "Explore rewards and incentive programs",
+      "menu": {
+        "referEarn": {
+          "title": "Refer & Earn",
+          "subtitle": "Invite your friends to earn"
+        },
+        "bonusWallet": {
+          "title": "Bonus Wallet",
+          "subtitle": "Check your bonus wallet transactions"
+        },
+        "roadHeroAwards": {
+          "title": "Road Hero Awards",
+          "subtitle": "Get your Road Hero Awards Report"
+        },
+        "seniorityBonus": {
+          "title": "Seniority Bonus",
+          "subtitle": "Bonus on your lifetime achievements"
+        }
+      },
+      "wallet": {
+        "title": "Bonus Wallet",
+        "balanceLabel": "BONUS WALLET BALANCE",
+        "transactionHistory": "Transaction History",
+        "transactionHistoryDesc": "All your bonus wallet transactions",
+        "empty": "No Wallet Transaction Yet!",
+        "emptyDescription": "Your bonus wallet transactions will appear here",
+        "errorLoading": "Error while loading statements"
+      },
+      "referEarn": {
+        "title": "Refer & Earn",
+        "subtitle": "Invite your friends to join Delivery KPG and earn bonus points when they complete deliveries.",
+        "shareSectionTitle": "Share Your Referral Code",
+        "yourReferralCode": "Your Referral Code",
+        "shareQrButton": "Share QR Code",
+        "copyLinkButton": "Copy Link",
+        "pointsLabel": "Points",
+        "pointsStructure": "Points Structure",
+        "orders": "Orders",
+        "referedUsers": "Referred Users",
+        "joinDate": "Join Date",
+        "ordersLabel": "Orders",
+        "pointsColumn": "Points",
+        "noBonus": "No bonus yet",
+        "noReferrals": "No referrals yet",
+        "shareModalTitle": "Share Referral QR",
+        "whatsappTitle": "WhatsApp",
+        "whatsappSubtitle": "Share directly to WhatsApp",
+        "lineTitle": "LINE",
+        "lineSubtitle": "Share directly to LINE",
+        "othersTitle": "Others",
+        "othersSubtitle": "Share using any app",
+        "toastCopiedTitle": "Copied!",
+        "toastCopiedSubtitle": "Referral link copied to clipboard",
+        "toastShareThanksTitle": "Thanks for sharing!",
+        "toastShareThanksSubtitle": "Spread the word and earn together",
+        "toastShareWhatsappTitle": "Shared on WhatsApp",
+        "toastShareLineTitle": "Shared on LINE",
+        "toastShareFailedTitle": "Failed to share",
+        "toastShareFailedWhatsappTitle": "Failed to share on WhatsApp",
+        "toastShareFailedLineTitle": "Failed to share on LINE",
+        "errorLoading": "Failed to load referral details"
+      },
+      "roadAwards": {
+        "title": "Road Hero Awards",
+        "noAward": "No Award",
+        "month": "Month: {{month}}",
+        "orders": "Orders: {{orders}}",
+        "errorLoading": "Error while loading statements"
+      },
+      "seniority": {
+        "title": "Seniority Bonus",
+        "ordersLabel": "Orders",
+        "pointsLabel": "Points",
+        "noBonuses": "No bonuses available",
+        "errorLoading": "Error while loading Seniority Bonus"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "App preferences & configuration",
+      "preferencesTitle": "App Preferences",
+      "preferencesDesc": "Customize your app experience",
+      "menu": {
+        "notification": {
+          "title": "Notification Sounds",
+          "subtitle": "Customize notification sounds"
+        },
+        "theme": {
+          "title": "Theme",
+          "subtitle": {
+            "light": "Light Mode",
+            "dark": "Dark Mode"
+          }
+        },
+        "language": {
+          "title": "Language",
+          "subtitle": "Change app language"
+        },
+        "tracking": {
+          "title": "Tracking Consent",
+          "subtitle": "Manage app analytics tracking preferences",
+          "modalTitle": "Analytics Consent",
+          "modalMessage": "We use Microsoft Clarity & Google Analytics only for analytics to improve app performance and user experience. We do NOT collect data for ads. Do you allow analytics tracking?"
+        },
+        "deleteAccount": {
+          "title": "Account Deletion",
+          "subtitle": "Request account deletion",
+          "modalTitle": "Account Deletion",
+          "modalMessage": "As a registered delivery partner with DeliveryKPG, you are currently unable to delete your account directly. This restriction is in place to ensure proper handling of settlements, cash-in-hand balances, and other transaction-related matters. If you would like to stop working with DeliveryKPG, please contact your manager for assistance."
+        }
+      },
+      "notification": {
+        "title": "Notification Settings",
+        "incomingOrder": "Incoming Order",
+        "orderReady": "Order Ready",
+        "selectSound": "Select Sound",
+        "description": "Customize notification sounds for different order events",
+        "incomingOrderDesc": "Sound when new orders arrive",
+        "orderReadyDesc": "Sound when orders are ready",
+        "toast": {
+          "incomingSaved": "Incoming order sound updated",
+          "readySaved": "Order ready sound updated"
+        }
+      },
+      "theme": {
+        "title": "Theme",
+        "light": "Light Mode",
+        "dark": "Dark Mode",
+        "system": "Device Default",
+        "toggle": "Toggle",
+        "selectTheme": "Select your preferred theme",
+        "currentlyActive": "Currently active",
+        "selectThemeLabel": "Select theme",
+        "lightDesc": "Bright interface for daytime use",
+        "darkDesc": "Dark interface for nighttime use",
+        "systemDesc": "Follow device settings"
+      }
+    },
+    "logout": {
+      "title": "Logout",
+      "subtitle": "Sign out of your account"
+    }
+  },
+  "dialog": {
+    "logout": {
+      "title": "Logout",
+      "message": "Are you sure you want to logout?",
+      "confirm": "Logout",
+      "cancel": "Cancel"
+    }
+  },
+  "account": {
+    "title": "Account",
+    "online": "You are online",
+    "offline": "You are offline",
+    "thirtyDaysEarnings": "30 Days Earnings",
+    "totalEarnings": "Total Earnings",
+    "onGoing": "On-Going",
+    "completed": "Completed",
+    "reviews": "Reviews",
+    "bonusWalletTitle": "Bonus Wallet",
+    "fixedSalary": "Fixed Salary P.O.",
+    "commissionRate": "Commission Rate",
+    "penaltyActive": "Penalty Active",
+    "gasRate": "Gas Rate",
+    "weeklyBonusBoost": "Weekly Bonus Boost",
+    "localTaxRate": "Local Tax Rate",
+    "payToCompany": "Pay to Company",
+    "receiveFromCompany": "Receive from Company",
+    "noLimit": "No Limit",
+    "minWithdrawalLimit": "Min. Withdrawal:\n{{currency}} {{amount}}",
+    "cashLimit": "Cash Limit",
+    "payWithQR": "Pay with QR",
+    "requestPayout": "Request withdrawal of {{currency}} {{amount}}",
+    "requestPayoutDialog": {
+      "title": "Requesting Payout of {{currency}} {{amount}}",
+      "message": "Are you sure you want to request Payout of {{currency}} {{amount}} from Delivery KPG?\n\nNote: The amount will arrive in your bank account within 3-5 business days.\n\nNote: A processing fee of {{currency}}{{deliveryGuyPayoutCharge}} will be charged for all payout requests.\n\nHowever, for payout amounts exceeding {{currency}}{{chargeReimbursementPayoutAmount}}, a refund of processing charge will be credited to the bonus wallet after payout is completed.",
+      "confirm": "Yes",
+      "cancel": "No"
+    },
+    "payWithQRDialog": {
+      "title": "Pay with QR",
+      "message": "Enter the amount you want to pay",
+      "confirm": "YES",
+      "cancel": "NO"
+    },
+    "bonusWallet": {
+      "balance": "Bonus Wallet Balance",
+      "redeemPoints": "Redeem Points",
+      "addPoints": "Add Points",
+      "viewTransactions": "View Transaction History",
+      "toast": {
+        "pointsRedeemed": "Points Redeemed",
+        "pointsRedeemedDesc": "Your bonus points have been redeemed successfully",
+        "redeemFailed": "Redeem Failed",
+        "invalidInput": "Invalid Input",
+        "enterValidNumber": "Please enter a valid number",
+        "pointsAdded": "Points Added",
+        "pointsAddedDesc": "Bonus points have been added to your wallet",
+        "addPointsFailed": "Add Points Failed",
+        "insufficientBalance": "Insufficient Balance",
+        "minBalanceRequired": "Bonus wallet must be greater than {{currency}} {{amount}} to redeem"
+      },
+      "redeemDialog": {
+        "title": "Redeem Points",
+        "message": "Settle Bonus Points to Collection Amount?\nPoints: {{points}}",
+        "confirm": "Redeem",
+        "cancel": "Cancel"
+      },
+      "addPointsDialog": {
+        "title": "Add Bonus Points from Collection",
+        "message": "Are you sure you want to add Bonus Points from your debt to company? This will reduce the debt on company and add points to the wallet.",
+        "placeholder": "Enter desired bonus points here",
+        "confirm": "Add Points",
+        "cancel": "Cancel"
+      }
+    },
+    "qrPayment": {
+      "title": "Scan QR Code to Pay",
+      "generatingQR": "Generating QR Code...",
+      "loadingQR": "Loading QR...",
+      "retry": "Retry",
+      "cancel": "Cancel"
+    }
+  },
+  "order": {
+    "orderNotFound": "Order not found",
+    "processing": "Processing...",
+    "orderAssignedBy": "Order Assigned by",
+    "rejectOrder": "Reject Order",
+    "getDirection": "Get Direction",
+    "callNow": "Call Now",
+    "chatButton": "Chat",
+    "whatsApp": "WhatsApp",
+    "locationDetails": "Location Details",
+    "driverNote": "Driver Note",
+    "orderItems": "Order Items",
+    "orderItemsCopyInfo": "Tap on an item name to copy it",
+    "addOrderPhotos": "Add Order Photos",
+    "orderBill": "Order Bill",
+    "orderItemsPhoto": "Order Items",
+    "payToRestaurant": "Pay to Restaurant / Store: {{currency}} {{amount}}",
+    "conditionModal": {
+      "title": "Order Assign Conditions",
+      "auto1": "Auto - 1",
+      "auto1Desc": "Driver to Restaurant is within 2 km",
+      "auto2": "Auto - 2",
+      "auto2Desc": "Has 1 Order Picked Up and customer's location in the picked up order to restaurant of this order is within 2 km",
+      "auto3": "Auto - 3",
+      "auto3Desc": "Nearest available driver within 4 km and below max order limit",
+      "operator": "Operator",
+      "operatorDesc": "Order Assigned manually By Operator",
+      "cancel": "Cancel"
+    },
+    "rejectModal": {
+      "title": "Reject Order",
+      "warningMessage": "Are you sure you want to reject this order? You'll be charged a penalty from Bonus Wallet if you continue",
+      "penalty": "Penalty: {{amount}} BP",
+      "selectReason": "Select Cancel Reason",
+      "yes": "Yes",
+      "no": "No",
+      "toast": {
+        "selectReason": "Select a rejection reason",
+        "rejected": "Order Rejected",
+        "errorRejecting": "Error Rejecting Delivery"
+      },
+      "reasons": {
+        "Not Enough Cash in Hand": "Not Enough Cash in Hand",
+        "Vehicle Breakdown": "Vehicle Breakdown",
+        "Personal Emergency": "Personal Emergency",
+        "Health Issue": "Health Issue",
+        "Low Battery/Phone Issue": "Low Battery/Phone Issue",
+        "Accident/Traffic Delay": "Accident/Traffic Delay",
+        "Weather Conditions": "Weather Conditions"
+      }
+    },
+    "pickupConfirm": {
+      "title": "Warning!",
+      "message": "Check the order code before leaving!",
+      "confirm": "Confirm",
+      "cancel": "Order ID Mismatch"
+    },
+    "deliveryConfirm": {
+      "title": "Delivered?",
+      "messagePinEnabled": "Please enter the delivery PIN provided by the customer to confirm delivery.",
+      "messagePinDisabled": "Are you sure you have delivered this order to the customer?",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "failedToLoad": "Failed to load order details",
+      "orderDelivered": "Order Delivered",
+      "orderCancelled": "Order Cancelled",
+      "orderClosed": "Order Closed",
+      "whatsappNotInstalled": "WhatsApp not installed",
+      "orderAcknowledged": "Order acknowledged",
+      "arrivedAtRestaurant": "Arrived at restaurant",
+      "actionFailed": "Action failed",
+      "uploadBothImages": "Please upload both order images first",
+      "invalidOrderData": "Invalid order data",
+      "updatingStatus": "Updating order status...",
+      "pickedUpSuccessfully": "Order picked up successfully",
+      "failedToUpdate": "Failed to update order",
+      "failedToPickup": "Failed to pickup order",
+      "verifyOrderCode": "Please verify the order code with the restaurant",
+      "completingDelivery": "Completing delivery...",
+      "incorrectPin": "Error delivering order: Incorrect PIN",
+      "deliveredSuccessfully": "Order delivered successfully",
+      "failedToDeliver": "Failed to deliver order"
+    },
+    "orderReadyBy": "Order will get ready by: {{time}}",
+    "ready": "READY",
+    "receiveFromCustomer": "Receive from Customer: {{currency}} {{amount}}",
+    "onlinePayment": "Online Payment",
+    "acknowledgeOrder": "Acknowledge Order",
+    "arrivedAtRestaurant": "Arrived at Restaurant",
+    "pickupOrder": "Pickup Order",
+    "deliverOrder": "Deliver Order",
+    "chat": {
+      "customer": "Customer",
+      "loadingMessages": "Loading messages...",
+      "typePlaceholder": "Type message here...",
+      "typing": "{{name}} is typing...",
+      "location": "Location",
+      "tapToOpen": "Tap to open in Maps",
+      "read": "Read",
+      "sent": "Sent",
+      "pending": "Pending",
+      "sendAttachment": "Send Attachment",
+      "sendLocation": "Send Location",
+      "openCamera": "Open camera",
+      "shareLocationDesc": "Share your current location",
+      "takePhotoDesc": "Take a photo to send",
+      "toast": {
+        "calling": "Calling...",
+        "openingWhatsApp": "Opening WhatsApp...",
+        "cameraPermissionDenied": "Camera permission denied",
+        "enableCameraAccess": "Please enable camera access to take a photo",
+        "sendingImage": "Sending image...",
+        "failedToOpenCamera": "Failed to open camera",
+        "pleaseTryAgain": "Please try again",
+        "locationPermissionDenied": "Location permission denied",
+        "enableLocationServices": "Please enable location services to send location",
+        "sendingLocation": "Sending location...",
+        "unableToGetLocation": "Unable to get location",
+        "makeLocationEnabled": "Please make sure location services are enabled"
+      }
+    }
+  }
+}
