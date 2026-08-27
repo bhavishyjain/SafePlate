@@ -1,16 +1,17 @@
 import jwt from "jsonwebtoken";
+import { getConfig } from "../config/env.js";
+import { AppError } from "./errors.js";
 
 export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const [scheme, token] = authHeader?.split(" ") || [];
 
-  if (!token) {
-    return res.status(401).json({ message: "Access token required" });
+  if (scheme !== "Bearer" || !token) {
+    return next(new AppError(401, "Access token required", "AUTHENTICATION_REQUIRED"));
   }
 
   try {
-    const secret = process.env.JWT_SECRET || "default_safeplate_secret_key_123!";
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token, getConfig().jwtSecret);
     req.user = {
       id: decoded.id,
       email: decoded.email,
@@ -18,18 +19,18 @@ export const authenticateToken = (req, res, next) => {
     };
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Invalid or expired token" });
+    return next(new AppError(401, "Invalid or expired token", "INVALID_TOKEN"));
   }
 };
 
 export const requireRole = (roles) => {
   return (req, res, next) => {
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return next(new AppError(401, "Authentication required", "AUTHENTICATION_REQUIRED"));
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden: Access denied for this role" });
+      return next(new AppError(403, "Access denied for this role", "FORBIDDEN"));
     }
 
     next();
