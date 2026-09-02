@@ -1,41 +1,34 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import { connectDB } from "./config/db.js";
-
-// Routes
-import authRoutes from "./routes/auth.js";
-import donationRoutes from "./routes/donations.js";
-import ngoRoutes from "./routes/ngos.js";
-import optimizeRoutes from "./routes/optimize.js";
-import allocationRoutes from "./routes/allocations.js";
-import dashboardRoutes from "./routes/dashboard.js";
+import { createApp } from "./app.js";
+import { connectDB, disconnectDB } from "./config/db.js";
+import { getConfig } from "./config/env.js";
+import { startExpiryScheduler } from "./jobs/expiryScheduler.js";
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+async function startServer() {
+  const config = getConfig();
+  await connectDB(config.mongoUri);
+  const app = createApp(config);
+  const expiryTask = startExpiryScheduler(config.expiryCron);
+  const server = app.listen(config.port, () => {
+    console.log(`SafePlate Backend API running on port ${config.port}`);
+  });
 
-// Connect to MongoDB
-connectDB();
+  async function shutdown(signal) {
+    console.log(`${signal} received; shutting down`);
+    server.close(async () => {
+      expiryTask.stop();
+      await disconnectDB();
+      process.exit(0);
+    });
+  }
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+  process.once("SIGINT", () => shutdown("SIGINT"));
+  process.once("SIGTERM", () => shutdown("SIGTERM"));
+}
 
-// Base Health Check
-app.get("/health", (req, res) => {
-  res.json({ status: "OK", service: "SafePlate API" });
-});
-
-// Register Routes
-app.use("/auth", authRoutes);
-app.use("/donations", donationRoutes);
-app.use("/ngos", ngoRoutes);
-app.use("/optimize", optimizeRoutes);
-app.use("/allocations", allocationRoutes);
-app.use("/dashboard", dashboardRoutes);
-
-app.listen(PORT, () => {
-  console.log(`SafePlate Backend API running on port ${PORT}`);
+startServer().catch((error) => {
+  console.error("Failed to start SafePlate API:", error.message);
+  process.exit(1);
 });
