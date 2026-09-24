@@ -17,7 +17,6 @@ function catalogSuggestion(input, match) {
     name: input.name.trim(),
     quantityGrams: input.quantityGrams,
     nutritionPer100g: { calories: match.caloriesPer100g, proteinGrams: match.proteinPer100g },
-    baseShelfLifeHours: match.baseShelfLifeHours,
     nutritionSource: "CATALOG",
     catalogItemId: match._id,
     donorConfirmed: false,
@@ -33,7 +32,7 @@ async function analyzeWithGemini(items) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: `Estimate nutrition per 100g and conservative cooked-food shelf life in hours for these food names: ${JSON.stringify(items.map((item) => item.name))}. Return values in the same order. Do not add commentary.` }] }],
+      contents: [{ role: "user", parts: [{ text: `Estimate calories and protein per 100g for these food names: ${JSON.stringify(items.map((item) => item.name))}. Return values in the same order. Do not add commentary.` }] }],
       generationConfig: {
         temperature: 0,
         responseMimeType: "application/json",
@@ -41,12 +40,11 @@ async function analyzeWithGemini(items) {
           type: "ARRAY",
           items: {
             type: "OBJECT",
-            required: ["name", "caloriesPer100g", "proteinPer100g", "baseShelfLifeHours"],
+            required: ["name", "caloriesPer100g", "proteinPer100g"],
             properties: {
               name: { type: "STRING" },
               caloriesPer100g: { type: "NUMBER" },
               proteinPer100g: { type: "NUMBER" },
-              baseShelfLifeHours: { type: "NUMBER" },
             },
           },
         },
@@ -79,7 +77,6 @@ export async function analyzeNutritionItems(items) {
             name: input.name.trim(),
             quantityGrams: input.quantityGrams,
             nutritionPer100g: { calories: Math.max(0, estimate.caloriesPer100g), proteinGrams: Math.max(0, estimate.proteinPer100g) },
-            baseShelfLifeHours: Math.max(0.1, estimate.baseShelfLifeHours),
             nutritionSource: "GEMINI_ESTIMATE",
             donorConfirmed: false,
             analysisStatus: "READY_FOR_CONFIRMATION",

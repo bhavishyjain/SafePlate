@@ -9,6 +9,7 @@ test("donation status transitions enforce the lifecycle", () => {
   assert.equal(canTransitionDonation("PENDING", "ASSIGNED"), true);
   assert.equal(canTransitionDonation("PENDING", "DISCARDED"), true);
   assert.equal(canTransitionDonation("ASSIGNED", "PICKED_UP"), true);
+  assert.equal(canTransitionDonation("ASSIGNED", "PENDING"), true);
   assert.equal(canTransitionDonation("PICKED_UP", "DELIVERED"), true);
   assert.equal(canTransitionDonation("DELIVERED", "PENDING"), false);
   assert.equal(canTransitionDonation("DISCARDED", "ASSIGNED"), false);
@@ -36,7 +37,6 @@ test("nutrition catalog seed data is unique and valid", () => {
   for (const catalogItem of nutritionCatalogSeedData) {
     assert.ok(catalogItem.caloriesPer100g >= 0);
     assert.ok(catalogItem.proteinPer100g >= 0);
-    assert.ok(catalogItem.baseShelfLifeHours > 0);
   }
 });
 

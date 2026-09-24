@@ -7,6 +7,10 @@ test("development configuration has safe local defaults", () => {
   assert.equal(config.port, 5000);
   assert.equal(config.mongoUri, "mongodb://localhost:27017/safeplate");
   assert.ok(config.jwtSecret.length >= 32);
+  assert.equal(config.maximumPickupRadiusKm, 25);
+  assert.equal(config.nutritionWeight, 0.7);
+  assert.equal(config.distanceWeight, 0.3);
+  assert.equal(config.maximumPageSize, 100);
 });
 
 test("production configuration requires explicit secrets and database", () => {
@@ -20,4 +24,8 @@ test("production configuration requires explicit secrets and database", () => {
 test("configuration validates positive port values", () => {
   assert.throws(() => getConfig({ NODE_ENV: "test", PORT: "0" }), /PORT/);
   assert.throws(() => getConfig({ NODE_ENV: "test", PORT: "abc" }), /PORT/);
+});
+
+test("allocation weights must total one", () => {
+  assert.throws(() => getConfig({ NODE_ENV: "test", ALLOCATION_NUTRITION_WEIGHT: "0.8", ALLOCATION_DISTANCE_WEIGHT: "0.3" }), /total 1/);
 });

@@ -1,0 +1,52 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SafePlate Backend API",
+    "version": "1.0.0",
+    "description": "Versioned API for nutrition-aware food donation, allocation, pickup, and delivery."
+  },
+  "servers": [{ "url": "/api/v1" }],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "schemas": {
+      "Reason": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": { "reason": { "type": "string", "minLength": 1 } }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "integer", "minimum": 1 },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "total": { "type": "integer", "minimum": 0 },
+          "pages": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  },
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/health": { "get": { "security": [], "summary": "Check API health", "responses": { "200": { "description": "API is running" } } } },
+    "/auth/register": { "post": { "security": [], "summary": "Register a donor or NGO user", "responses": { "201": { "description": "Registered" } } } },
+    "/auth/login": { "post": { "security": [], "summary": "Issue access and refresh tokens", "responses": { "200": { "description": "Authenticated" }, "429": { "description": "Login attempts exceeded" } } } },
+    "/auth/refresh": { "post": { "security": [], "summary": "Rotate a refresh token", "responses": { "200": { "description": "Session rotated" } } } },
+    "/donations": {
+      "get": { "summary": "List visible donations with pagination", "parameters": [{ "in": "query", "name": "page", "schema": { "type": "integer" } }, { "in": "query", "name": "limit", "schema": { "type": "integer", "maximum": 100 } }, { "in": "query", "name": "status", "schema": { "type": "string" } }], "responses": { "200": { "description": "Paginated donations" } } },
+      "post": { "summary": "Create a confirmed donation", "responses": { "201": { "description": "Donation created" } } }
+    },
+    "/optimize": { "post": { "summary": "Run deterministic allocation as an admin", "responses": { "200": { "description": "Optimization result" }, "409": { "description": "Another optimization is running" } } } },
+    "/allocations": { "get": { "summary": "List visible allocations with pagination", "responses": { "200": { "description": "Paginated allocations" } } } },
+    "/allocations/{id}/pickup": { "patch": { "summary": "Confirm pickup idempotently", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Pickup confirmed" } } } },
+    "/allocations/{id}/delivered": { "patch": { "summary": "Confirm delivery idempotently", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Delivery confirmed" } } } },
+    "/allocations/{id}/reject": { "patch": { "summary": "Reject and automatically re-optimize an assignment", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Assignment rejected" } } } },
+    "/allocations/{id}/cancel": { "patch": { "summary": "Cancel an assignment as an admin", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Assignment cancelled" } } } },
+    "/allocations/{id}/reassign": { "patch": { "summary": "Manually reassign as an admin", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Assignment reassigned" } } } },
+    "/dashboard/summary": { "get": { "summary": "Read admin dashboard metrics and daily trends", "parameters": [{ "in": "query", "name": "from", "schema": { "type": "string", "format": "date-time" } }, { "in": "query", "name": "to", "schema": { "type": "string", "format": "date-time" } }], "responses": { "200": { "description": "Dashboard summary" } } } },
+    "/admin/users": { "get": { "summary": "Search and paginate users as an admin", "responses": { "200": { "description": "Paginated users" } } } },
+    "/admin/users/{id}/status": { "patch": { "summary": "Enable or disable an account", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Account status updated" } } } },
+    "/admin/users/{id}/revoke-sessions": { "post": { "summary": "Revoke every refresh-token session for a user", "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Sessions revoked" } } } }
+  }
+}

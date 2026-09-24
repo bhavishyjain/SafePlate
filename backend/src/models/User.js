@@ -12,6 +12,7 @@ const UserSchema = new Schema(
       required: true,
     },
     organization: { type: String },
+    isActive: { type: Boolean, default: true, index: true },
   },
   { timestamps: true }
 );

@@ -6,7 +6,6 @@ const NutritionCatalogItemSchema = new Schema(
     aliases: [{ type: String, trim: true }],
     caloriesPer100g: { type: Number, required: true, min: 0 },
     proteinPer100g: { type: Number, required: true, min: 0 },
-    baseShelfLifeHours: { type: Number, required: true, min: 0.1 },
     active: { type: Boolean, default: true, index: true },
   },
   { timestamps: true }
