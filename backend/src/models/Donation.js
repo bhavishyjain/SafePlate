@@ -12,7 +12,6 @@ const DonationSchema = new Schema(
             calories: { type: Number, required: true, min: 0 },
             proteinGrams: { type: Number, required: true, min: 0 },
           },
-          baseShelfLifeHours: { type: Number, required: true, min: 0.1 },
           nutritionSource: { type: String, enum: ["CATALOG", "GEMINI_ESTIMATE", "ADMIN_OVERRIDE"], required: true },
           donorConfirmed: { type: Boolean, required: true, validate: (value) => value === true },
           catalogItemId: { type: Schema.Types.ObjectId, ref: "NutritionCatalogItem" },
@@ -48,18 +47,12 @@ const DonationSchema = new Schema(
       enum: ["SEALED_PACKAGED", "CLOSED_CONTAINER", "OPEN_OR_BULK"],
       required: true,
     },
-    storageCondition: {
-      type: String,
-      enum: ["ROOM_TEMPERATURE", "REFRIGERATED", "FROZEN"],
-      required: true,
-    },
     status: {
       type: String,
       enum: ["PENDING", "ASSIGNED", "PICKED_UP", "DELIVERED", "DISCARDED"],
       default: "PENDING",
       required: true,
     },
-    riskScore: { type: Number, default: 0, min: 0, max: 1 },
     discardReason: { type: String, trim: true },
   },
   { timestamps: true }

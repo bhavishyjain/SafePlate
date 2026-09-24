@@ -10,7 +10,7 @@ async function run() {
     throw new Error("Development reset requires NODE_ENV != production and CONFIRM_DATABASE_RESET=SAFEPLATE_RESET");
   }
   await connectDB(config.mongoUri);
-  const collections = ["allocations", "donations", "ngonutritionlogs", "ngos", "nutritioncatalogitems", "foodtypes", "refreshtokens", "passwordresettokens"];
+  const collections = ["allocations", "donations", "ngonutritionlogs", "ngos", "nutritioncatalogitems", "optimizationlocks", "foodtypes", "refreshtokens", "passwordresettokens"];
   for (const name of collections) {
     if ((await mongoose.connection.db.listCollections({ name }).toArray()).length) await mongoose.connection.db.collection(name).deleteMany({});
   }

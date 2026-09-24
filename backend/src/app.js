@@ -7,6 +7,7 @@ import optimizeRoutes from "./routes/optimize.js";
 import allocationRoutes from "./routes/allocations.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import nutritionRoutes from "./routes/nutrition.js";
+import adminUserRoutes from "./routes/adminUsers.js";
 import { requestContext } from "./middleware/requestContext.js";
 import { errorHandler, notFoundHandler } from "./middleware/errors.js";
 
@@ -18,6 +19,7 @@ const routeGroups = [
   ["/allocations", allocationRoutes],
   ["/dashboard", dashboardRoutes],
   ["/nutrition", nutritionRoutes],
+  ["/admin/users", adminUserRoutes],
 ];
 
 function buildCorsOptions(corsOrigins) {

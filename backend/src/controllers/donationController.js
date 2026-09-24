@@ -2,9 +2,10 @@ import { Donation } from "../models/Donation.js";
 import { Allocation } from "../models/Allocation.js";
 import { NGO } from "../models/NGO.js";
 import { AppError } from "../middleware/errors.js";
+import { paginationFromQuery, paginatedResult } from "../utils/pagination.js";
 
 export async function createDonation(req, res, next) {
-  try { return res.status(201).json(await Donation.create({ ...req.body, donorId: req.user.id, status: "PENDING", riskScore: 0 })); }
+  try { return res.status(201).json(await Donation.create({ ...req.body, donorId: req.user.id, status: "PENDING" })); }
   catch (error) { return next(error); }
 }
 
@@ -38,9 +39,32 @@ export async function discardDonation(req, res, next) {
 
 export async function listDonations(req, res, next) {
   try {
-    if (req.user.role === "ADMIN") return res.json(await Donation.find().populate("donorId", "name email"));
-    if (req.user.role === "DONOR") return res.json(await Donation.find({ donorId: req.user.id }));
-    return next(new AppError(403, "Access denied for this role", "FORBIDDEN"));
+    const filter = {};
+    if (req.user.role === "DONOR") filter.donorId = req.user.id;
+    else if (req.user.role !== "ADMIN") return next(new AppError(403, "Access denied for this role", "FORBIDDEN"));
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.from || req.query.to) {
+      filter.createdAt = {};
+      if (req.query.from) {
+        const from = new Date(req.query.from);
+        if (Number.isNaN(from.getTime())) return next(new AppError(400, "from must be a valid date", "INVALID_DATE_RANGE"));
+        filter.createdAt.$gte = from;
+      }
+      if (req.query.to) {
+        const to = new Date(req.query.to);
+        if (Number.isNaN(to.getTime())) return next(new AppError(400, "to must be a valid date", "INVALID_DATE_RANGE"));
+        filter.createdAt.$lte = to;
+      }
+      if (filter.createdAt.$gte && filter.createdAt.$lte && filter.createdAt.$gte > filter.createdAt.$lte) {
+        return next(new AppError(400, "from cannot be after to", "INVALID_DATE_RANGE"));
+      }
+    }
+    const page = paginationFromQuery(req.query);
+    const [items, total] = await Promise.all([
+      Donation.find(filter).populate("donorId", "name email").sort(page.sort).skip(page.skip).limit(page.limit),
+      Donation.countDocuments(filter),
+    ]);
+    return res.json(paginatedResult(items, total, page));
   } catch (error) { return next(error); }
 }
 

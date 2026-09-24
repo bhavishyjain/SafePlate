@@ -1,7 +1,7 @@
 {
   "name": "safeplate-backend",
   "version": "1.0.0",
-  "description": "SafePlate - Nutrition- & Spoilage-Aware Food Redistribution App Backend",
+  "description": "SafePlate - Nutrition-Aware Food Redistribution App Backend",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
