@@ -14,6 +14,5 @@ export const validateCatalogItem = validate((req) => {
   const errors = [];
   if (req.body.name !== undefined && !isNonEmptyString(req.body.name)) errors.push({ field: "name", message: "Name is invalid" });
   for (const field of ["caloriesPer100g", "proteinPer100g"]) if (req.body[field] !== undefined && (typeof req.body[field] !== "number" || req.body[field] < 0)) errors.push({ field, message: "Must be zero or greater" });
-  if (req.body.baseShelfLifeHours !== undefined && !isPositiveNumber(req.body.baseShelfLifeHours)) errors.push({ field: "baseShelfLifeHours", message: "Must be positive" });
   return errors;
 });

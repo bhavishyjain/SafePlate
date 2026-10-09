@@ -8,7 +8,7 @@ export const DONATION_STATUSES = Object.freeze([
 
 const ALLOWED_TRANSITIONS = Object.freeze({
   PENDING: new Set(["ASSIGNED", "DISCARDED"]),
-  ASSIGNED: new Set(["PICKED_UP", "DISCARDED"]),
+  ASSIGNED: new Set(["PENDING", "PICKED_UP", "DISCARDED"]),
   PICKED_UP: new Set(["DELIVERED"]),
   DELIVERED: new Set(),
   DISCARDED: new Set(),

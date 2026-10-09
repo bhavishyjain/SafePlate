@@ -27,7 +27,7 @@ export async function login(req, res, next) {
     const query = { email: normalizedEmail };
     if (role) query.role = role;
     const user = await User.findOne(query);
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    if (!user || user.isActive === false || !(await bcrypt.compare(password, user.passwordHash))) {
       recordLoginFailure(normalizedEmail, req.ip);
       return next(new AppError(401, "Invalid credentials", "INVALID_CREDENTIALS"));
     }
@@ -38,7 +38,7 @@ export async function login(req, res, next) {
 }
 
 export async function refresh(req, res, next) {
-  try { return res.json(await rotateSession(req.body.refreshToken, req.ip, (id) => User.findById(id))); }
+  try { return res.json(await rotateSession(req.body.refreshToken, req.ip, (id) => User.findOne({ _id: id, isActive: { $ne: false } }))); }
   catch (error) { return next(error); }
 }
 

@@ -8,6 +8,14 @@ function parsePositiveInteger(value, fallback, name) {
   return parsed;
 }
 
+function parseNumberInRange(value, fallback, name, minimum, maximum) {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed) || parsed < minimum || parsed > maximum) {
+    throw new Error(`${name} must be between ${minimum} and ${maximum}`);
+  }
+  return parsed;
+}
+
 export function getConfig(env = process.env) {
   const nodeEnv = env.NODE_ENV || "development";
   const isProduction = nodeEnv === "production";
@@ -19,6 +27,12 @@ export function getConfig(env = process.env) {
   }
   if (!mongoUri) {
     throw new Error("MONGODB_URI is required");
+  }
+
+  const nutritionWeight = parseNumberInRange(env.ALLOCATION_NUTRITION_WEIGHT, 0.7, "ALLOCATION_NUTRITION_WEIGHT", 0, 1);
+  const distanceWeight = parseNumberInRange(env.ALLOCATION_DISTANCE_WEIGHT, 0.3, "ALLOCATION_DISTANCE_WEIGHT", 0, 1);
+  if (Math.abs(nutritionWeight + distanceWeight - 1) > 1e-9) {
+    throw new Error("Allocation weights must total 1");
   }
 
   return Object.freeze({
@@ -41,6 +55,10 @@ export function getConfig(env = process.env) {
     geminiModel: env.GEMINI_MODEL || "gemini-2.5-flash",
     operationalTimeZone: "Asia/Kolkata",
     expiryCron: env.EXPIRY_CRON || "*/5 * * * *",
+    maximumPickupRadiusKm: parseNumberInRange(env.MAXIMUM_PICKUP_RADIUS_KM, 25, "MAXIMUM_PICKUP_RADIUS_KM", 0.1, 500),
+    nutritionWeight,
+    distanceWeight,
+    maximumPageSize: parsePositiveInteger(env.MAXIMUM_PAGE_SIZE, 100, "MAXIMUM_PAGE_SIZE"),
     corsOrigins: (env.CORS_ORIGINS || "*")
       .split(",")
       .map((origin) => origin.trim())

@@ -1,9 +1,35 @@
+import { Allocation } from "../models/Allocation.js";
 import { Donation } from "../models/Donation.js";
-import { NGO } from "../models/NGO.js";
-export async function summary(_req, res, next) {
+import { AppError } from "../middleware/errors.js";
+
+function dateRange(query) {
+  const range = {};
+  if (query.from) {
+    const from = new Date(query.from);
+    if (Number.isNaN(from.getTime())) throw new AppError(400, "from must be a valid date", "INVALID_DATE_RANGE");
+    range.$gte = from;
+  }
+  if (query.to) {
+    const to = new Date(query.to);
+    if (Number.isNaN(to.getTime())) throw new AppError(400, "to must be a valid date", "INVALID_DATE_RANGE");
+    range.$lte = to;
+  }
+  if (range.$gte && range.$lte && range.$gte > range.$lte) throw new AppError(400, "from cannot be after to", "INVALID_DATE_RANGE");
+  return Object.keys(range).length ? { createdAt: range } : {};
+}
+
+export async function summary(req, res, next) {
   try {
-    const donations = await Donation.find();
-    const values = donations.reduce((sum, donation) => { sum.kgDonated += donation.quantityKg; sum.risk += donation.riskScore; if (donation.status === "DELIVERED") sum.kgDelivered += donation.quantityKg; if (donation.status === "DISCARDED") sum.kgDiscarded += donation.quantityKg; return sum; }, { kgDonated: 0, kgDelivered: 0, kgDiscarded: 0, risk: 0 });
-    return res.json({ kgDonated: values.kgDonated, kgDelivered: values.kgDelivered, kgDiscarded: values.kgDiscarded, avgSpoilageRisk: donations.length ? values.risk / donations.length : 0, ngosServed: await NGO.countDocuments() });
+    const donationMatch = dateRange(req.query);
+    const allocationMatch = Object.keys(donationMatch).length ? { assignedAt: donationMatch.createdAt } : {};
+    const [donationTotals, allocationTotals, servedNgoIds, dailyTrend] = await Promise.all([
+      Donation.aggregate([{ $match: donationMatch }, { $group: { _id: null, kgDonated: { $sum: "$quantityKg" }, kgDelivered: { $sum: { $cond: [{ $eq: ["$status", "DELIVERED"] }, "$quantityKg", 0] } }, kgDiscarded: { $sum: { $cond: [{ $eq: ["$status", "DISCARDED"] }, "$quantityKg", 0] } }, unmatchedDonations: { $sum: { $cond: [{ $eq: ["$status", "PENDING"] }, 1, 0] } } } }]),
+      Allocation.aggregate([{ $match: allocationMatch }, { $lookup: { from: "donations", localField: "donationId", foreignField: "_id", as: "donation" } }, { $unwind: "$donation" }, { $group: { _id: null, total: { $sum: 1 }, delivered: { $sum: { $cond: [{ $eq: ["$status", "DELIVERED"] }, 1, 0] } }, kgAssigned: { $sum: "$donation.quantityKg" } } }]),
+      Allocation.distinct("ngoId", { ...allocationMatch, status: "DELIVERED" }),
+      Donation.aggregate([{ $match: donationMatch }, { $group: { _id: { $dateToString: { date: "$createdAt", format: "%Y-%m-%d", timezone: "Asia/Kolkata" } }, donatedKg: { $sum: "$quantityKg" }, deliveredKg: { $sum: { $cond: [{ $eq: ["$status", "DELIVERED"] }, "$quantityKg", 0] } } } }, { $sort: { _id: 1 } }, { $project: { _id: 0, date: "$_id", donatedKg: 1, deliveredKg: 1 } }]),
+    ]);
+    const donations = donationTotals[0] ?? { kgDonated: 0, kgDelivered: 0, kgDiscarded: 0, unmatchedDonations: 0 };
+    const allocations = allocationTotals[0] ?? { total: 0, delivered: 0, kgAssigned: 0 };
+    return res.json({ ...donations, kgAssigned: allocations.kgAssigned, ngosServed: servedNgoIds.length, deliverySuccessRate: allocations.total ? allocations.delivered / allocations.total : 0, dailyTrend });
   } catch (error) { return next(error); }
 }

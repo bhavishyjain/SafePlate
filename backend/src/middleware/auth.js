@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import { getConfig } from "../config/env.js";
 import { AppError } from "./errors.js";
+import { User } from "../models/User.js";
 
-export const authenticateToken = (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const [scheme, token] = authHeader?.split(" ") || [];
 
@@ -12,10 +13,12 @@ export const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, getConfig().jwtSecret);
+    const user = await User.findById(decoded.id).select("email role isActive");
+    if (!user || user.isActive === false) return next(new AppError(401, "Account is disabled or no longer exists", "ACCOUNT_DISABLED"));
     req.user = {
       id: decoded.id,
-      email: decoded.email,
-      role: decoded.role,
+      email: user.email,
+      role: user.role,
     };
     next();
   } catch (error) {
