@@ -1,50 +1,45 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
-let ongoingGetUser = null;
+const SESSION_KEY = "safeplate.session.v1";
+let cachedSession;
+
+async function readValue() {
+  if (Platform.OS === "web") return globalThis.localStorage?.getItem(SESSION_KEY) ?? null;
+  return SecureStore.getItemAsync(SESSION_KEY);
+}
+
+async function writeValue(value) {
+  if (Platform.OS === "web") globalThis.localStorage?.setItem(SESSION_KEY, value);
+  else await SecureStore.setItemAsync(SESSION_KEY, value, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK });
+}
 
 export default async function getUserAuth() {
-  if (ongoingGetUser) {
-    return ongoingGetUser;
-  }
-
+  if (cachedSession !== undefined) return cachedSession;
   try {
-    ongoingGetUser = (async () => {
-      let user = null;
-      if (Platform.OS === "web") {
-        user = localStorage.getItem("user");
-      } else {
-        user = await AsyncStorage.getItem("user");
-      }
-      return user ? JSON.parse(user) : null;
-    })();
-
-    const result = await ongoingGetUser;
-    ongoingGetUser = null;
-    return result;
-  } catch (error) {
-    console.error("getUserAuth error:", error?.message);
-    ongoingGetUser = null;
-    return null;
+    const value = await readValue();
+    cachedSession = value ? JSON.parse(value) : null;
+    return cachedSession;
+  } catch {
+    const legacy = await AsyncStorage.getItem("user");
+    cachedSession = legacy ? JSON.parse(legacy) : null;
+    if (cachedSession) await setUserAuth(cachedSession);
+    return cachedSession;
   }
 }
 
-export async function setUserAuth(user) {
-  if (Platform.OS === "web") {
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("auth_token", user.auth_token);
-  } else {
-    await AsyncStorage.setItem("user", JSON.stringify(user));
-    await AsyncStorage.setItem("auth_token", user.auth_token);
-  }
+export async function setUserAuth(session) {
+  const normalized = { ...session, accessToken: session.accessToken || session.auth_token, auth_token: session.accessToken || session.auth_token };
+  cachedSession = normalized;
+  await writeValue(JSON.stringify(normalized));
+  await AsyncStorage.multiRemove(["user", "auth_token"]);
+  return normalized;
 }
 
 export async function clearUserAuth() {
-  if (Platform.OS === "web") {
-    localStorage.removeItem("user");
-    localStorage.removeItem("auth_token");
-  } else {
-    await AsyncStorage.removeItem("user");
-    await AsyncStorage.removeItem("auth_token");
-  }
+  cachedSession = null;
+  if (Platform.OS === "web") globalThis.localStorage?.removeItem(SESSION_KEY);
+  else await SecureStore.deleteItemAsync(SESSION_KEY);
+  await AsyncStorage.multiRemove(["user", "auth_token"]);
 }

@@ -1,34 +1,22 @@
-import { Stack } from "expo-router";
-import { Platform } from "react-native";
+import { Redirect, Stack, useSegments } from "expo-router";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { darkColors, lightColors } from "../../colors";
-import { useTheme } from "../../utils/context/theme";
+import { useColors } from "../../components/ui";
+import { useAuth } from "../../utils/context/auth";
+import { canAccessRoleRoute, homeForRole, roleForSegments } from "../../constants/routing";
 
-export default function RootLayout() {
-  const { colorScheme } = useTheme();
+export default function AppLayout() {
+  const { user, loading } = useAuth();
+  const segments = useSegments();
+  const colors = useColors();
+  const inAuth = segments.includes("(auth)");
+  const requestedRole = roleForSegments(segments);
 
-  // Get current theme colors
-  const colors = colorScheme === "dark" ? darkColors : lightColors;
+  if (loading) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundPrimary }}><ActivityIndicator color={colors.primary} /></View>;
+  if (!user && !inAuth) return <Redirect href="/(app)/(auth)/login" />;
+  if (user && inAuth) return <Redirect href={homeForRole(user.role)} />;
+  if (user && requestedRole && !canAccessRoleRoute(user.role, segments)) return <Redirect href={homeForRole(user.role)} />;
 
-  const getEdges = () => {
-    if (Platform.OS === "ios") {
-      return ["top"];
-    }
-    return ["top", "bottom"];
-  }
-
-  return (
-    <>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView
-          className="flex-1"
-          style={{ backgroundColor: colors.backgroundPrimary }}
-          edges={getEdges()}
-        >
-          <Stack screenOptions={{ headerShown: false }} />
-        </SafeAreaView>
-      </GestureHandlerRootView>
-    </>
-  );
+  return <GestureHandlerRootView style={{ flex: 1 }}><SafeAreaView style={{ flex: 1, backgroundColor: colors.backgroundPrimary }} edges={Platform.OS === "ios" ? ["top"] : ["top", "bottom"]}><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.backgroundPrimary } }} /></SafeAreaView></GestureHandlerRootView>;
 }

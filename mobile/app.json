@@ -14,9 +14,7 @@
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
         "ACCESS_NETWORK_STATE",
-        "CAMERA",
         "INTERNET",
-        "POST_NOTIFICATIONS",
         "VIBRATE"
       ],
       "adaptiveIcon": {
@@ -42,21 +40,14 @@
         }
       ],
       "react-native-auto-skeleton",
-      "expo-asset",
       "expo-localization",
       [
-        "expo-notifications",
+        "expo-location",
         {
-          "icon": "./assets/images/splash.png",
-          "color": "#FFCC00"
+          "locationWhenInUsePermission": "Allow SafePlate to use your location for donation pickup and NGO matching."
         }
       ],
-      [
-        "expo-image-picker",
-        {
-          "microphonePermission": false
-        }
-      ]
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

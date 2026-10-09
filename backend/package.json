@@ -7,9 +7,10 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "test": "node --test",
     "check": "node --check src/index.js",
+    "db:development": "node src/scripts/startDevelopmentMongo.js",
     "seed:nutrition-catalog": "node src/scripts/seedNutritionCatalog.js",
+    "seed:development": "node src/scripts/seedDevelopmentData.js",
     "reset:development": "node src/scripts/resetDevelopmentData.js"
   },
   "dependencies": {
@@ -20,5 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
     "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^10.4.3"
   }
 }

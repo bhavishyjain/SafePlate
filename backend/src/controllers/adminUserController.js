@@ -19,6 +19,14 @@ export async function listUsers(req, res, next) {
   } catch (error) { return next(error); }
 }
 
+export async function getUser(req, res, next) {
+  try {
+    const user = await User.findById(req.params.id).select("-passwordHash");
+    if (!user) return next(new AppError(404, "User not found", "USER_NOT_FOUND"));
+    return res.json(user);
+  } catch (error) { return next(error); }
+}
+
 export async function setUserStatus(req, res, next) {
   try {
     if (req.params.id === req.user.id && req.body.isActive === false) return next(new AppError(409, "You cannot disable your own account", "SELF_DISABLE_FORBIDDEN"));

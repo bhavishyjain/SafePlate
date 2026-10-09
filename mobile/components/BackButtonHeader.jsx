@@ -7,7 +7,6 @@ import { useTheme } from "../utils/context/theme";
 export default function BackButtonHeader({
   title,
   hasBackButton = true,
-  order = null,
 }) {
   const { colorScheme } = useTheme();
   const colors = colorScheme === "dark" ? darkColors : lightColors;
@@ -24,23 +23,10 @@ export default function BackButtonHeader({
       {hasBackButton ? (
         <TouchableOpacity
           onPress={() => {
-            if (order && order.orderstatus_id) {
-              switch (order.orderstatus_id) {
-                case 3:
-                  router.replace("/(app)/(tabs)/accepted");
-                  return;
-                case 4:
-                  router.replace("/(app)/(tabs)/picked-up");
-                  return;
-                default:
-                  break;
-              }
-            }
-
             if (router.canGoBack()) {
               router.back();
             } else {
-              router.replace("/"); // fallback
+              router.replace("/");
             }
           }}
           className="w-10 h-10 rounded-full items-center justify-center"

@@ -1,54 +1,13 @@
-import { useRootNavigationState, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { Redirect } from "expo-router";
 import { ActivityIndicator, Image, View } from "react-native";
-import { darkColors, lightColors } from "@/colors";
-import { useTheme } from "@/utils/context/theme";
-import getUserAuth from "../utils/userAuth";
+import { useAuth } from "../utils/context/auth";
+import { useColors } from "../components/ui";
+
+const homeFor = (role) => role === "NGO" ? "/(app)/ngo/(tabs)/home" : role === "ADMIN" ? "/(app)/admin/home" : "/(app)/donor/(tabs)/home";
 
 export default function Index() {
-  const router = useRouter();
-  const navigationState = useRootNavigationState();
-  const { colorScheme } = useTheme();
-  const colors = colorScheme === "dark" ? darkColors : lightColors;
-
-  useEffect(() => {
-    if (!navigationState?.key) return;
-
-    const checkUser = async () => {
-      try {
-        const user = await getUserAuth();
-        if (user && user.auth_token) {
-          router.replace("/(app)/(tabs)/home");
-        } else {
-          router.replace("/(app)/(auth)/login");
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        router.replace("/(app)/(auth)/login");
-      }
-    };
-
-    checkUser();
-  }, [navigationState?.key]);
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: colors.backgroundPrimary,
-      }}
-    >
-      <Image
-        source={require("../assets/images/splash.png")}
-        style={{ width: 150, height: 150, resizeMode: "contain" }}
-      />
-      <ActivityIndicator
-        size="small"
-        color={colors.primary}
-        style={{ marginTop: 20 }}
-      />
-    </View>
-  );
+  const { user, loading } = useAuth();
+  const colors = useColors();
+  if (!loading) return <Redirect href={user ? homeFor(user.role) : "/(app)/(auth)/login"} />;
+  return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundPrimary }}><Image source={require("../assets/images/splash.png")} style={{ width: 140, height: 140 }} /><ActivityIndicator color={colors.primary} style={{ marginTop: 18 }} /></View>;
 }

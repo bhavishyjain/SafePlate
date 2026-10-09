@@ -22,6 +22,21 @@ export async function listAllocations(req, res, next) {
   } catch (error) { return next(error); }
 }
 
+export async function getAllocation(req, res, next) {
+  try {
+    const allocation = await Allocation.findById(req.params.id)
+      .select(req.user.role === "ADMIN" ? "" : "-scoreSnapshot -history")
+      .populate("donationId")
+      .populate("ngoId");
+    if (!allocation) return next(new AppError(404, "Allocation not found", "ALLOCATION_NOT_FOUND"));
+    if (req.user.role === "NGO") {
+      const ngo = await NGO.findOne({ userId: req.user.id }).select("_id");
+      if (!ngo || allocation.ngoId._id.toString() !== ngo._id.toString()) return next(new AppError(403, "You cannot access this allocation", "FORBIDDEN"));
+    } else if (req.user.role !== "ADMIN") return next(new AppError(403, "Access denied for this role", "FORBIDDEN"));
+    return res.json(allocation);
+  } catch (error) { return next(error); }
+}
+
 export async function confirmPickup(req, res, next) {
   try { return res.json({ message: "Pickup confirmed", allocation: await confirmAllocationPickup(req.params.id, req.user) }); }
   catch (error) { return next(error); }
