@@ -1,0 +1,20 @@
+import { useCallback, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { Text, View } from "react-native";
+import AllocationCard from "../../../../components/AllocationCard";
+import { Button, ErrorState, LoadingState, Screen, Surface, Title, useColors } from "../../../../components/ui";
+import { listAllocations } from "../../../../services/allocations";
+import { getMyNgo, getNutritionStatus } from "../../../../services/ngos";
+import { useAuth } from "../../../../utils/context/auth";
+
+export default function NgoHome() {
+  const colors = useColors(); const { user } = useAuth(); const [state, setState] = useState(null); const [error, setError] = useState(null); const [refreshing, setRefreshing] = useState(false);
+  const load = useCallback(async () => { try { setError(null); const profile = await getMyNgo(); const [nutrition, allocations] = await Promise.all([getNutritionStatus(profile._id), listAllocations({ page: 1, limit: 20 })]); setState({ profile, nutrition, allocations }); } catch (requestError) { if (requestError.code === "NGO_NOT_FOUND") setState({ needsProfile: true }); else setError(requestError); } finally { setRefreshing(false); } }, []);
+  useFocusEffect(useCallback(() => { load(); }, [load]));
+  if (!state && !error) return <Screen><LoadingState /></Screen>;
+  if (state?.needsProfile) return <Screen><Title subtitle="Tell SafePlate who you serve so daily nutrition needs can be calculated.">Welcome, {user?.name?.split(" ")[0]}</Title><Surface style={{ marginBottom: 16 }}><Text style={{ color: colors.textPrimary, fontWeight: "800", fontSize: 18 }}>Complete your NGO profile</Text><Text style={{ color: colors.textSecondary, lineHeight: 20, marginTop: 7 }}>Assignments and nutrition status become available after profile setup.</Text></Surface><Button title="Set up NGO profile" onPress={() => router.push("/(app)/ngo/(tabs)/profile")} /></Screen>;
+  const nutrition = state?.nutrition; const active = state?.allocations?.items?.find((item) => ["ASSIGNED", "PICKED_UP"].includes(item.status));
+  return <Screen refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }}><Title subtitle="Today’s delivery progress uses the Asia/Kolkata operational day.">Hello, {user?.name?.split(" ")[0] || "NGO"}</Title>{error ? <ErrorState message={error.message} onRetry={load} /> : <><Surface style={{ marginBottom: 20 }}><Text style={{ color: colors.textPrimary, fontSize: 18, fontWeight: "900" }}>Today’s nutrition</Text><Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 3 }}>Target source: {nutrition.targetSource}</Text><Progress label="Calories" delivered={nutrition.deliveredCalories} target={nutrition.targetCalories} colors={colors} /><Progress label="Protein" delivered={nutrition.deliveredProtein} target={nutrition.targetProtein} suffix=" g" colors={colors} /><Button title="View nutrition details" variant="secondary" onPress={() => router.push("/(app)/ngo/nutrition")} style={{ marginTop: 16 }} /></Surface><Text style={{ color: colors.textPrimary, fontSize: 18, fontWeight: "800", marginBottom: 10 }}>Active assignment</Text>{active ? <AllocationCard allocation={active} onPress={() => router.push({ pathname: "/(app)/ngo/assignments/[id]", params: { id: active._id } })} /> : <Surface><Text style={{ color: colors.textSecondary }}>No assignment currently needs action.</Text></Surface>}</>}</Screen>;
+}
+
+function Progress({ label, delivered, target, suffix = "", colors }) { const ratio = target ? Math.min(1, delivered / target) : 0; return <View style={{ marginTop: 16 }}><View style={{ flexDirection: "row", justifyContent: "space-between" }}><Text style={{ color: colors.textPrimary, fontWeight: "700" }}>{label}</Text><Text style={{ color: colors.textSecondary }}>{Number(delivered).toFixed(0)} / {Number(target).toFixed(0)}{suffix}</Text></View><View style={{ height: 9, backgroundColor: colors.backgroundPrimary, borderRadius: 10, marginTop: 7, overflow: "hidden" }}><View style={{ width: `${ratio * 100}%`, height: "100%", backgroundColor: colors.primary }} /></View></View>; }

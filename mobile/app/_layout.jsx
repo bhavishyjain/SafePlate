@@ -1,5 +1,5 @@
 import { useAppFonts } from "@/utils/context/fonts";
-import { SettingsProvider } from "@/utils/context/settings";
+import { AuthProvider } from "@/utils/context/auth";
 import { ThemeProvider, useTheme } from "@/utils/context/theme";
 import { LanguageProvider } from "@/utils/i18n/LanguageProvider";
 import { Stack } from "expo-router";
@@ -52,9 +52,9 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <SettingsProvider>
+        <AuthProvider>
           <AppContent />
-        </SettingsProvider>
+        </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

@@ -1,9 +1,14 @@
 import { Router } from "express";
 import { authenticateToken, requireRole } from "../middleware/auth.js";
 import { validateObjectIdParam } from "../middleware/validate.js";
-import { confirmDelivery, confirmPickup, listAllocations } from "../controllers/allocationController.js";
+import { cancel, confirmDelivery, confirmPickup, getAllocation, listAllocations, reassign, reject } from "../controllers/allocationController.js";
+import { validateReason, validateReassignment } from "../middleware/validators/allocationValidators.js";
 const router = Router();
 router.get("/", authenticateToken, listAllocations);
+router.get("/:id", authenticateToken, validateObjectIdParam(), getAllocation);
 router.patch("/:id/pickup", authenticateToken, requireRole(["NGO", "ADMIN"]), validateObjectIdParam(), confirmPickup);
 router.patch("/:id/delivered", authenticateToken, requireRole(["NGO", "ADMIN"]), validateObjectIdParam(), confirmDelivery);
+router.patch("/:id/reject", authenticateToken, requireRole(["NGO"]), validateObjectIdParam(), validateReason, reject);
+router.patch("/:id/cancel", authenticateToken, requireRole(["ADMIN"]), validateObjectIdParam(), validateReason, cancel);
+router.patch("/:id/reassign", authenticateToken, requireRole(["ADMIN"]), validateObjectIdParam(), validateReassignment, reassign);
 export default router;

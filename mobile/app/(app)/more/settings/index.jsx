@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Globe, Moon, Settings, Sun, Trash2 } from "lucide-react-native";
+import { Globe, Moon, Settings, Sun } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -11,7 +11,6 @@ import { useTranslation } from "../../../../utils/i18n/LanguageProvider";
 import getUserAuth from "../../../../utils/userAuth";
 
 import { darkColors, lightColors } from "../../../../colors";
-import DialogBox from "../../../../components/DialogBox";
 import { useTheme } from "../../../../utils/context/theme";
 import LanguagePicker from "./../../../../components/LanguagePicker";
 
@@ -22,8 +21,6 @@ export default function SettingsScreen() {
 
   const [user, setUser] = useState(null);
   const languagePickerRef = useRef(null);
-
-  const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -95,31 +92,11 @@ export default function SettingsScreen() {
             subtitle={t("more.settings.menu.language.subtitle")}
             onPress={() => languagePickerRef.current?.openModal()}
           />
-          <MenuItem
-            icon={<Trash2 color={colors.danger} />}
-            title={t("more.settings.menu.deleteAccount.title")}
-            subtitle={t("more.settings.menu.deleteAccount.subtitle")}
-            onPress={() => setShowDeleteAccountDialog(true)}
-          />
         </View>
       </ScrollView>
 
       {/* Hidden Language Picker Modal */}
       <LanguagePicker ref={languagePickerRef} modalOnly />
-      
-      <DialogBox
-        visible={showDeleteAccountDialog}
-        title={t("more.settings.menu.deleteAccount.modalTitle")}
-        message={t("more.settings.menu.deleteAccount.modalMessage")}
-        confirmText={"OK"}
-        cancelText={"Cancel"}
-        onConfirm={async () => {
-          setShowDeleteAccountDialog(false);
-        }}
-        onCancel={async () => {
-          setShowDeleteAccountDialog(false);
-        }}
-      />
     </View>
   );
 }

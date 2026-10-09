@@ -28,8 +28,6 @@ function WheelColumn({
   const scrollY = useRef(
     new Animated.Value(initialIndex * ITEM_HEIGHT),
   ).current;
-  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
-
   const isProgrammaticScroll = useRef(false);
   const lastCommittedIndex = useRef(initialIndex);
   const momentumStarted = useRef(false);
@@ -45,7 +43,6 @@ function WheelColumn({
       });
 
       scrollY.setValue(initialIndex * ITEM_HEIGHT);
-      setSelectedIndex(initialIndex);
       lastCommittedIndex.current = initialIndex;
 
       setTimeout(() => {
@@ -54,7 +51,7 @@ function WheelColumn({
     }, 50);
 
     return () => clearTimeout(id);
-  }, [initialIndex]);
+  }, [initialIndex, scrollY]);
 
   const snapToNearestItem = (offsetY) => {
     const idx = clamp(Math.round(offsetY / ITEM_HEIGHT), 0, data.length - 1);
@@ -73,7 +70,6 @@ function WheelColumn({
     // Update state
     if (idx !== lastCommittedIndex.current) {
       lastCommittedIndex.current = idx;
-      setSelectedIndex(idx);
       onIndexChange?.(idx);
     }
 
@@ -391,7 +387,7 @@ export default function DateTimePickerModal({
       const maxDays = daysInMonth(year, month - 1);
       if (day > maxDays) setDay(maxDays);
     }
-  }, [year, month, mode]);
+  }, [year, month, day, mode]);
 
   const monthInitialIndex = useMemo(() => {
     const idx = monthsData.indexOf(pad2(month));

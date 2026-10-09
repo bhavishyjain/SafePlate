@@ -7,8 +7,15 @@ export async function analyze(req, res, next) {
   catch (error) { return next(error); }
 }
 
-export async function listCatalog(_req, res, next) {
-  try { return res.json(await NutritionCatalogItem.find({ active: true }).sort({ name: 1 })); }
+export async function listCatalog(req, res, next) {
+  try {
+    const filter = req.user.role === "ADMIN" && req.query.active === "all" ? {} : { active: true };
+    if (req.query.search?.trim()) {
+      const escaped = req.query.search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      filter.$or = [{ name: new RegExp(escaped, "i") }, { aliases: new RegExp(escaped, "i") }];
+    }
+    return res.json(await NutritionCatalogItem.find(filter).sort({ name: 1 }));
+  }
   catch (error) { return next(error); }
 }
 
