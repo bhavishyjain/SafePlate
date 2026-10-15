@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { Allocation } from "../models/Allocation.js";
 import { Donation } from "../models/Donation.js";
 import { NGO } from "../models/NGO.js";
+import { User } from "../models/User.js";
 import { NgoNutritionLog } from "../models/NgoNutritionLog.js";
 import { OptimizationLock } from "../models/OptimizationLock.js";
 import { AppError } from "../middleware/errors.js";
@@ -67,7 +68,9 @@ async function allocationInputs(evaluatedAt, donationIds) {
   ]);
   const deliveredByNgo = new Map(logs.map((log) => [String(log.ngoId), { calories: log.deliveredCalories, proteinGrams: log.deliveredProtein }]));
   const excludedNgoIdsByDonation = new Map(existingAllocations.map((allocation) => [String(allocation.donationId), allocation.rejectedNgoIds.map(String)]));
-  const preparedNgos = ngos.map((ngo) => ({ ...ngo, effectiveNutrition: effectiveNgoNutrition(ngo) }));
+  const activeNgoUsers = await User.find({ _id: { $in: ngos.map((ngo) => ngo.userId) }, role: "NGO", isActive: true }).select("_id").lean();
+  const activeUserIds = new Set(activeNgoUsers.map((user) => String(user._id)));
+  const preparedNgos = ngos.filter((ngo) => activeUserIds.has(String(ngo.userId))).map((ngo) => ({ ...ngo, effectiveNutrition: effectiveNgoNutrition(ngo) }));
   return { donations, ngos: preparedNgos, deliveredByNgo, excludedNgoIdsByDonation };
 }
 
@@ -214,6 +217,7 @@ export async function reassignAllocation(allocationId, actor, ngoId, reason) {
   ]);
   if (!donation) throw new AppError(404, "Donation not found", "DONATION_NOT_FOUND");
   if (!ngo) throw new AppError(404, "NGO profile not found", "NGO_NOT_FOUND");
+  if (!await User.exists({ _id: ngo.userId, role: "NGO", isActive: true })) throw new AppError(409, "The selected NGO account is inactive", "NGO_INACTIVE");
   const deliveredByNgo = new Map([[String(ngoId), { calories: delivered?.deliveredCalories ?? 0, proteinGrams: delivered?.deliveredProtein ?? 0 }]]);
   const proposal = runHeuristicAllocation([donation], [{ ...ngo, effectiveNutrition: effectiveNgoNutrition(ngo) }], deliveredByNgo, { ...getConfig(), evaluatedAt: new Date() })[0];
   if (!proposal) throw new AppError(409, "The selected NGO is outside the pickup radius", "NGO_OUTSIDE_PICKUP_RADIUS");

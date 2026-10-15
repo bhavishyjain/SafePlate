@@ -317,11 +317,11 @@ export default function DialogBox({
                   activeOpacity={0.7}
                 >
                   {loading ? (
-                    <ActivityIndicator color={colors.dark} size="small" />
+                    <ActivityIndicator color={colors.onPrimary} size="small" />
                   ) : (
                     <Text
                       className="text-center text-base font-bold"
-                      style={[{ color: colors.dark }, confirmTextStyle]}
+                      style={[{ color: colors.onPrimary }, confirmTextStyle]}
                     >
                       {confirmText}
                     </Text>

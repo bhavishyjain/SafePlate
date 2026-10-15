@@ -1,52 +1,13 @@
 import { router } from "expo-router";
-import { ChevronLeft } from "lucide-react-native/icons";
+import { ChevronLeft } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
-import { darkColors, lightColors } from "../colors";
-import { useTheme } from "../utils/context/theme";
+import { useColors } from "./ui";
 
-export default function BackButtonHeader({
-  title,
-  hasBackButton = true,
-}) {
-  const { colorScheme } = useTheme();
-  const colors = colorScheme === "dark" ? darkColors : lightColors;
-
-  return (
-    <View
-      className="flex-row justify-between items-center px-4 py-3"
-      style={{
-        backgroundColor: colors.backgroundPrimary,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
-      }}
-    >
-      {hasBackButton ? (
-        <TouchableOpacity
-          onPress={() => {
-            if (router.canGoBack()) {
-              router.back();
-            } else {
-              router.replace("/");
-            }
-          }}
-          className="w-10 h-10 rounded-full items-center justify-center"
-          style={{ backgroundColor: colors.backgroundSecondary }}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <ChevronLeft size={18} color={colors.textPrimary} />
-        </TouchableOpacity>
-      ) : (
-        <View className="w-10" />
-      )}
-      <Text
-        className="text-lg font-fira-bold"
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        style={{ color: colors.textPrimary }}
-      >
-        {title}
-      </Text>
-      <View className="w-10" />
-    </View>
-  );
+export default function BackButtonHeader({ title, hasBackButton = true }) {
+  const colors = useColors();
+  return <View style={{ height: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, backgroundColor: colors.backgroundPrimary, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+    {hasBackButton ? <TouchableOpacity accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace("/")} style={{ width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundSecondary }} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}><ChevronLeft size={19} color={colors.textPrimary} /></TouchableOpacity> : <View style={{ width: 40 }} />}
+    <Text numberOfLines={1} style={{ color: colors.textPrimary, fontSize: 17, fontWeight: "800", maxWidth: "70%" }}>{title}</Text>
+    <View style={{ width: 40 }} />
+  </View>;
 }

@@ -1,4 +1,4 @@
-import { Check } from "lucide-react-native";
+import { Check, ChevronDown, Search, X } from "lucide-react-native";
 import {
   forwardRef,
   useEffect,
@@ -66,17 +66,19 @@ const CustomPicker = forwardRef(
     return (
       <>
         <TouchableOpacity
-          className="h-[50px] justify-center rounded-lg border"
+          className="justify-center border"
           style={[
             {
+              minHeight: 54,
+              borderRadius: 14,
               backgroundColor: colors.backgroundSecondary,
-              borderColor: colors.textSecondary,
+              borderColor: colors.borderStrong,
             },
             containerStyle,
           ]}
           onPress={() => setIsVisible(true)}
         >
-          <View className="flex-row items-center px-2 ml-1">
+          <View className="flex-row items-center px-4">
             {selectedItem?.icon && (
               <View className="mr-2">{selectedItem.icon}</View>
             )}
@@ -88,6 +90,7 @@ const CustomPicker = forwardRef(
             >
               {selectedItem ? selectedItem.label : placeholder}
             </Text>
+            <ChevronDown size={18} color={colors.textSecondary} />
           </View>
         </TouchableOpacity>
 
@@ -104,18 +107,19 @@ const CustomPicker = forwardRef(
             onPress={() => setIsVisible(false)}
           >
             <View
-              className="rounded-xl w-full overflow-hidden border"
+            className="w-full overflow-hidden border"
               style={{
-                backgroundColor: colors.backgroundPrimary,
-                borderColor: colors.backgroundSecondary,
-                maxWidth: "90%",
-                maxHeight: "60%",
+                backgroundColor: colors.backgroundSecondary,
+                borderColor: colors.borderStrong,
+                borderRadius: 22,
+                maxWidth: 520,
+                maxHeight: "70%",
               }}
             >
               {/* Header */}
               <View
                 className="flex-row justify-between items-center p-4 border-b"
-                style={{ borderBottomColor: colors.backgroundSecondary }}
+                style={{ borderBottomColor: colors.border }}
               >
                 <Text
                   className="text-lg font-semibold"
@@ -123,26 +127,20 @@ const CustomPicker = forwardRef(
                 >
                   {placeholder}
                 </Text>
-                <TouchableOpacity onPress={() => setIsVisible(false)}>
-                  <Text
-                    className="text-2xl font-light"
-                    style={{ color: colors.textPrimary }}
-                  >
-                    ✕
-                  </Text>
-                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsVisible(false)} style={{ width: 38, height: 38, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundElevated }}><X size={18} color={colors.textPrimary} /></TouchableOpacity>
               </View>
 
               {/* Search */}
               {searchPlaceholder && (
                 <View className="m-3">
                   <PaperTextInput
+                    left={<PaperTextInput.Icon icon={() => <Search size={18} color={colors.textSecondary} />} />}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                     placeholder={searchPlaceholder}
                     placeholderTextColor={colors.placeholder}
-                    className="h-[45px] rounded-lg text-sm"
-                    style={{ backgroundColor: colors.backgroundSecondary }}
+                    className="h-[48px] text-sm"
+                    style={{ backgroundColor: colors.backgroundElevated, borderRadius: 12 }}
                     underlineStyle={{ display: "none" }}
                     contentStyle={{
                       color: colors.textPrimary,
@@ -171,10 +169,10 @@ const CustomPicker = forwardRef(
                     }`}
                     style={[
                       index < filteredData.length - 1 && {
-                        borderBottomColor: colors.backgroundSecondary,
+                        borderBottomColor: colors.border,
                       },
                       item.value === value && {
-                        backgroundColor: colors.backgroundSecondary,
+                        backgroundColor: colors.primarySoft,
                       },
                     ]}
                     onPress={() => handleSelect(item)}

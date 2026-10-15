@@ -3,6 +3,7 @@ import { Allocation } from "../models/Allocation.js";
 import { NGO } from "../models/NGO.js";
 import { AppError } from "../middleware/errors.js";
 import { paginationFromQuery, paginatedResult } from "../utils/pagination.js";
+import { parseOperationalDateBoundary } from "../utils/date.js";
 
 export async function createDonation(req, res, next) {
   try { return res.status(201).json(await Donation.create({ ...req.body, donorId: req.user.id, status: "PENDING" })); }
@@ -46,12 +47,12 @@ export async function listDonations(req, res, next) {
     if (req.query.from || req.query.to) {
       filter.createdAt = {};
       if (req.query.from) {
-        const from = new Date(req.query.from);
+        const from = parseOperationalDateBoundary(req.query.from);
         if (Number.isNaN(from.getTime())) return next(new AppError(400, "from must be a valid date", "INVALID_DATE_RANGE"));
         filter.createdAt.$gte = from;
       }
       if (req.query.to) {
-        const to = new Date(req.query.to);
+        const to = parseOperationalDateBoundary(req.query.to, true);
         if (Number.isNaN(to.getTime())) return next(new AppError(400, "to must be a valid date", "INVALID_DATE_RANGE"));
         filter.createdAt.$lte = to;
       }

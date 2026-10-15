@@ -9,7 +9,6 @@
     "dev": "node --watch src/index.js",
     "check": "node --check src/index.js",
     "db:development": "node src/scripts/startDevelopmentMongo.js",
-    "seed:nutrition-catalog": "node src/scripts/seedNutritionCatalog.js",
     "seed:development": "node src/scripts/seedDevelopmentData.js",
     "reset:development": "node src/scripts/resetDevelopmentData.js"
   },

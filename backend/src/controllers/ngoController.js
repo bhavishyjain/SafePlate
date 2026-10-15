@@ -41,7 +41,7 @@ export async function eligibleNgos(req, res, next) {
     const rejected = new Set((allocation?.rejectedNgoIds ?? []).map(String));
     const maximum = getConfig().maximumPickupRadiusKm;
     const items = ngos.map((ngo) => ({ ...ngo, distanceKm: haversineDistanceKm(donation.location, ngo.location) }))
-      .filter((ngo) => !rejected.has(String(ngo._id)) && ngo.distanceKm <= maximum && ngo.userId?.isActive !== false)
+      .filter((ngo) => !rejected.has(String(ngo._id)) && ngo.distanceKm <= maximum && ngo.userId?.isActive === true)
       .sort((left, right) => left.distanceKm - right.distanceKm);
     return res.json({ items, maximumPickupRadiusKm: maximum });
   } catch (error) { return next(error); }

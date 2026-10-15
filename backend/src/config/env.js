@@ -38,7 +38,7 @@ export function getConfig(env = process.env) {
   return Object.freeze({
     nodeEnv,
     isProduction,
-    port: parsePositiveInteger(env.PORT, 5000, "PORT"),
+    port: parsePositiveInteger(env.PORT, 5001, "PORT"),
     mongoUri,
     jwtSecret,
     accessTokenExpiresIn: env.ACCESS_TOKEN_EXPIRES_IN || "15m",

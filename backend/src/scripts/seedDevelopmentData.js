@@ -234,12 +234,21 @@ async function run() {
   ];
   await Allocation.insertMany(allocations);
 
-  const primaryDelivered = donationNutrition(records[3].items);
-  const partnerDelivered = donationNutrition(records[7].items);
-  await NgoNutritionLog.bulkWrite([
-    { updateOne: { filter: { ngoId: primaryNgo._id, date: startOfOperationalDay(now) }, update: { $set: { deliveredCalories: primaryDelivered.calories, deliveredProtein: primaryDelivered.proteinGrams } }, upsert: true } },
-    { updateOne: { filter: { ngoId: partnerNgo._id, date: startOfOperationalDay(at(now, -DAY)) }, update: { $set: { deliveredCalories: partnerDelivered.calories, deliveredProtein: partnerDelivered.proteinGrams } }, upsert: true } },
-  ]);
+  // Rebuild demo nutrition totals from delivered allocations so re-seeding across
+  // an operational-day boundary never leaves stale or incorrectly dated logs.
+  const recordById = new Map(records.map((record) => [String(record._id), record]));
+  const deliveredByNgoAndDay = new Map();
+  for (const assignment of allocations.filter((item) => item.status === "DELIVERED")) {
+    const date = startOfOperationalDay(assignment.deliveredConfirmedAt);
+    const key = `${assignment.ngoId}:${date.toISOString()}`;
+    const nutrition = donationNutrition(recordById.get(String(assignment.donationId)).items);
+    const current = deliveredByNgoAndDay.get(key) ?? { ngoId: assignment.ngoId, date, deliveredCalories: 0, deliveredProtein: 0 };
+    current.deliveredCalories += nutrition.calories;
+    current.deliveredProtein += nutrition.proteinGrams;
+    deliveredByNgoAndDay.set(key, current);
+  }
+  await NgoNutritionLog.deleteMany({ ngoId: { $in: [primaryNgo._id, partnerNgo._id] } });
+  await NgoNutritionLog.insertMany([...deliveredByNgoAndDay.values()]);
 
   console.log("SafePlate development demo data seeded successfully");
   console.table([
@@ -247,7 +256,7 @@ async function run() {
     { role: "NGO", email: ngoUser.email, password: DEMO_PASSWORD },
     { role: "ADMIN", email: admin.email, password: DEMO_PASSWORD },
   ]);
-  console.log(`Created/refreshed: 6 users, 2 NGO profiles, ${records.length} donations, ${allocations.length} allocations, 2 nutrition logs, and ${catalog.length} catalog items.`);
+  console.log(`Created/refreshed: 6 users, 2 NGO profiles, ${records.length} donations, ${allocations.length} allocations, ${deliveredByNgoAndDay.size} nutrition logs, and ${catalog.length} catalog items.`);
   console.log(`Disabled account for admin testing: ${disabledUser.email}`);
 }
 

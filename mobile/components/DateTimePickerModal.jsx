@@ -717,7 +717,7 @@ export default function DateTimePickerModal({
                     textAlign: "center",
                     fontSize: 16,
                     fontWeight: "700",
-                    color: colors.dark,
+                    color: colors.onPrimary,
                   }}
                 >
                   {t("common.confirm")}

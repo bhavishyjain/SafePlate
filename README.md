@@ -105,12 +105,12 @@ cd backend
 npm install
 ```
 
-Development defaults use port `5000`, `mongodb://localhost:27017/safeplate`, and a local-only JWT secret. Production requires explicit `MONGODB_URI` and `JWT_SECRET` values.
+Development defaults use port `5001`, `mongodb://localhost:27017/safeplate`, and a local-only JWT secret. Production requires explicit `MONGODB_URI` and `JWT_SECRET` values.
 
 Common optional environment variables:
 
 ```env
-PORT=5000
+PORT=5001
 MONGODB_URI=mongodb://localhost:27017/safeplate
 JWT_SECRET=replace-with-at-least-32-random-characters
 RESEND_API_KEY=
@@ -140,7 +140,7 @@ Start the API:
 npm run dev
 ```
 
-The API is available at `http://localhost:5000/api/v1`. Its machine-readable contract is in `backend/openapi.json`.
+The API is available at `http://localhost:5001/api/v1`. Its machine-readable contract is in `backend/openapi.json`.
 
 ## Application setup
 
@@ -159,13 +159,18 @@ npm run android
 npm run web
 ```
 
-Android emulators use `http://10.0.2.2:5000` by default. Web and iOS use `http://localhost:5000`. Override the host for a physical device or remote API:
+SafePlate selects its API host at build time. Development builds use `EXPO_PUBLIC_API_URL_DEV`; release APK/AAB builds use `EXPO_PUBLIC_API_URL_PROD`. Android emulators use `http://10.0.2.2:5001` by default when the development variable is omitted, while web and iOS use `http://localhost:5001`.
 
 ```env
-EXPO_PUBLIC_API_URL=http://YOUR_COMPUTER_IP:5000
+EXPO_PUBLIC_API_URL_DEV=http://YOUR_COMPUTER_IP:5001
+EXPO_PUBLIC_API_URL_PROD=https://your-safeplate-api.onrender.com
 ```
 
-Do not include `/api/v1` in `EXPO_PUBLIC_API_URL`; the application adds it automatically.
+Do not include `/api/v1` in either URL; the application adds it automatically. Copy `mobile/.env.example` to `mobile/.env` before creating a release build. Production builds fail immediately when `EXPO_PUBLIC_API_URL_PROD` is missing, preventing an APK from accidentally targeting localhost.
+
+The repository includes `render.yaml` for a Render web service. It uses `backend/` as the service root, checks `/api/v1/health`, generates a production JWT secret, and prompts for `MONGODB_URI` and `APP_BASE_URL` during initial Blueprint creation.
+
+Existing Render services configured at the repository root are also supported: the root `package.json` installs the backend dependencies and forwards `start` to the backend server.
 
 ## Demo accounts
 
@@ -188,8 +193,7 @@ npm start                       # Start the API
 npm run dev                     # Start with Node watch mode
 npm run check                   # Validate the backend entry file
 npm run db:development          # Start the local persistent MongoDB instance
-npm run seed:nutrition-catalog  # Seed only nutrition references
-npm run seed:development        # Seed all demo workflows
+npm run seed:development        # Seed accounts, NGOs, catalog, donations, assignments, and nutrition history
 ```
 
 ### Application
