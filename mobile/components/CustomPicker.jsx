@@ -10,6 +10,7 @@ import { FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
 import { TextInput as PaperTextInput } from "react-native-paper";
 import { darkColors, lightColors } from "../colors";
 import { useTheme } from "../utils/context/theme";
+import { useTranslation } from "../utils/i18n/LanguageProvider";
 
 const CustomPicker = forwardRef(
   (
@@ -26,6 +27,7 @@ const CustomPicker = forwardRef(
     ref,
   ) => {
     const { colorScheme } = useTheme();
+    const { tr } = useTranslation();
     const colors = colorScheme === "dark" ? darkColors : lightColors;
 
     const [isVisible, setIsVisible] = useState(false);
@@ -40,7 +42,7 @@ const CustomPicker = forwardRef(
     }));
 
     const filteredData = data?.filter((item) =>
-      item.label.toLowerCase().includes(searchQuery.toLowerCase()),
+      tr(item.label).toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     const selectedItem = data?.find((item) => item.value === value);
@@ -88,7 +90,7 @@ const CustomPicker = forwardRef(
                 color: selectedItem ? colors.textPrimary : colors.placeholder,
               }}
             >
-              {selectedItem ? selectedItem.label : placeholder}
+              {selectedItem ? tr(selectedItem.label) : tr(placeholder)}
             </Text>
             <ChevronDown size={18} color={colors.textSecondary} />
           </View>
@@ -125,7 +127,7 @@ const CustomPicker = forwardRef(
                   className="text-lg font-semibold"
                   style={{ color: colors.textPrimary }}
                 >
-                  {placeholder}
+                  {tr(placeholder)}
                 </Text>
                 <TouchableOpacity onPress={() => setIsVisible(false)} style={{ width: 38, height: 38, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundElevated }}><X size={18} color={colors.textPrimary} /></TouchableOpacity>
               </View>
@@ -137,7 +139,7 @@ const CustomPicker = forwardRef(
                     left={<PaperTextInput.Icon icon={() => <Search size={18} color={colors.textSecondary} />} />}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
-                    placeholder={searchPlaceholder}
+                    placeholder={tr(searchPlaceholder)}
                     placeholderTextColor={colors.placeholder}
                     className="h-[48px] text-sm"
                     style={{ backgroundColor: colors.backgroundElevated, borderRadius: 12 }}
@@ -186,7 +188,7 @@ const CustomPicker = forwardRef(
                           item.value === value && { fontWeight: "600" },
                         ]}
                       >
-                        {item.label}
+                        {tr(item.label)}
                       </Text>
                     </View>
                     {item.value === value && (
@@ -199,7 +201,7 @@ const CustomPicker = forwardRef(
                     className="text-center p-5 text-sm"
                     style={{ color: colors.textSecondary }}
                   >
-                    No results found
+                    {tr("No results found")}
                   </Text>
                 }
               />

@@ -163,10 +163,10 @@ SafePlate selects its API host at build time. Development builds use `EXPO_PUBLI
 
 ```env
 EXPO_PUBLIC_API_URL_DEV=http://YOUR_COMPUTER_IP:5001
-EXPO_PUBLIC_API_URL_PROD=https://your-safeplate-api.onrender.com
+EXPO_PUBLIC_API_URL_PROD=https://safeplate-bhcs.onrender.com
 ```
 
-Do not include `/api/v1` in either URL; the application adds it automatically. Copy `mobile/.env.example` to `mobile/.env` before creating a release build. Production builds fail immediately when `EXPO_PUBLIC_API_URL_PROD` is missing, preventing an APK from accidentally targeting localhost.
+Do not include `/api/v1` in either URL; the application adds it automatically. The deployed URL is committed in `mobile/.env.production`, while developer-specific overrides belong in the ignored `mobile/.env`. Production builds fail immediately when `EXPO_PUBLIC_API_URL_PROD` is missing, preventing an APK from accidentally targeting localhost.
 
 The repository includes `render.yaml` for a Render web service. It uses `backend/` as the service root, checks `/api/v1/health`, generates a production JWT secret, and prompts for `MONGODB_URI` and `APP_BASE_URL` during initial Blueprint creation.
 

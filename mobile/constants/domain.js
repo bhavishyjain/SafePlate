@@ -1,3 +1,5 @@
+import { i18n } from "../utils/i18n/config";
+
 export const DONATION_STATUSES = ["PENDING", "ASSIGNED", "PICKED_UP", "DELIVERED", "DISCARDED"];
 export const ALLOCATION_STATUSES = ["ASSIGNED", "PICKED_UP", "DELIVERED", "REJECTED", "CANCELLED"];
 
@@ -30,7 +32,8 @@ export const labelFor = (value) => value?.replaceAll("_", " ").toLowerCase().rep
 
 export function formatDateTime(value) {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value));
+  const locale = i18n.locale === "hi" ? "hi-IN" : "en-IN";
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value));
 }
 
 export function nutritionTotals(items = []) {

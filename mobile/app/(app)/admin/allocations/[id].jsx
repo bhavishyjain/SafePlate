@@ -10,14 +10,143 @@ import { formatDateTime } from "../../../../constants/domain";
 import { Button, ErrorState, Field, LoadingState, Screen, Section, StatusBadge, Surface, useColors } from "../../../../components/ui";
 import { cancelAllocation, confirmDelivery, confirmPickup, getAllocation, reassignAllocation } from "../../../../services/allocations";
 import { getEligibleNgos, getNgo } from "../../../../services/ngos";
-
+import { useTranslation } from "../../../../utils/i18n/LanguageProvider";
 export default function AdminAllocationDetail() {
-  const { id } = useLocalSearchParams(); const colors = useColors(); const [state, setState] = useState(null); const [error, setError] = useState(null); const [loading, setLoading] = useState(false); const [action, setAction] = useState(null); const [reason, setReason] = useState(""); const [ngoId, setNgoId] = useState(""); const [eligible, setEligible] = useState([]);
-  const load = useCallback(async () => { try { setError(null); const allocation = await getAllocation(id); const ngoKey = allocation.ngoId?._id || allocation.ngoId; const ngo = ngoKey ? await getNgo(ngoKey) : null; setState({ allocation, ngo }); } catch (requestError) { setError(requestError); } }, [id]); useFocusEffect(useCallback(() => { load(); }, [load]));
-  const openReassign = async () => { setAction("reassign"); setReason(""); setNgoId(""); try { const result = await getEligibleNgos(state.allocation.donationId._id); setEligible(result.items.filter((ngo) => ngo._id !== (state.allocation.ngoId?._id || state.allocation.ngoId))); } catch (requestError) { Toast.show({ type: "error", text1: requestError.message }); } };
-  const mutate = async () => { if (action === "cancel" && !reason.trim()) { Toast.show({ type: "error", text1: "A reason is required" }); return; } if (action === "reassign" && (!ngoId || !reason.trim())) { Toast.show({ type: "error", text1: "Choose an NGO and enter a reason" }); return; } setLoading(true); try { if (action === "pickup") await confirmPickup(id); if (action === "delivery") await confirmDelivery(id); if (action === "cancel") await cancelAllocation(id, reason.trim()); if (action === "reassign") await reassignAllocation(id, ngoId, reason.trim()); Toast.show({ type: "success", text1: "Allocation updated" }); setAction(null); setReason(""); await load(); } catch (requestError) { Toast.show({ type: "error", text1: requestError.message }); } finally { setLoading(false); } };
-  const options = useMemo(() => eligible.map((ngo) => ({ value: ngo._id, label: `${ngo.userId?.organization || ngo.userId?.name || ngo.type} · ${ngo.distanceKm.toFixed(1)} km` })), [eligible]);
-  if (!state && !error) return <Screen><LoadingState /></Screen>; if (error) return <Screen><ErrorState message={error.message} onRetry={load} /></Screen>;
-  const { allocation, ngo } = state; const donation = allocation.donationId; const score = allocation.scoreSnapshot;
-  return <View style={{ flex: 1, backgroundColor: colors.backgroundPrimary }}><BackButtonHeader title="Allocation details" /><Screen><View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 18 }}><Text style={{ color: colors.textPrimary, fontSize: 24, fontWeight: "900" }}>Assignment</Text><StatusBadge status={allocation.status} /></View><Section title="Donation and NGO"><Surface><DetailRow label="Food" value={donation.items.map((item) => item.name).join(", ")} /><DetailRow label="Weight" value={`${donation.quantityKg.toFixed(2)} kg`} /><DetailRow label="NGO" value={ngo?.userId?.organization || ngo?.userId?.name || ngo?.type} /><DetailRow label="Pickup deadline" value={formatDateTime(donation.pickupDeadline)} last /></Surface></Section><Section title="Match score"><Surface><Text style={{ color: colors.primary, fontSize: 30, fontWeight: "900", marginBottom: 8 }}>{(allocation.matchScore * 100).toFixed(1)}%</Text><DetailRow label="Nutrition score" value={`${(score.nutritionScore * 100).toFixed(1)}%`} /><DetailRow label="Distance score" value={`${(score.distanceScore * 100).toFixed(1)}%`} /><DetailRow label="Distance" value={`${score.distanceKm.toFixed(2)} km`} /><DetailRow label="Nutrition weight" value={`${(score.nutritionWeight * 100).toFixed(0)}%`} /><DetailRow label="Distance weight" value={`${(score.distanceWeight * 100).toFixed(0)}%`} /><DetailRow label="Pickup radius" value={`${score.maximumPickupRadiusKm} km`} /><DetailRow label="Calories before assignment" value={score.remainingCaloriesBeforeAssignment.toFixed(0)} /><DetailRow label="Protein before assignment" value={`${score.remainingProteinGramsBeforeAssignment.toFixed(1)} g`} /><DetailRow label="Algorithm" value={score.algorithmVersion} /><DetailRow label="Evaluated" value={formatDateTime(score.evaluatedAt)} last /></Surface></Section><Section title="Audit history"><Surface>{allocation.history.map((event, index) => <View key={`${event.event}-${event.at}-${index}`} style={{ borderBottomWidth: index === allocation.history.length - 1 ? 0 : 1, borderColor: colors.border, paddingVertical: 10 }}><Text style={{ color: colors.textPrimary, fontWeight: "800" }}>{event.event.replaceAll("_", " ")}</Text><Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 3 }}>{formatDateTime(event.at)}</Text>{event.reason ? <Text style={{ color: colors.textSecondary, marginTop: 4 }}>{event.reason}</Text> : null}</View>)}</Surface></Section>{allocation.status === "ASSIGNED" ? <View style={{ gap: 10 }}><Button title="Confirm pickup" onPress={() => setAction("pickup")} /><Button title="Reassign" variant="secondary" onPress={openReassign} /><Button title="Cancel assignment" variant="danger" onPress={() => { setReason(""); setAction("cancel"); }} /></View> : null}{allocation.status === "PICKED_UP" ? <Button title="Confirm delivery" onPress={() => setAction("delivery")} /> : null}{["REJECTED", "CANCELLED"].includes(allocation.status) ? <Button title="Reassign donation" onPress={openReassign} /> : null}</Screen><DialogBox visible={["pickup", "delivery", "cancel"].includes(action)} title={action === "pickup" ? "Confirm pickup?" : action === "delivery" ? "Confirm delivery?" : "Cancel assignment?"} message={action === "cancel" ? "The donation returns to Pending." : "This advances the donation lifecycle and is recorded in history."} showInput={action === "cancel"} inputValue={reason} onInputChange={setReason} inputPlaceholder="Required reason" confirmText="Confirm" onConfirm={mutate} onCancel={() => setAction(null)} loading={loading} /><DialogBox visible={action === "reassign"} title="Reassign donation" message={<View style={{ width: "100%" }}><Text style={{ color: colors.textSecondary, marginBottom: 8 }}>Only active NGOs within the pickup radius are shown.</Text><CustomPicker data={options} value={ngoId} onChange={(item) => setNgoId(item.value)} placeholder="Select eligible NGO" /><Field label="Required reason" value={reason} onChangeText={setReason} multiline style={{ marginTop: 10 }} /></View>} confirmText="Reassign" onConfirm={mutate} onCancel={() => setAction(null)} loading={loading || !ngoId || !reason.trim()} /></View>;
+  const {
+    tr
+  } = useTranslation();
+  const {
+    id
+  } = useLocalSearchParams();
+  const colors = useColors();
+  const [state, setState] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [action, setAction] = useState(null);
+  const [reason, setReason] = useState("");
+  const [ngoId, setNgoId] = useState("");
+  const [eligible, setEligible] = useState([]);
+  const load = useCallback(async () => {
+    try {
+      setError(null);
+      const allocation = await getAllocation(id);
+      const ngoKey = allocation.ngoId?._id || allocation.ngoId;
+      const ngo = ngoKey ? await getNgo(ngoKey) : null;
+      setState({
+        allocation,
+        ngo
+      });
+    } catch (requestError) {
+      setError(requestError);
+    }
+  }, [id]);
+  useFocusEffect(useCallback(() => {
+    load();
+  }, [load]));
+  const openReassign = async () => {
+    setAction("reassign");
+    setReason("");
+    setNgoId("");
+    try {
+      const result = await getEligibleNgos(state.allocation.donationId._id);
+      setEligible(result.items.filter(ngo => ngo._id !== (state.allocation.ngoId?._id || state.allocation.ngoId)));
+    } catch (requestError) {
+      Toast.show({
+        type: "error",
+        text1: requestError.message
+      });
+    }
+  };
+  const mutate = async () => {
+    if (action === "cancel" && !reason.trim()) {
+      Toast.show({
+        type: "error",
+        text1: tr("A reason is required")
+      });
+      return;
+    }
+    if (action === "reassign" && (!ngoId || !reason.trim())) {
+      Toast.show({
+        type: "error",
+        text1: tr("Choose an NGO and enter a reason")
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      if (action === "pickup") await confirmPickup(id);
+      if (action === "delivery") await confirmDelivery(id);
+      if (action === "cancel") await cancelAllocation(id, reason.trim());
+      if (action === "reassign") await reassignAllocation(id, ngoId, reason.trim());
+      Toast.show({
+        type: "success",
+        text1: tr("Allocation updated")
+      });
+      setAction(null);
+      setReason("");
+      await load();
+    } catch (requestError) {
+      Toast.show({
+        type: "error",
+        text1: requestError.message
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  const options = useMemo(() => eligible.map(ngo => ({
+    value: ngo._id,
+    label: `${ngo.userId?.organization || ngo.userId?.name || ngo.type} · ${ngo.distanceKm.toFixed(1)} km`
+  })), [eligible]);
+  if (!state && !error) return <Screen><LoadingState /></Screen>;
+  if (error) return <Screen><ErrorState message={error.message} onRetry={load} /></Screen>;
+  const {
+    allocation,
+    ngo
+  } = state;
+  const donation = allocation.donationId;
+  const score = allocation.scoreSnapshot;
+  return <View style={{
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary
+  }}><BackButtonHeader title={tr("Allocation details")} /><Screen><View style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 18
+      }}><Text style={{
+          color: colors.textPrimary,
+          fontSize: 24,
+          fontWeight: "900"
+        }}>{tr("Assignment")}</Text><StatusBadge status={allocation.status} /></View><Section title={tr("Donation and NGO")}><Surface><DetailRow label={tr("Food")} value={donation.items.map(item => item.name).join(", ")} /><DetailRow label={tr("Weight")} value={`${donation.quantityKg.toFixed(2)} kg`} /><DetailRow label={tr("NGO")} value={ngo?.userId?.organization || ngo?.userId?.name || ngo?.type} /><DetailRow label={tr("Pickup deadline")} value={formatDateTime(donation.pickupDeadline)} last /></Surface></Section><Section title={tr("Match score")}><Surface><Text style={{
+            color: colors.primary,
+            fontSize: 30,
+            fontWeight: "900",
+            marginBottom: 8
+          }}>{(allocation.matchScore * 100).toFixed(1)}%</Text><DetailRow label={tr("Nutrition score")} value={`${(score.nutritionScore * 100).toFixed(1)}%`} /><DetailRow label={tr("Distance score")} value={`${(score.distanceScore * 100).toFixed(1)}%`} /><DetailRow label={tr("Distance")} value={`${score.distanceKm.toFixed(2)} km`} /><DetailRow label={tr("Nutrition weight")} value={`${(score.nutritionWeight * 100).toFixed(0)}%`} /><DetailRow label={tr("Distance weight")} value={`${(score.distanceWeight * 100).toFixed(0)}%`} /><DetailRow label={tr("Pickup radius")} value={`${score.maximumPickupRadiusKm} km`} /><DetailRow label={tr("Calories before assignment")} value={score.remainingCaloriesBeforeAssignment.toFixed(0)} /><DetailRow label={tr("Protein before assignment")} value={`${score.remainingProteinGramsBeforeAssignment.toFixed(1)} g`} /><DetailRow label={tr("Algorithm")} value={score.algorithmVersion} /><DetailRow label={tr("Evaluated")} value={formatDateTime(score.evaluatedAt)} last /></Surface></Section><Section title={tr("Audit history")}><Surface>{allocation.history.map((event, index) => <View key={`${event.event}-${event.at}-${index}`} style={{
+            borderBottomWidth: index === allocation.history.length - 1 ? 0 : 1,
+            borderColor: colors.border,
+            paddingVertical: 10
+          }}><Text style={{
+              color: colors.textPrimary,
+              fontWeight: "800"
+            }}>{event.event.replaceAll("_", " ")}</Text><Text style={{
+              color: colors.textSecondary,
+              fontSize: 12,
+              marginTop: 3
+            }}>{formatDateTime(event.at)}</Text>{event.reason ? <Text style={{
+              color: colors.textSecondary,
+              marginTop: 4
+            }}>{event.reason}</Text> : null}</View>)}</Surface></Section>{allocation.status === "ASSIGNED" ? <View style={{
+        gap: 10
+      }}><Button title={tr("Confirm pickup")} onPress={() => setAction("pickup")} /><Button title={tr("Reassign")} variant="secondary" onPress={openReassign} /><Button title={tr("Cancel assignment")} variant="danger" onPress={() => {
+          setReason("");
+          setAction("cancel");
+        }} /></View> : null}{allocation.status === "PICKED_UP" ? <Button title={tr("Confirm delivery")} onPress={() => setAction("delivery")} /> : null}{["REJECTED", "CANCELLED"].includes(allocation.status) ? <Button title={tr("Reassign donation")} onPress={openReassign} /> : null}</Screen><DialogBox visible={["pickup", "delivery", "cancel"].includes(action)} title={action === "pickup" ? tr("Confirm pickup?") : action === "delivery" ? tr("Confirm delivery?") : tr("Cancel assignment?")} message={action === "cancel" ? tr("The donation returns to Pending.") : tr("This advances the donation lifecycle and is recorded in history.")} showInput={action === "cancel"} inputValue={reason} onInputChange={setReason} inputPlaceholder={tr("Required reason")} confirmText={tr("Confirm")} onConfirm={mutate} onCancel={() => setAction(null)} loading={loading} /><DialogBox visible={action === "reassign"} title={tr("Reassign donation")} message={<View style={{
+      width: "100%"
+    }}><Text style={{
+        color: colors.textSecondary,
+        marginBottom: 8
+      }}>{tr("Only active NGOs within the pickup radius are shown.")}</Text><CustomPicker data={options} value={ngoId} onChange={item => setNgoId(item.value)} placeholder={tr("Select eligible NGO")} /><Field label={tr("Required reason")} value={reason} onChangeText={setReason} multiline style={{
+        marginTop: 10
+      }} /></View>} confirmText={tr("Reassign")} onConfirm={mutate} onCancel={() => setAction(null)} loading={loading || !ngoId || !reason.trim()} /></View>;
 }

@@ -1,8 +1,13 @@
 import { Platform } from "react-native";
 
 const normalizeHost = (value) => value?.trim().replace(/\/+$/, "") || "";
-const defaultDevelopmentHost = Platform.OS === "android" ? "http://10.0.2.2:5001" : "http://localhost:5001";
-const developmentHost = normalizeHost(process.env.EXPO_PUBLIC_API_URL_DEV) || defaultDevelopmentHost;
+const sharedDevelopmentHost = normalizeHost(process.env.EXPO_PUBLIC_API_URL_DEV);
+const developmentHost = Platform.select({
+  android: normalizeHost(process.env.EXPO_PUBLIC_API_URL_DEV_ANDROID) || sharedDevelopmentHost || "http://10.0.2.2:5001",
+  ios: normalizeHost(process.env.EXPO_PUBLIC_API_URL_DEV_IOS) || sharedDevelopmentHost || "http://localhost:5001",
+  web: normalizeHost(process.env.EXPO_PUBLIC_API_URL_DEV_WEB) || "http://localhost:5001",
+  default: sharedDevelopmentHost || "http://localhost:5001",
+});
 const productionHost = normalizeHost(process.env.EXPO_PUBLIC_API_URL_PROD);
 
 if (!__DEV__ && !productionHost) {

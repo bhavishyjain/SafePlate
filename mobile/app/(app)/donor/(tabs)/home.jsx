@@ -1,40 +1,418 @@
 import { useCallback, useMemo, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowRight, Plus } from "lucide-react-native";
-import { Pressable, Text, View } from "react-native";
+import { ArrowRight, CalendarClock, ChartNoAxesCombined, HandHeart, ListChecks, PackageCheck, Sparkles } from "lucide-react-native";
+import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native";
 import DonationCard from "../../../../components/DonationCard";
-import { Button, EmptyState, ErrorState, LoadingState, Screen, Surface, useColors } from "../../../../components/ui";
+import PressableBlock from "../../../../components/PressableBlock";
+import { darkColors, lightColors } from "../../../../colors";
 import { listDonations } from "../../../../services/donations";
 import { useAuth } from "../../../../utils/context/auth";
-
+import { useTheme } from "../../../../utils/context/theme";
+import { useTranslation } from "../../../../utils/i18n/LanguageProvider";
+const ACTIVE_STATUSES = ["PENDING", "ASSIGNED", "PICKED_UP"];
 export default function DonorHome() {
-  const colors = useColors();
-  const { user } = useAuth();
+  const {
+    tr
+  } = useTranslation();
+  const {
+    colorScheme
+  } = useTheme();
+  const colors = colorScheme === "dark" ? darkColors : lightColors;
+  const {
+    user
+  } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const load = useCallback(async () => { try { setError(null); setData(await listDonations({ page: 1, limit: 100 })); } catch (requestError) { setError(requestError); } finally { setRefreshing(false); } }, []);
-  useFocusEffect(useCallback(() => { load(); }, [load]));
-  const counts = useMemo(() => (data?.items || []).reduce((map, item) => ({ ...map, [item.status]: (map[item.status] || 0) + 1 }), {}), [data]);
-  const active = data?.items?.filter((item) => ["PENDING", "ASSIGNED", "PICKED_UP"].includes(item.status)).slice(0, 3) || [];
+  const load = useCallback(async () => {
+    try {
+      setError(null);
+      setData(await listDonations({
+        page: 1,
+        limit: 100
+      }));
+    } catch (requestError) {
+      setError(requestError);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+  useFocusEffect(useCallback(() => {
+    load();
+  }, [load]));
+  const summary = useMemo(() => {
+    const items = data?.items || [];
+    const now = new Date();
+    const thisMonth = items.filter(item => {
+      const date = new Date(item.createdAt);
+      return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    });
+    const active = items.filter(item => ACTIVE_STATUSES.includes(item.status));
+    const delivered = items.filter(item => item.status === "DELIVERED");
+    return {
+      items,
+      active,
+      delivered,
+      totalKg: items.reduce((total, item) => total + Number(item.quantityKg || 0), 0),
+      monthCount: thisMonth.length
+    };
+  }, [data]);
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const firstName = user?.name?.split(" ")[0] || "Donor";
+  return <ScrollView style={{
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary
+  }} contentContainerStyle={{
+    width: "100%",
+    maxWidth: 820,
+    alignSelf: "center",
+    paddingHorizontal: 16,
+    paddingTop: 28,
+    paddingBottom: 132
+  }} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
+    setRefreshing(true);
+    load();
+  }} colors={[colors.primary]} tintColor={colors.primary} />}>
+      <View style={{
+      marginBottom: 22
+    }}>
+        <Text style={{
+        color: colors.textSecondary,
+        fontSize: 14,
+        fontWeight: "600"
+      }}>
+          {greeting}
+        </Text>
+        <Text style={{
+        color: colors.textPrimary,
+        fontSize: 30,
+        lineHeight: 37,
+        fontWeight: "900",
+        marginTop: 1
+      }}>
+          {firstName}
+        </Text>
+        <Text style={{
+        color: colors.textSecondary,
+        fontSize: 14,
+        lineHeight: 20,
+        marginTop: 4
+      }}>{tr("Your food can become someone’s next meal.")}</Text>
+      </View>
 
-  return <Screen refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }}>
-    <View style={{ marginBottom: 24 }}><Text style={{ color: colors.textSecondary, fontSize: 14, fontWeight: "500" }}>{greeting}</Text><Text style={{ color: colors.textPrimary, fontSize: 30, fontWeight: "800", marginTop: 2 }}>{user?.name?.split(" ")[0] || "Donor"}</Text><Text style={{ color: colors.textSecondary, fontSize: 14, marginTop: 3 }}>Here is what is happening with your food donations.</Text></View>
-    {!data && !error ? <LoadingState /> : error ? <ErrorState message={error.message} onRetry={load} /> : <>
-      <Surface style={{ marginBottom: 18 }}>
-        <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: "700" }}>Donation snapshot</Text>
-        <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 3, marginBottom: 13 }}>All contributions linked to your account</Text>
-        <View style={{ flexDirection: "row", gap: 8 }}>{[
-          { label: "Total", value: data.pagination?.total || 0 },
-          { label: "Active", value: (counts.PENDING || 0) + (counts.ASSIGNED || 0) + (counts.PICKED_UP || 0) },
-          { label: "Delivered", value: counts.DELIVERED || 0 },
-        ].map((item) => <View key={item.label} style={{ flex: 1, borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.backgroundPrimary, paddingHorizontal: 12, paddingVertical: 11 }}><Text style={{ color: colors.textSecondary, fontSize: 11 }}>{item.label}</Text><Text style={{ color: colors.textPrimary, fontSize: 21, fontWeight: "800", marginTop: 3 }}>{item.value}</Text></View>)}</View>
-      </Surface>
-      <Button title="Donate food" icon={Plus} onPress={() => router.push("/(app)/donor/(tabs)/donate")} style={{ marginBottom: 26 }} />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}><Text style={{ color: colors.textPrimary, fontSize: 19, fontWeight: "800" }}>In progress</Text><Pressable onPress={() => router.push("/(app)/donor/(tabs)/donations")} style={{ flexDirection: "row", alignItems: "center", gap: 4 }}><Text style={{ color: colors.primary, fontSize: 13, fontWeight: "700" }}>View all</Text><ArrowRight size={14} color={colors.primary} /></Pressable></View>
-      {active.length ? active.map((donation) => <DonationCard key={donation._id} donation={donation} onPress={() => router.push({ pathname: "/(app)/donor/donations/[id]", params: { id: donation._id } })} />) : <EmptyState title="No active donations" message="Your next donation will appear here after you submit it." />}
-    </>}
-  </Screen>;
+      <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/donate")} style={{
+      overflow: "hidden",
+      backgroundColor: colors.primary,
+      borderRadius: 20,
+      padding: 20,
+      marginBottom: 20
+    }}>
+        <View style={{
+        position: "absolute",
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+        backgroundColor: "rgba(255,255,255,0.10)",
+        right: -45,
+        top: -58
+      }} />
+        <View style={{
+        position: "absolute",
+        width: 86,
+        height: 86,
+        borderRadius: 43,
+        backgroundColor: "rgba(255,255,255,0.10)",
+        right: 54,
+        bottom: -44
+      }} />
+        <View style={{
+        width: 44,
+        height: 44,
+        borderRadius: 14,
+        backgroundColor: "rgba(255,255,255,0.22)",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 20
+      }}>
+          <HandHeart color={colors.onPrimary} size={23} />
+        </View>
+        <Text style={{
+        color: colors.onPrimary,
+        fontSize: 21,
+        fontWeight: "900"
+      }}>
+          {tr("Share surplus food")}
+        </Text>
+        <Text style={{
+        color: colors.onPrimary,
+        opacity: 0.76,
+        fontSize: 13,
+        lineHeight: 19,
+        marginTop: 5,
+        maxWidth: 300
+      }}>{tr("Add the food, confirm nutrition and arrange a safe pickup.")}</Text>
+        <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 18
+      }}>
+          <Text style={{
+          color: colors.onPrimary,
+          fontSize: 13,
+          fontWeight: "900"
+        }}>{tr("Start a donation")}</Text>
+          <ArrowRight color={colors.onPrimary} size={17} style={{
+          marginLeft: 6
+        }} />
+        </View>
+      </PressableBlock>
+
+      {!data && !error ? <View style={{
+      paddingVertical: 46,
+      alignItems: "center"
+    }}>
+          <ActivityIndicator color={colors.primary} size="large" />
+          <Text style={{
+        color: colors.textSecondary,
+        marginTop: 12
+      }}>
+            {tr("Loading your dashboard…")}
+          </Text>
+        </View> : error ? <View style={{
+      backgroundColor: colors.backgroundSecondary,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 16,
+      padding: 20,
+      marginBottom: 20
+    }}>
+          <Text style={{
+        color: colors.textPrimary,
+        fontWeight: "800"
+      }}>
+            {tr("Couldn’t load your donations")}
+          </Text>
+          <Text style={{
+        color: colors.textSecondary,
+        lineHeight: 19,
+        marginTop: 5
+      }}>
+            {error.message}
+          </Text>
+          <PressableBlock onPress={load} style={{
+        alignSelf: "flex-start",
+        marginTop: 14
+      }}>
+            <Text style={{
+          color: colors.primary,
+          fontWeight: "800"
+        }}>{tr("Try again")}</Text>
+          </PressableBlock>
+        </View> : <>
+          <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 11
+      }}>
+            <Text style={{
+          color: colors.textPrimary,
+          fontSize: 19,
+          fontWeight: "900"
+        }}>{tr("At a glance")}</Text>
+            <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/impact")} style={{
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+              <Text style={{
+            color: colors.primary,
+            fontSize: 12,
+            fontWeight: "800"
+          }}>{tr("View impact")}</Text>
+              <ArrowRight color={colors.primary} size={14} style={{
+            marginLeft: 4
+          }} />
+            </PressableBlock>
+          </View>
+          <View style={{
+        flexDirection: "row",
+        gap: 9,
+        marginBottom: 24
+      }}>
+            <Metric label={tr("Shared")} value={`${summary.totalKg.toFixed(1)} kg`} icon={Sparkles} colors={colors} />
+            <Metric label={tr("Active")} value={summary.active.length} icon={CalendarClock} colors={colors} />
+            <Metric label={tr("Delivered")} value={summary.delivered.length} icon={PackageCheck} colors={colors} />
+          </View>
+
+          <Text style={{
+        color: colors.textPrimary,
+        fontSize: 19,
+        fontWeight: "900",
+        marginBottom: 11
+      }}>{tr("Quick actions")}</Text>
+          <View style={{
+        flexDirection: "row",
+        gap: 10,
+        marginBottom: 26
+      }}>
+            <QuickAction icon={ListChecks} title={tr("Donation history")} subtitle={tr("Track every pickup")} colors={colors} onPress={() => router.push("/(app)/donor/(tabs)/donations")} />
+            <QuickAction icon={ChartNoAxesCombined} title={tr("Your impact")} subtitle={`${summary.monthCount} this month`} colors={colors} onPress={() => router.push("/(app)/donor/(tabs)/impact")} />
+          </View>
+
+          <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 11
+      }}>
+            <View>
+              <Text style={{
+            color: colors.textPrimary,
+            fontSize: 19,
+            fontWeight: "900"
+          }}>{tr("Active pickups")}</Text>
+              <Text style={{
+            color: colors.textSecondary,
+            fontSize: 12,
+            marginTop: 3
+          }}>
+                {tr("Donations that still need attention")}
+              </Text>
+            </View>
+            <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/donations")} style={{
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+              <Text style={{
+            color: colors.primary,
+            fontSize: 12,
+            fontWeight: "800"
+          }}>{tr("View all")}</Text>
+              <ArrowRight color={colors.primary} size={14} style={{
+            marginLeft: 4
+          }} />
+            </PressableBlock>
+          </View>
+          {summary.active.length ? summary.active.slice(0, 3).map(donation => <DonationCard key={donation._id} donation={donation} onPress={() => router.push({
+        pathname: "/(app)/donor/donations/[id]",
+        params: {
+          id: donation._id
+        }
+      })} />) : <View style={{
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 16,
+        padding: 22,
+        alignItems: "center"
+      }}>
+              <PackageCheck color={colors.primary} size={26} />
+              <Text style={{
+          color: colors.textPrimary,
+          fontWeight: "800",
+          marginTop: 10
+        }}>{tr("You’re all caught up")}</Text>
+              <Text style={{
+          color: colors.textSecondary,
+          textAlign: "center",
+          lineHeight: 18,
+          fontSize: 12,
+          marginTop: 4
+        }}>{tr("There are no pickups in progress right now.")}</Text>
+            </View>}
+        </>}
+    </ScrollView>;
+}
+function Metric({
+  label,
+  value,
+  icon: Icon,
+  colors
+}) {
+  return <View style={{
+    flex: 1,
+    minWidth: 0,
+    backgroundColor: colors.backgroundSecondary,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    padding: 12
+  }}>
+      <View style={{
+      width: 30,
+      height: 30,
+      borderRadius: 9,
+      backgroundColor: `${colors.primary}15`,
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
+        <Icon size={15} color={colors.primary} />
+      </View>
+      <Text style={{
+      color: colors.textPrimary,
+      fontSize: 17,
+      fontWeight: "900",
+      marginTop: 12
+    }} numberOfLines={1}>
+        {value}
+      </Text>
+      <Text style={{
+      color: colors.textSecondary,
+      fontSize: 11,
+      marginTop: 2
+    }}>
+        {label}
+      </Text>
+    </View>;
+}
+function QuickAction({
+  icon: Icon,
+  title,
+  subtitle,
+  colors,
+  onPress
+}) {
+  return <PressableBlock onPress={onPress} style={{
+    flex: 1,
+    minWidth: 0,
+    backgroundColor: colors.backgroundSecondary,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: 15
+  }}>
+      <View style={{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between"
+    }}>
+        <View style={{
+        width: 36,
+        height: 36,
+        borderRadius: 11,
+        backgroundColor: `${colors.primary}17`,
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+          <Icon size={18} color={colors.primary} />
+        </View>
+        <ArrowRight size={16} color={colors.textSecondary} />
+      </View>
+      <Text style={{
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: "800",
+      marginTop: 13
+    }} numberOfLines={1}>
+        {title}
+      </Text>
+      <Text style={{
+      color: colors.textSecondary,
+      fontSize: 11,
+      marginTop: 3
+    }} numberOfLines={1}>
+        {subtitle}
+      </Text>
+    </PressableBlock>;
 }

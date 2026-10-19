@@ -1,27 +1,107 @@
 import { Text, View } from "react-native";
 import Svg, { Line, Polyline, Text as SvgText } from "react-native-svg";
 import { Button, Surface, useColors } from "./ui";
-
-export function MetricGrid({ metrics }) {
+import { useTranslation } from "../utils/i18n/LanguageProvider";
+export function MetricGrid({
+  metrics
+}) {
   const colors = useColors();
-  return <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginBottom: 24 }}>{metrics.map((metric) => <Surface key={metric.label} style={{ width: "48%", minHeight: 112, justifyContent: "space-between" }}><Text style={{ color: colors.textSecondary, fontSize: 12, fontWeight: "600" }}>{metric.label}</Text><Text adjustsFontSizeToFit numberOfLines={1} style={{ color: metric.tone ? colors[metric.tone] : colors.textPrimary, fontSize: 25, fontWeight: "800", marginTop: 15, letterSpacing: -0.4 }}>{metric.value}</Text></Surface>)}</View>;
+  return <View style={{
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 24
+  }}>{metrics.map(metric => <Surface key={metric.label} style={{
+      width: "48%",
+      minHeight: 112,
+      justifyContent: "space-between"
+    }}><Text style={{
+        color: colors.textSecondary,
+        fontSize: 12,
+        fontWeight: "600"
+      }}>{metric.label}</Text><Text adjustsFontSizeToFit numberOfLines={1} style={{
+        color: metric.tone ? colors[metric.tone] : colors.textPrimary,
+        fontSize: 25,
+        fontWeight: "800",
+        marginTop: 15,
+        letterSpacing: -0.4
+      }}>{metric.value}</Text></Surface>)}</View>;
 }
-
-export function DetailRow({ label, value, last = false }) {
+export function DetailRow({
+  label,
+  value,
+  last = false
+}) {
   const colors = useColors();
-  return <View style={{ flexDirection: "row", gap: 12, paddingVertical: 10, borderBottomWidth: last ? 0 : 1, borderColor: colors.border }}><Text style={{ color: colors.textSecondary, flex: 1 }}>{label}</Text><Text selectable style={{ color: colors.textPrimary, fontWeight: "700", flex: 1.5, textAlign: "right" }}>{value ?? "—"}</Text></View>;
+  return <View style={{
+    flexDirection: "row",
+    gap: 12,
+    paddingVertical: 10,
+    borderBottomWidth: last ? 0 : 1,
+    borderColor: colors.border
+  }}><Text style={{
+      color: colors.textSecondary,
+      flex: 1
+    }}>{label}</Text><Text selectable style={{
+      color: colors.textPrimary,
+      fontWeight: "700",
+      flex: 1.5,
+      textAlign: "right"
+    }}>{value ?? "—"}</Text></View>;
 }
-
-export function PaginationFooter({ pagination, onPage, loading }) {
+export function PaginationFooter({
+  pagination,
+  onPage,
+  loading
+}) {
+  const {
+    tr
+  } = useTranslation();
   if (!pagination || pagination.pages <= 1) return null;
-  return <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}><Button title="Previous" variant="secondary" disabled={pagination.page <= 1} onPress={() => onPage(pagination.page - 1)} style={{ flex: 1 }} /><Button title={loading ? "Loading…" : `${pagination.page} / ${pagination.pages}`} disabled style={{ flex: 1 }} /><Button title="Next" variant="secondary" disabled={pagination.page >= pagination.pages} onPress={() => onPage(pagination.page + 1)} style={{ flex: 1 }} /></View>;
+  return <View style={{
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10
+  }}><Button title={tr("Previous")} variant="secondary" disabled={pagination.page <= 1} onPress={() => onPage(pagination.page - 1)} style={{
+      flex: 1
+    }} /><Button title={loading ? tr("Loading…") : `${pagination.page} / ${pagination.pages}`} disabled style={{
+      flex: 1
+    }} /><Button title={tr("Next")} variant="secondary" disabled={pagination.page >= pagination.pages} onPress={() => onPage(pagination.page + 1)} style={{
+      flex: 1
+    }} /></View>;
 }
-
-export function WeightTrend({ data = [] }) {
+export function WeightTrend({
+  data = []
+}) {
+  const {
+    tr
+  } = useTranslation();
   const colors = useColors();
   if (!data.length) return null;
-  const width = 320; const height = 150; const pad = 24;
-  const max = Math.max(1, ...data.flatMap((item) => [item.donatedKg, item.deliveredKg]));
-  const points = (key) => data.map((item, index) => `${pad + (index * (width - pad * 2)) / Math.max(1, data.length - 1)},${height - pad - (item[key] / max) * (height - pad * 2)}`).join(" ");
-  return <Surface style={{ marginBottom: 18 }}><Text style={{ color: colors.textPrimary, fontSize: 17, fontWeight: "800", marginBottom: 6 }}>Daily weight trend</Text><Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 14 }}>Food donated and successfully delivered</Text><Svg accessibilityLabel="Daily donated versus delivered kilograms chart" width="100%" height={height} viewBox={`0 0 ${width} ${height}`}><Line x1={pad} y1={height - pad} x2={width - pad} y2={height - pad} stroke={colors.border} /><Polyline points={points("donatedKg")} fill="none" stroke={colors.primary} strokeWidth="3" /><Polyline points={points("deliveredKg")} fill="none" stroke={colors.success} strokeWidth="3" /><SvgText x={pad} y={14} fill={colors.primary} fontSize="10">Donated</SvgText><SvgText x={90} y={14} fill={colors.success} fontSize="10">Delivered</SvgText></Svg><View style={{ flexDirection: "row", justifyContent: "space-between" }}><Text style={{ color: colors.textSecondary, fontSize: 11 }}>{data[0].date}</Text><Text style={{ color: colors.textSecondary, fontSize: 11 }}>{data[data.length - 1].date}</Text></View></Surface>;
+  const width = 320;
+  const height = 150;
+  const pad = 24;
+  const max = Math.max(1, ...data.flatMap(item => [item.donatedKg, item.deliveredKg]));
+  const points = key => data.map((item, index) => `${pad + index * (width - pad * 2) / Math.max(1, data.length - 1)},${height - pad - item[key] / max * (height - pad * 2)}`).join(" ");
+  return <Surface style={{
+    marginBottom: 18
+  }}><Text style={{
+      color: colors.textPrimary,
+      fontSize: 17,
+      fontWeight: "800",
+      marginBottom: 6
+    }}>{tr("Daily weight trend")}</Text><Text style={{
+      color: colors.textSecondary,
+      fontSize: 12,
+      marginBottom: 14
+    }}>{tr("Food donated and successfully delivered")}</Text><Svg accessibilityLabel={tr("Daily donated versus delivered kilograms chart")} width="100%" height={height} viewBox={`0 0 ${width} ${height}`}><Line x1={pad} y1={height - pad} x2={width - pad} y2={height - pad} stroke={colors.border} /><Polyline points={points("donatedKg")} fill="none" stroke={colors.primary} strokeWidth="3" /><Polyline points={points("deliveredKg")} fill="none" stroke={colors.success} strokeWidth="3" /><SvgText x={pad} y={14} fill={colors.primary} fontSize="10">{tr("Donated")}</SvgText><SvgText x={90} y={14} fill={colors.success} fontSize="10">{tr("Delivered")}</SvgText></Svg><View style={{
+      flexDirection: "row",
+      justifyContent: "space-between"
+    }}><Text style={{
+        color: colors.textSecondary,
+        fontSize: 11
+      }}>{data[0].date}</Text><Text style={{
+        color: colors.textSecondary,
+        fontSize: 11
+      }}>{data[data.length - 1].date}</Text></View></Surface>;
 }

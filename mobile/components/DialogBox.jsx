@@ -268,13 +268,18 @@ export default function DialogBox({
 
             {/* Action Buttons */}
             {showActionButton && (
-              <View className="flex-row gap-3">
+              <View style={{ flexDirection: "row", gap: 12 }}>
                 <PressableBlock
                   onPress={handleCancel}
                   disabled={loading}
-                  className="flex-1 rounded-xl py-4"
                   style={[
                     {
+                      flex: 1,
+                      minHeight: 48,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingHorizontal: 14,
                       opacity: loading ? 0.7 : 1,
                       backgroundColor:
                         colorScheme === "dark"
@@ -306,9 +311,14 @@ export default function DialogBox({
                 <PressableBlock
                   onPress={handleConfirm}
                   disabled={loading}
-                  className="flex-1 rounded-xl py-4"
                   style={[
                     {
+                      flex: 1,
+                      minHeight: 48,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingHorizontal: 14,
                       opacity: loading ? 0.7 : 1,
                       backgroundColor: colors.primary,
                     },

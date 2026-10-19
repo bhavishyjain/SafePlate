@@ -1,13 +1,31 @@
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import { View } from "react-native";
+import BackButtonHeader from "../../../../../components/BackButtonHeader";
 import DonationForm from "../../../../../components/DonationForm";
-import { ErrorState, LoadingState, Screen } from "../../../../../components/ui";
+import { ErrorState, LoadingState, Screen, useColors } from "../../../../../components/ui";
 import { getDonation } from "../../../../../services/donations";
-
+import { useTranslation } from "../../../../../utils/i18n/LanguageProvider";
 export default function EditDonation() {
-  const { id } = useLocalSearchParams(); const [donation, setDonation] = useState(null); const [error, setError] = useState(null);
-  useEffect(() => { getDonation(id).then(setDonation).catch(setError); }, [id]);
-  if (error) return <Screen><ErrorState message={error.message} /></Screen>;
-  if (!donation) return <Screen><LoadingState /></Screen>;
-  return <DonationForm donation={donation} onSuccess={() => router.replace({ pathname: "/(app)/donor/donations/[id]", params: { id } })} />;
+  const {
+    tr
+  } = useTranslation();
+  const colors = useColors();
+  const {
+    id
+  } = useLocalSearchParams();
+  const [donation, setDonation] = useState(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    getDonation(id).then(setDonation).catch(setError);
+  }, [id]);
+  return <View style={{
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary
+  }}><BackButtonHeader title={tr("Edit donation")} />{error ? <Screen><ErrorState message={error.message} /></Screen> : !donation ? <Screen><LoadingState /></Screen> : <DonationForm donation={donation} onSuccess={() => router.replace({
+      pathname: "/(app)/donor/donations/[id]",
+      params: {
+        id
+      }
+    })} />}</View>;
 }

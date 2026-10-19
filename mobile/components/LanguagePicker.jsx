@@ -10,7 +10,7 @@ const LanguagePicker = forwardRef(({ modalOnly = false }, ref) => {
   const { colorScheme } = useTheme();
   const colors = colorScheme === "dark" ? darkColors : lightColors;
 
-  const { t, locale } = useTranslation();
+  const { t, tr, locale } = useTranslation();
   const { setLanguage } = useLanguage();
   const pickerRef = useRef(null);
 
@@ -42,7 +42,7 @@ const LanguagePicker = forwardRef(({ modalOnly = false }, ref) => {
           data={languages}
           value={locale}
           onChange={handleLanguageChange}
-          placeholder="Select Language"
+          placeholder={tr("Select Language")}
           searchPlaceholder=""
         />
       </View>
@@ -63,7 +63,7 @@ const LanguagePicker = forwardRef(({ modalOnly = false }, ref) => {
           data={languages}
           value={locale}
           onChange={handleLanguageChange}
-          placeholder="Select Language"
+          placeholder={tr("Select Language")}
           searchPlaceholder=""
           containerStyle={{
             height: 35,

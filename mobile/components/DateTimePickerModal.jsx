@@ -276,7 +276,7 @@ export default function DateTimePickerModal({
 }) {
   const { colorScheme } = useTheme();
   const colors = colorScheme === "dark" ? darkColors : lightColors;
-  const { t } = useTranslation();
+  const { t, tr } = useTranslation();
 
   const [show, setShow] = useState(false);
 
@@ -560,7 +560,7 @@ export default function DateTimePickerModal({
       >
         {Icon && <Icon size={18} color={colors.textSecondary} />}
         <Text className="ml-2 text-sm" style={{ color: colors.textPrimary }}>
-          {displayValue || (mode === "date" ? "Select date" : "Select time")}
+          {displayValue || (mode === "date" ? tr("Select date") : tr("Select time"))}
         </Text>
       </PressableBlock>
 
@@ -604,7 +604,7 @@ export default function DateTimePickerModal({
                     marginBottom: 6,
                   }}
                 >
-                  {label || (mode === "date" ? "Select Date" : "Select Time")}
+                  {label || (mode === "date" ? tr("Select date") : tr("Select time"))}
                 </Text>
 
                 <Text

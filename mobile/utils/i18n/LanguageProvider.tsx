@@ -17,12 +17,14 @@ type LanguageContextType = {
   locale: LanguageKey;
   setLanguage: (lang: LanguageKey) => void;
   t: (key: string, options?: any) => string;
+  tr: (text: string, options?: Record<string, string | number>) => string;
 };
 
 const LanguageContext = createContext<LanguageContextType>({
   locale: "en",
   setLanguage: () => {},
   t: (key: string) => key,
+  tr: (text: string) => text,
 });
 
 /* ---------- storage helpers ---------- */
@@ -84,9 +86,22 @@ export const LanguageProvider = ({
     [locale] // Re-create when locale changes
   );
 
+  const tr = useCallback(
+    (text: string, options: Record<string, string | number> = {}) => {
+      const localePhrases = (LANGUAGES[locale].messages as any).phrases || {};
+      const englishPhrases = (LANGUAGES.en.messages as any).phrases || {};
+      let translated = localePhrases[text] || englishPhrases[text] || text;
+      Object.entries(options).forEach(([key, value]) => {
+        translated = translated.replaceAll(`{{${key}}}`, String(value));
+      });
+      return translated;
+    },
+    [locale],
+  );
+
   const value = useMemo(
-    () => ({ locale, setLanguage, t }),
-    [locale, setLanguage, t]
+    () => ({ locale, setLanguage, t, tr }),
+    [locale, setLanguage, t, tr]
   );
 
   if (!hydrated) return null;
@@ -103,6 +118,6 @@ export const LanguageProvider = ({
 export const useLanguage = () => useContext(LanguageContext);
 
 export const useTranslation = () => {
-  const { t, locale } = useLanguage();
-  return { t, locale };
+  const { t, tr, locale } = useLanguage();
+  return { t, tr, locale };
 };
