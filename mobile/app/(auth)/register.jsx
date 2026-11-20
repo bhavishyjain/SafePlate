@@ -2,9 +2,9 @@ import { useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
-import { Button, Field, Screen, Title, useColors } from "../../../components/ui";
-import CustomPicker from "../../../components/CustomPicker";
-import { useAuth } from "../../../utils/context/auth";
+import { Button, Field, Screen, Title, useColors } from "../../components/ui";
+import CustomPicker from "../../components/CustomPicker";
+import { useAuth } from "../../utils/context/auth";
 
 export default function Register() {
   const colors = useColors();
@@ -22,7 +22,7 @@ export default function Register() {
       void ignored;
       await register({ ...payload, name: form.name.trim(), phone: form.phone.trim(), email: form.email.trim().toLowerCase(), organization: form.organization.trim() || undefined });
       Toast.show({ type: "success", text1: "Account created", text2: "Sign in to continue" });
-      router.replace("/(app)/(auth)/login");
+      router.replace("/login");
     } catch (error) { Toast.show({ type: "error", text1: "Registration failed", text2: error.message }); }
     finally { setLoading(false); }
   };
