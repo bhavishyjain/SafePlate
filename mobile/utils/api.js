@@ -4,6 +4,15 @@ import { API_BASE_URL, USER_AGENT_STRING } from "../url";
 import getUserAuth, { clearUserAuth, setUserAuth } from "./userAuth";
 import { runSingleRefresh } from "./refreshQueue";
 
+let authFailureHandler = null;
+
+export function setAuthFailureHandler(handler) {
+  authFailureHandler = handler;
+  return () => {
+    if (authFailureHandler === handler) authFailureHandler = null;
+  };
+}
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -30,7 +39,8 @@ api.interceptors.response.use(
       return api(request);
     } catch (refreshError) {
       await clearUserAuth();
-      router.replace("/(app)/(auth)/login");
+      if (authFailureHandler) await authFailureHandler();
+      else router.replace("/login");
       throw normalizeApiError(refreshError);
     }
   },

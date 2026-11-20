@@ -10,12 +10,10 @@ export default function AppLayout() {
   const { user, loading } = useAuth();
   const segments = useSegments();
   const colors = useColors();
-  const inAuth = segments.includes("(auth)");
   const requestedRole = roleForSegments(segments);
 
   if (loading) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundPrimary }}><ActivityIndicator color={colors.primary} /></View>;
-  if (!user && !inAuth) return <Redirect href="/(app)/(auth)/login" />;
-  if (user && inAuth) return <Redirect href={homeForRole(user.role)} />;
+  if (!user) return <Redirect href="/login" />;
   if (user && requestedRole && !canAccessRoleRoute(user.role, segments)) return <Redirect href={homeForRole(user.role)} />;
 
   return <GestureHandlerRootView style={{ flex: 1 }}><SafeAreaView style={{ flex: 1, backgroundColor: colors.backgroundPrimary }} edges={Platform.OS === "ios" ? ["top"] : ["top", "bottom"]}><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.backgroundPrimary } }} /></SafeAreaView></GestureHandlerRootView>;

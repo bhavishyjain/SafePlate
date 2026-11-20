@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { api } from "../api";
+import { router } from "expo-router";
+import { api, setAuthFailureHandler } from "../api";
 import getUserAuth, { clearUserAuth, setUserAuth } from "../userAuth";
 
 const AuthContext = createContext(null);
@@ -7,6 +8,11 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => setAuthFailureHandler(() => {
+    setSession(null);
+    router.replace("/login");
+  }), []);
 
   const restore = useCallback(async () => {
     setLoading(true);

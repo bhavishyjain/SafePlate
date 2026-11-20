@@ -8,6 +8,6 @@ const homeFor = (role) => role === "NGO" ? "/(app)/ngo/(tabs)/home" : role === "
 export default function Index() {
   const { user, loading } = useAuth();
   const colors = useColors();
-  if (!loading) return <Redirect href={user ? homeFor(user.role) : "/(app)/(auth)/login"} />;
+  if (!loading) return <Redirect href={user ? homeFor(user.role) : "/login"} />;
   return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.backgroundPrimary }}><Image source={require("../assets/images/splash.png")} style={{ width: 140, height: 140 }} /><ActivityIndicator color={colors.primary} style={{ marginTop: 18 }} /></View>;
 }
