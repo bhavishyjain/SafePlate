@@ -29,6 +29,7 @@ export default function DonorTabs() {
     width
   } = useWindowDimensions();
   const barWidth = Math.min(Math.max(width - 24, 300), 780);
+  const horizontalInset = Math.max((width - barWidth) / 2, 12);
   const bottom = Math.max(insets.bottom, 12);
   const icon = Icon => {
     function NavigationIcon({
@@ -46,12 +47,9 @@ export default function DonorTabs() {
     tabBarInactiveTintColor: colors.textSecondary,
     tabBarStyle: {
       position: "absolute",
-      left: width / 2,
-      transform: [{
-        translateX: -barWidth / 2
-      }],
+      left: horizontalInset,
+      right: horizontalInset,
       bottom,
-      width: barWidth,
       height: 72,
       backgroundColor: "transparent",
       borderTopWidth: 0,

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { Check, HandHeart, Minus, Plus } from "lucide-react-native";
+import { Check, Minus, Plus } from "lucide-react-native";
 import Toast from "react-native-toast-message";
 import CustomPicker from "./CustomPicker";
 import DateTimePickerModal from "./DateTimePickerModal";
@@ -132,33 +132,14 @@ export default function DonationForm({
     subtitle: tr("Check the details once before submitting.")
   }][step];
   return <Screen contentStyle={{
-    paddingTop: 24
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    paddingBottom: 164
   }}><View style={{
-      flexDirection: "row",
-      alignItems: "flex-start",
-      gap: 14,
-      marginBottom: 20
-    }}><View style={{
-        width: 48,
-        height: 48,
-        borderRadius: 15,
-        backgroundColor: `${colors.primary}18`,
-        alignItems: "center",
-        justifyContent: "center"
-      }}><HandHeart size={23} color={colors.primary} /></View><View style={{
-        flex: 1
-      }}><Text style={{
-          color: colors.textPrimary,
-          fontSize: 27,
-          fontWeight: "900"
-        }}>{donation ? tr("Edit donation") : tr("Donate food")}</Text><Text style={{
-          color: colors.textSecondary,
-          fontSize: 13,
-          lineHeight: 19,
-          marginTop: 4
-        }}>{donation ? tr("Update this pending contribution and confirm its details again.") : tr("Share safe surplus food in four guided steps.")}</Text></View></View><Surface style={{
-      padding: 16,
-      marginBottom: 24
+      paddingBottom: 20,
+      marginBottom: 24,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border
     }}><View style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -169,23 +150,20 @@ export default function DonationForm({
         }}><Text style={{
             color: colors.textPrimary,
             fontSize: 16,
-            fontWeight: "900"
+            fontWeight: "600"
           }}>{stepCopy.title}</Text><Text style={{
             color: colors.textSecondary,
             fontSize: 12,
             lineHeight: 17,
             marginTop: 3
           }}>{stepCopy.subtitle}</Text></View><View style={{
-          backgroundColor: `${colors.primary}18`,
-          borderRadius: 999,
-          paddingHorizontal: 9,
-          paddingVertical: 5,
+          paddingTop: 2,
           marginLeft: 12
         }}><Text style={{
-            color: colors.primary,
+            color: colors.textSecondary,
             fontSize: 10,
-            fontWeight: "900"
-          }}>{tr("STEP {{step}} OF 4", { step: step + 1 })}</Text></View></View><StepProgress step={step} colors={colors} /></Surface>
+            fontWeight: "500"
+          }}>{step + 1}/4</Text></View></View><StepProgress step={step} colors={colors} /></View>
     {step === 0 ? <><Section title={tr("Food items")} subtitle={tr("Each item must weigh at least 250 grams.")}>{items.map((item, index) => <Surface key={index} style={{
           marginBottom: 12
         }}><View style={{
@@ -195,7 +173,7 @@ export default function DonationForm({
             marginBottom: 12
           }}><View><Text style={{
                 color: colors.textPrimary,
-                fontWeight: "900",
+                fontWeight: "600",
                 fontSize: 16
               }}>{tr("Item {{number}}", { number: String(index + 1).padStart(2, "0") })}</Text><Text style={{
                 color: colors.textSecondary,
@@ -204,7 +182,7 @@ export default function DonationForm({
               }}>{tr("Food and prepared weight")}</Text></View>{items.length > 1 ? <Pressable accessibilityRole="button" accessibilityLabel={`${tr("Remove item")} ${index + 1}`} onPress={() => setItems(current => current.filter((_, i) => i !== index))} style={{
               width: 38,
               height: 38,
-              borderRadius: 12,
+              borderRadius: 10,
               backgroundColor: `${colors.danger}18`,
               alignItems: "center",
               justifyContent: "center"
@@ -216,7 +194,7 @@ export default function DonationForm({
         name: "",
         quantityGrams: ""
       }])} style={{
-        marginBottom: 12
+        marginBottom: 20
       }} /><Button title={tr("Analyse nutrition")} onPress={runAnalysis} loading={loading} /></> : null}
     {step === 1 ? <><Section title={tr("Confirm nutrition")}>{items.map((item, index) => <Surface key={index} style={{
           marginBottom: 12
@@ -226,7 +204,7 @@ export default function DonationForm({
             marginBottom: 10
           }}><Text style={{
               color: colors.textPrimary,
-              fontWeight: "800",
+              fontWeight: "600",
               fontSize: 16
             }}>{item.name}</Text>{item.nutritionSource ? <StatusBadge status={item.nutritionSource} /> : null}</View>{item.analysisStatus === "UNAVAILABLE" ? <Text style={{
             color: colors.danger
@@ -278,7 +256,7 @@ export default function DonationForm({
       }}><Text style={{
           color: colors.textPrimary,
           fontSize: 19,
-          fontWeight: "800",
+          fontWeight: "600",
           marginBottom: 12
         }}>{tr("{{count}} food items", { count: items.length })}</Text>{items.map(item => <Text key={item.name} style={{
           color: colors.textSecondary,
@@ -289,7 +267,7 @@ export default function DonationForm({
           marginVertical: 12
         }} /><Text style={{
           color: colors.textPrimary,
-          fontWeight: "700"
+          fontWeight: "500"
         }}>{totals.calories.toFixed(0)} kcal · {totals.protein.toFixed(1)} {tr("g protein")}</Text><Text style={{
           color: colors.textSecondary,
           marginTop: 8
@@ -338,7 +316,7 @@ function StepProgress({
           borderColor: index <= step ? colors.primary : colors.borderStrong
         }}>{index < step ? <Check size={14} color={colors.onPrimary} strokeWidth={3} /> : <Text style={{
             color: index === step ? colors.onPrimary : colors.textSecondary,
-            fontWeight: "900",
+            fontWeight: "600",
             fontSize: 11
           }}>{index + 1}</Text>}</View>{index < labels.length - 1 ? <View style={{
           flex: 1,
@@ -349,7 +327,7 @@ function StepProgress({
         }} />}</View><Text style={{
         color: index === step ? colors.textPrimary : colors.textSecondary,
         fontSize: 10,
-        fontWeight: index === step ? "900" : "600",
+        fontWeight: index === step ? "600" : "400",
         marginTop: 6
       }}>{tr(label)}</Text></View>)}</View>;
 }

@@ -297,14 +297,13 @@ export default function DonationDetail() {
           flex: 1,
           height: 51,
           borderRadius: 13,
-          borderWidth: 1,
-          borderColor: colors.danger,
+          backgroundColor: colors.danger,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center"
-        }}><Trash2 size={17} color={colors.danger} /><Text style={{
-            color: colors.danger,
-            fontWeight: "900",
+        }}><Trash2 size={17} color={colors.dark} /><Text style={{
+            color: colors.dark,
+            fontWeight: "600",
             marginLeft: 7
           }}>{tr("Discard")}</Text></PressableBlock></View> : null}
     </ScrollView>}

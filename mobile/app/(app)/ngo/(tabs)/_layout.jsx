@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Building2, ClipboardList, HeartPulse, Home, Settings } from "lucide-react-native";
+import { ClipboardList, HeartPulse, History, Home, Settings } from "lucide-react-native";
 import { View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CurvedTabBar from "../../../../components/CurvedTabBar";
@@ -16,6 +16,7 @@ export default function NgoTabs() {
     width
   } = useWindowDimensions();
   const barWidth = Math.min(Math.max(width - 24, 300), 780);
+  const horizontalInset = Math.max((width - barWidth) / 2, 12);
   const icon = Icon => {
     function TabIcon({
       color
@@ -32,12 +33,9 @@ export default function NgoTabs() {
     tabBarInactiveTintColor: colors.textSecondary,
     tabBarStyle: {
       position: "absolute",
-      left: width / 2,
-      transform: [{
-        translateX: -barWidth / 2
-      }],
+      left: horizontalInset,
+      right: horizontalInset,
       bottom: Math.max(insets.bottom, 12),
-      width: barWidth,
       height: 72,
       backgroundColor: "transparent",
       borderTopWidth: 0,
@@ -79,9 +77,13 @@ export default function NgoTabs() {
         borderColor: colors.backgroundPrimary
       }}><HeartPulse color={colors.onPrimary} size={27} strokeWidth={2.5} /></View>
     }} />
+    <Tabs.Screen name="history" options={{
+      title: tr("History"),
+      tabBarIcon: icon(History)
+    }} />
     <Tabs.Screen name="profile" options={{
       title: tr("Profile"),
-      tabBarIcon: icon(Building2)
+      href: null
     }} />
     <Tabs.Screen name="more" options={{
       title: tr("More"),

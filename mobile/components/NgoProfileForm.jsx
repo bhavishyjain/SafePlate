@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { Building2, Minus, Plus, UsersRound } from "lucide-react-native";
+import { ChevronDown, ChevronUp, Plus, Trash2, UsersRound } from "lucide-react-native";
 import Toast from "react-native-toast-message";
 import { BENEFICIARY_OPTIONS, NGO_TYPE_OPTIONS } from "../constants/domain";
 import { validateBeneficiaryGroups, validateCoordinates } from "../constants/forms";
@@ -30,6 +30,7 @@ export default function NgoProfileForm({
     count: ""
   }]);
   const [loading, setLoading] = useState(false);
+  const [expandedGroup, setExpandedGroup] = useState(null);
   const updateGroup = (index, patch) => setGroups(current => current.map((group, groupIndex) => groupIndex === index ? {
     ...group,
     ...patch
@@ -85,34 +86,11 @@ export default function NgoProfileForm({
     }
   };
   return <Screen contentStyle={{
-    paddingTop: 24
+    paddingTop: 24,
+    paddingBottom: 148
   }}>
-    <View style={{
-      flexDirection: "row",
-      alignItems: "flex-start",
-      gap: 14,
-      marginBottom: 22
-    }}><View style={{
-        width: 48,
-        height: 48,
-        borderRadius: 15,
-        backgroundColor: `${colors.primary}18`,
-        alignItems: "center",
-        justifyContent: "center"
-      }}><Building2 size={23} color={colors.primary} /></View><View style={{
-        flex: 1
-      }}><Text style={{
-          color: colors.textPrimary,
-          fontSize: 27,
-          fontWeight: "900"
-        }}>{profile ? tr("Organization profile") : tr("Set up your NGO")}</Text><Text style={{
-          color: colors.textSecondary,
-          fontSize: 13,
-          lineHeight: 19,
-          marginTop: 4
-        }}>{tr("Beneficiary groups and location determine your daily needs and matching eligibility.")}</Text></View></View>
     {profile ? <Surface style={{
-      marginBottom: 24,
+      marginBottom: 20,
       flexDirection: "row",
       alignItems: "center"
     }}><View style={{
@@ -128,7 +106,7 @@ export default function NgoProfileForm({
       }}><Text style={{
           color: colors.textPrimary,
           fontSize: 15,
-          fontWeight: "900"
+          fontWeight: "600"
         }}>{tr("{{count}} people registered", { count: profile.capacity })}</Text><Text style={{
           color: colors.textSecondary,
           fontSize: 12,
@@ -136,27 +114,23 @@ export default function NgoProfileForm({
         }}>{tr("{{count}} beneficiary groups · Update when your service changes", { count: groups.length })}</Text></View></Surface> : null}
     <Section title={tr("Organization type")}><CustomPicker data={NGO_TYPE_OPTIONS} value={type} onChange={item => setType(item.value)} placeholder={tr("NGO type")} searchPlaceholder="" /></Section>
     <Section title={tr("Beneficiary groups")} subtitle={tr("Add each age group you currently serve.")}>
-      {groups.map((group, index) => <Surface key={index} style={{
+      {groups.map((group, index) => {
+        const option = BENEFICIARY_OPTIONS.find(item => item.value === group.category);
+        const expanded = expandedGroup === index;
+        return <Surface key={index} style={{
         marginBottom: 10
       }}>
-        <View style={{
+        <Pressable accessibilityRole="button" accessibilityState={{ expanded }} onPress={() => setExpandedGroup(current => current === index ? null : index)} style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 12
+          minHeight: 40
         }}><Text style={{
             color: colors.textPrimary,
-            fontWeight: "700",
+            fontWeight: "600",
             fontSize: 15
-          }}>{tr("Group {{number}}", { number: index + 1 })}</Text>{groups.length > 1 ? <Pressable accessibilityRole="button" accessibilityLabel={`${tr("Remove group")} ${index + 1}`} onPress={() => setGroups(current => current.filter((_, itemIndex) => itemIndex !== index))} style={{
-            width: 34,
-            height: 34,
-            borderRadius: 9,
-            backgroundColor: `${colors.danger}18`,
-            alignItems: "center",
-            justifyContent: "center"
-          }}><Minus size={17} color={colors.danger} /></Pressable> : null}</View>
-        <CustomPicker data={BENEFICIARY_OPTIONS} value={group.category} onChange={item => updateGroup(index, {
+          }}>{tr(option?.label || group.category)}</Text>{expanded ? <ChevronUp size={19} color={colors.textSecondary} /> : <ChevronDown size={19} color={colors.textSecondary} />}</Pressable>
+        {expanded ? <View style={{ marginTop: 14 }}><CustomPicker data={BENEFICIARY_OPTIONS} value={group.category} onChange={item => updateGroup(index, {
           category: item.value
         })} placeholder={tr("Age group")} />
         <View style={{
@@ -165,7 +139,20 @@ export default function NgoProfileForm({
         <Field label={tr("Number of beneficiaries")} value={group.count} onChangeText={count => updateGroup(index, {
           count
         })} keyboardType="numeric" />
-      </Surface>)}
+        {groups.length > 1 ? <Pressable accessibilityRole="button" accessibilityLabel={`${tr("Remove group")} ${index + 1}`} onPress={() => {
+          setGroups(current => current.filter((_, itemIndex) => itemIndex !== index));
+          setExpandedGroup(null);
+        }} style={{
+          minHeight: 46,
+          width: "100%",
+          borderRadius: 10,
+          backgroundColor: colors.danger,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center"
+        }}><Trash2 size={17} color={colors.dark} /><Text style={{ color: colors.dark, fontSize: 14, fontWeight: "600", marginLeft: 7 }}>{tr("Remove group")}</Text></Pressable> : null}</View> : null}
+      </Surface>;
+      })}
       <Button title={tr("Add beneficiary group")} icon={Plus} variant="secondary" onPress={() => setGroups(current => [...current, {
         category: "ADULT_30_TO_59",
         count: ""
@@ -173,7 +160,7 @@ export default function NgoProfileForm({
     </Section>
     <Section title={tr("Calculated daily need")}><Surface><View style={{
           flexDirection: "row",
-          gap: 8
+          alignItems: "center"
         }}>{[{
             label: tr("People"),
             value: totals.capacity
@@ -183,21 +170,23 @@ export default function NgoProfileForm({
           }, {
             label: tr("Protein"),
             value: `${totals.protein.toLocaleString("en-IN")} g`
-          }].map(item => <View key={item.label} style={{
+          }].map((item, index) => <View key={item.label} style={{
             flex: 1,
-            backgroundColor: colors.backgroundPrimary,
-            borderWidth: 1,
-            borderColor: colors.border,
-            borderRadius: 11,
-            padding: 10
+            minHeight: 54,
+            paddingHorizontal: 8,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRightWidth: index < 2 ? 1 : 0,
+            borderRightColor: colors.border
           }}><Text adjustsFontSizeToFit numberOfLines={1} style={{
               color: colors.textPrimary,
-              fontSize: 17,
-              fontWeight: "800"
+              fontSize: 16,
+              fontWeight: "600"
             }}>{item.value}</Text><Text style={{
               color: colors.textSecondary,
               fontSize: 10,
-              marginTop: 4
+              marginTop: 4,
+              textAlign: "center"
             }}>{item.label}</Text></View>)}</View><Text style={{
           color: colors.textSecondary,
           fontSize: 11,
@@ -206,7 +195,7 @@ export default function NgoProfileForm({
         }}>{tr("Preview based on SafePlate India references. The server calculates the final target.")}</Text></Surface></Section>
     <LocationField value={location} onChange={setLocation} />
     <Button title={profile ? tr("Save profile") : tr("Complete setup")} onPress={submit} loading={loading} style={{
-      marginTop: 16
+      marginTop: 28
     }} />
   </Screen>;
 }

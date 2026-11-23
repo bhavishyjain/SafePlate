@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowRight, CheckCircle2, HandHeart, PackageCheck, Sparkles, Truck } from "lucide-react-native";
+import { ArrowRight, CheckCircle2, HandHeart, PackageCheck, Truck } from "lucide-react-native";
 import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native";
 import PressableBlock from "../../../../components/PressableBlock";
 import { darkColors, lightColors } from "../../../../colors";
@@ -46,7 +46,7 @@ export default function DonorImpact() {
       const date = new Date();
       date.setDate(1);
       date.setMonth(date.getMonth() - (5 - offset));
-      const value = items.filter(item => {
+      const value = delivered.filter(item => {
         const created = new Date(item.createdAt);
         return created.getMonth() === date.getMonth() && created.getFullYear() === date.getFullYear();
       }).reduce((sum, item) => sum + Number(item.quantityKg || 0), 0);
@@ -66,8 +66,8 @@ export default function DonorImpact() {
       months
     };
   }, [data]);
-  const nextMilestone = Math.max(10, Math.ceil((impact.totalKg + 0.01) / 10) * 10);
-  const milestoneProgress = Math.min(100, impact.totalKg / nextMilestone * 100);
+  const nextMilestone = Math.max(10, Math.ceil((impact.deliveredKg + 0.01) / 10) * 10);
+  const milestoneProgress = Math.min(100, impact.deliveredKg / nextMilestone * 100);
   const maxMonthKg = Math.max(...impact.months.map(month => month.value), 1);
   return <ScrollView style={{
     flex: 1,
@@ -83,19 +83,6 @@ export default function DonorImpact() {
     setRefreshing(true);
     load();
   }} colors={[colors.primary]} tintColor={colors.primary} />}>
-      <Text style={{
-      color: colors.textPrimary,
-      fontSize: 29,
-      fontWeight: "900"
-    }}>{tr("Your impact")}</Text>
-      <Text style={{
-      color: colors.textSecondary,
-      fontSize: 13,
-      lineHeight: 19,
-      marginTop: 4,
-      marginBottom: 22
-    }}>{tr("A clear view of the food you have shared through SafePlate.")}</Text>
-
       {!data && !error ? <View style={{
       paddingVertical: 60,
       alignItems: "center"
@@ -131,46 +118,37 @@ export default function DonorImpact() {
           </PressableBlock>
         </View> : <>
           <View style={{
-        backgroundColor: colors.primary,
-        borderRadius: 20,
-        overflow: "hidden",
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderLeftWidth: 3,
+        borderLeftColor: colors.primary,
+        borderRadius: 16,
         padding: 20,
-        marginBottom: 18
+        marginBottom: 16
       }}>
-            <View style={{
-          position: "absolute",
-          width: 170,
-          height: 170,
-          borderRadius: 85,
-          right: -60,
-          top: -70,
-          backgroundColor: "rgba(255,255,255,0.11)"
-        }} />
-            <Sparkles size={24} color={colors.onPrimary} />
             <Text style={{
-          color: colors.onPrimary,
+          color: colors.textSecondary,
           fontSize: 13,
-          fontWeight: "700",
-          opacity: 0.72,
-          marginTop: 18
-        }}>{tr("TOTAL FOOD SHARED")}</Text>
+          fontWeight: "500"
+        }}>{tr("Food shared")}</Text>
             <View style={{
           flexDirection: "row",
           alignItems: "flex-end",
           marginTop: 3
         }}>
               <Text style={{
-            color: colors.onPrimary,
+            color: colors.primary,
             fontSize: 40,
             lineHeight: 46,
-            fontWeight: "900"
+            fontWeight: "500"
           }}>
-                {impact.totalKg.toFixed(1)}
+                {impact.deliveredKg.toFixed(1)}
               </Text>
               <Text style={{
-            color: colors.onPrimary,
+            color: colors.textPrimary,
             fontSize: 17,
-            fontWeight: "800",
+            fontWeight: "500",
             marginLeft: 6,
             marginBottom: 6
           }}>
@@ -178,22 +156,25 @@ export default function DonorImpact() {
               </Text>
             </View>
             <Text style={{
-          color: colors.onPrimary,
-          opacity: 0.75,
+          color: colors.textSecondary,
           fontSize: 12,
           marginTop: 3
         }}>
-              {tr("Across {{count}} donations", { count: impact.total })}
+              {tr("Across {{count}} donations", { count: impact.delivered })}
             </Text>
           </View>
 
           <View style={{
         flexDirection: "row",
-        gap: 10,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 16,
         marginBottom: 24
       }}>
-            <ImpactMetric icon={PackageCheck} label={tr("Delivered")} value={impact.delivered} colors={colors} />
-            <ImpactMetric icon={Truck} label={tr("Delivered food")} value={`${impact.deliveredKg.toFixed(1)} kg`} colors={colors} />
+            <ImpactMetric icon={PackageCheck} label={tr("Delivered")} value={impact.delivered} colors={colors} divider />
+            <ImpactMetric icon={Truck} label={tr("Donations")} value={impact.total} colors={colors} divider />
             <ImpactMetric icon={CheckCircle2} label={tr("Delivery rate")} value={`${impact.deliveryRate}%`} colors={colors} />
           </View>
 
@@ -214,14 +195,14 @@ export default function DonorImpact() {
                 <Text style={{
               color: colors.textPrimary,
               fontSize: 17,
-              fontWeight: "900"
+              fontWeight: "600"
             }}>{tr("Next milestone")}</Text>
                 <Text style={{
               color: colors.textSecondary,
               fontSize: 12,
               marginTop: 3
             }}>
-                  {tr("{{remaining}} kg to reach {{target}} kg", { remaining: Math.max(0, nextMilestone - impact.totalKg).toFixed(1), target: nextMilestone })}
+                  {tr("{{remaining}} kg to reach {{target}} kg", { remaining: Math.max(0, nextMilestone - impact.deliveredKg).toFixed(1), target: nextMilestone })}
                 </Text>
               </View>
               <View style={{
@@ -253,8 +234,8 @@ export default function DonorImpact() {
 
           <Text style={{
         color: colors.textPrimary,
-        fontSize: 19,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "500",
         marginBottom: 4
       }}>{tr("Last six months")}</Text>
           <Text style={{
@@ -285,7 +266,7 @@ export default function DonorImpact() {
                 <Text style={{
             color: colors.textPrimary,
             fontSize: 10,
-            fontWeight: "800",
+            fontWeight: "500",
             marginBottom: 6
           }}>
                   {month.value ? month.value.toFixed(1) : ""}
@@ -309,8 +290,8 @@ export default function DonorImpact() {
 
           <Text style={{
         color: colors.textPrimary,
-        fontSize: 19,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "500",
         marginBottom: 12
       }}>
             {tr("How each donation helps")}
@@ -339,7 +320,7 @@ export default function DonorImpact() {
             <Text style={{
           color: colors.onPrimary,
           fontSize: 15,
-          fontWeight: "900"
+          fontWeight: "600"
         }}>{tr("Make another donation")}</Text>
             <ArrowRight size={18} color={colors.onPrimary} style={{
           marginLeft: 7
@@ -349,26 +330,26 @@ export default function DonorImpact() {
     </ScrollView>;
 }
 function ImpactMetric({
-  icon: Icon,
   label,
   value,
-  colors
+  colors,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12
+    minHeight: 52,
+    paddingHorizontal: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border
   }}>
-      <Icon size={17} color={colors.primary} />
       <Text style={{
       color: colors.textPrimary,
       fontSize: 16,
-      fontWeight: "900",
-      marginTop: 12
+      fontWeight: "600",
+      textAlign: "center"
     }} numberOfLines={1}>
         {value}
       </Text>
@@ -406,7 +387,7 @@ function Journey({
           <Text style={{
           color: colors.primary,
           fontSize: 12,
-          fontWeight: "900"
+          fontWeight: "600"
         }}>
             {number}
           </Text>
@@ -425,7 +406,7 @@ function Journey({
         <Text style={{
         color: colors.textPrimary,
         fontSize: 14,
-        fontWeight: "800",
+        fontWeight: "600",
         paddingTop: 4
       }}>
           {title}

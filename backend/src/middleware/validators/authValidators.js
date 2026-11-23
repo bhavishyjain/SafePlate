@@ -27,3 +27,11 @@ export const validateResetPassword = validate((req) => {
   if (typeof req.body.password !== "string" || req.body.password.length < 8) errors.push({ field: "password", message: "Password must contain at least 8 characters" });
   return errors;
 });
+
+export const validateProfileUpdate = validate((req) => {
+  const errors = [];
+  if (!isNonEmptyString(req.body.name)) errors.push({ field: "name", message: "Name is required" });
+  if (!isNonEmptyString(req.body.phone) || req.body.phone.trim().length < 7) errors.push({ field: "phone", message: "A valid phone number is required" });
+  if (req.body.organization !== undefined && typeof req.body.organization !== "string") errors.push({ field: "organization", message: "Organization must be text" });
+  return errors;
+});

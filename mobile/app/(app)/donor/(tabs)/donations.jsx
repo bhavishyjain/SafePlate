@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowDownUp, HandHeart, Inbox, Search } from "lucide-react-native";
+import { ArrowDownUp, Inbox, Search } from "lucide-react-native";
 import { ActivityIndicator, RefreshControl, ScrollView, Text, TextInput, View } from "react-native";
 import DonationCard from "../../../../components/DonationCard";
 import PressableBlock from "../../../../components/PressableBlock";
@@ -9,6 +9,13 @@ import { DONATION_STATUSES, labelFor } from "../../../../constants/domain";
 import { listDonations } from "../../../../services/donations";
 import { useTheme } from "../../../../utils/context/theme";
 import { useTranslation } from "../../../../utils/i18n/LanguageProvider";
+const statusTone = (status, colors) => ({
+  PENDING: colors.warning,
+  ASSIGNED: colors.info,
+  PICKED_UP: colors.primary,
+  DELIVERED: colors.success,
+  DISCARDED: colors.danger
+})[status] || colors.primary;
 export default function Donations() {
   const {
     tr
@@ -43,7 +50,6 @@ export default function Donations() {
     const normalizedQuery = query.trim().toLowerCase();
     return [...(data?.items || [])].filter(item => !status || item.status === status).filter(item => !normalizedQuery || item.items?.some(food => food.name.toLowerCase().includes(normalizedQuery))).sort((a, b) => (new Date(b.createdAt) - new Date(a.createdAt)) * (newestFirst ? 1 : -1));
   }, [data, newestFirst, query, status]);
-  const totalKg = (data?.items || []).reduce((total, item) => total + Number(item.quantityKg || 0), 0);
   return <ScrollView style={{
     flex: 1,
     backgroundColor: colors.backgroundPrimary
@@ -58,93 +64,6 @@ export default function Donations() {
     setRefreshing(true);
     load();
   }} colors={[colors.primary]} tintColor={colors.primary} />}>
-      <View style={{
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      gap: 16,
-      marginBottom: 22
-    }}>
-        <View style={{
-        flex: 1
-      }}>
-          <Text style={{
-          color: colors.textPrimary,
-          fontSize: 29,
-          fontWeight: "900"
-        }}>{tr("My donations")}</Text>
-          <Text style={{
-          color: colors.textSecondary,
-          fontSize: 13,
-          lineHeight: 19,
-          marginTop: 4
-        }}>{tr("Track every contribution from submission to delivery.")}</Text>
-        </View>
-        <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/donate")} accessibilityLabel={tr("Create donation")} style={{
-        width: 44,
-        height: 44,
-        borderRadius: 14,
-        backgroundColor: colors.primary,
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-          <HandHeart size={21} color={colors.onPrimary} />
-        </PressableBlock>
-      </View>
-
-      <View style={{
-      flexDirection: "row",
-      gap: 10,
-      marginBottom: 18
-    }}>
-        <View style={{
-        flex: 1,
-        backgroundColor: colors.backgroundSecondary,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: 14
-      }}>
-          <Text style={{
-          color: colors.textSecondary,
-          fontSize: 11
-        }}>{tr("Total contributions")}</Text>
-          <Text style={{
-          color: colors.textPrimary,
-          fontSize: 22,
-          fontWeight: "900",
-          marginTop: 4
-        }}>
-            {data?.pagination?.total || 0}
-          </Text>
-        </View>
-        <View style={{
-        flex: 1,
-        backgroundColor: colors.backgroundSecondary,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: 14
-      }}>
-          <Text style={{
-          color: colors.textSecondary,
-          fontSize: 11
-        }}>
-            {tr("Food shared")}
-          </Text>
-          <Text style={{
-          color: colors.textPrimary,
-          fontSize: 22,
-          fontWeight: "900",
-          marginTop: 4
-        }}>
-            {totalKg.toFixed(1)} <Text style={{
-            fontSize: 12
-          }}>{tr("kg")}</Text>
-          </Text>
-        </View>
-      </View>
-
       <View style={{
       flexDirection: "row",
       alignItems: "center",
@@ -188,6 +107,7 @@ export default function Donations() {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{
       gap: 8,
+      paddingRight: 16,
       paddingBottom: 20
     }}>
         {[{
@@ -198,18 +118,22 @@ export default function Donations() {
         value
       }))].map(item => {
         const selected = status === item.value;
+        const tone = statusTone(item.value, colors);
         return <PressableBlock key={item.value || "all"} onPress={() => setStatus(item.value)} style={{
+          minHeight: 40,
+          alignItems: "center",
+          justifyContent: "center",
           paddingHorizontal: 14,
           paddingVertical: 9,
           borderRadius: 999,
           borderWidth: 1,
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? colors.primary : colors.backgroundSecondary
+          borderColor: selected ? tone : `${tone}66`,
+          backgroundColor: selected ? tone : `${tone}14`
         }}>
               <Text style={{
-            color: selected ? colors.onPrimary : colors.textPrimary,
+            color: selected ? colors.onPrimary : tone,
             fontSize: 12,
-            fontWeight: "800"
+            fontWeight: "600"
           }}>
                 {item.label}
               </Text>
@@ -226,7 +150,7 @@ export default function Donations() {
         <Text style={{
         color: colors.textPrimary,
         fontSize: 18,
-        fontWeight: "900"
+        fontWeight: "500"
       }}>
           {status ? tr(labelFor(status)) : tr("All donations")}
         </Text>

@@ -32,7 +32,7 @@ export default function DonationCard({
     borderWidth: 1,
     borderColor: colors.border,
     padding: 16,
-    marginBottom: 12
+    marginBottom: 8
   }}>
     <View style={{
       flexDirection: "row",
@@ -57,7 +57,7 @@ export default function DonationCard({
           color: colors.textPrimary,
           fontSize: 16,
           lineHeight: 21,
-          fontWeight: "800"
+        fontWeight: "600"
         }} numberOfLines={2}>{title}</Text>
         <Text style={{
           color: colors.textSecondary,
@@ -66,16 +66,19 @@ export default function DonationCard({
         }}>{itemCount} {tr(itemCount === 1 ? "item" : "items")} · {tr(labelFor(donation.packagingType))}</Text>
       </View>
       <View style={{
-        paddingHorizontal: 9,
-        paddingVertical: 6,
-        borderRadius: 8,
-        backgroundColor: `${tone}18`
+        flexShrink: 0,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 999,
+        borderWidth: 1,
+        borderColor: `${tone}66`,
+        backgroundColor: `${tone}14`
       }}>
         <Text style={{
           color: tone,
           fontSize: 10,
-          fontWeight: "900"
-        }}>{tr(labelFor(donation.status)).toUpperCase()}</Text>
+          fontWeight: "600"
+        }} numberOfLines={1}>{tr(labelFor(donation.status)).toUpperCase()}</Text>
       </View>
     </View>
 
@@ -92,7 +95,7 @@ export default function DonationCard({
       <Text style={{
         color: colors.primary,
         fontSize: 18,
-        fontWeight: "900"
+      fontWeight: "600"
       }}>{Number(donation.quantityKg || 0).toFixed(2)}</Text>
       <Text style={{
         color: colors.primary,

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticateToken } from "../middleware/auth.js";
-import { forgotPassword, login, logout, logoutAll, me, refresh, register, resetPassword } from "../controllers/authController.js";
-import { validateForgotPassword, validateLogin, validateRefreshToken, validateRegistration, validateResetPassword } from "../middleware/validators/authValidators.js";
+import { forgotPassword, login, logout, logoutAll, me, refresh, register, resetPassword, updateMe } from "../controllers/authController.js";
+import { validateForgotPassword, validateLogin, validateProfileUpdate, validateRefreshToken, validateRegistration, validateResetPassword } from "../middleware/validators/authValidators.js";
 
 const router = Router();
 
@@ -13,5 +13,6 @@ router.post("/logout-all", authenticateToken, logoutAll);
 router.post("/forgot-password", validateForgotPassword, forgotPassword);
 router.post("/reset-password", validateResetPassword, resetPassword);
 router.get("/me", authenticateToken, me);
+router.patch("/me", authenticateToken, validateProfileUpdate, updateMe);
 
 export default router;

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowRight, Building2, ClipboardCheck, ClipboardList, HeartPulse, MapPin, PackageCheck, Truck } from "lucide-react-native";
+import { ArrowRight, Building2, ClipboardCheck, ClipboardList, HeartPulse, History, PackageCheck, Truck } from "lucide-react-native";
 import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native";
 import AllocationCard from "../../../../components/AllocationCard";
 import PressableBlock from "../../../../components/PressableBlock";
@@ -208,18 +208,22 @@ export default function NgoHome() {
 
       <View style={{
         flexDirection: "row",
-        gap: 9,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 16,
         marginBottom: 24
       }}>
-        <Metric icon={ClipboardList} label={tr("Assigned")} value={summary.assigned} colors={colors} />
-        <Metric icon={Truck} label={tr("Picked up")} value={summary.pickedUp} colors={colors} />
+        <Metric icon={ClipboardList} label={tr("Assigned")} value={summary.assigned} colors={colors} divider />
+        <Metric icon={Truck} label={tr("Picked up")} value={summary.pickedUp} colors={colors} divider />
         <Metric icon={PackageCheck} label={tr("Delivered")} value={summary.delivered} colors={colors} />
       </View>
 
       <Text style={{
         color: colors.textPrimary,
         fontSize: 19,
-        fontWeight: "900",
+        fontWeight: "500",
         marginBottom: 11
       }}>{tr("Quick actions")}</Text>
       <View style={{
@@ -228,7 +232,7 @@ export default function NgoHome() {
         marginBottom: 26
       }}>
         <QuickAction icon={ClipboardCheck} title={tr("All assignments")} subtitle={tr("Manage collection queue")} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/assignments")} />
-        <QuickAction icon={MapPin} title={tr("Organization profile")} subtitle={`${state.profile.capacity} beneficiaries`} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/profile")} />
+        <QuickAction icon={History} title={tr("Delivery history")} subtitle={tr("Completed collections")} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/history")} />
       </View>
 
       <View style={{
@@ -239,7 +243,7 @@ export default function NgoHome() {
       }}><View><Text style={{
             color: colors.textPrimary,
             fontSize: 19,
-            fontWeight: "900"
+            fontWeight: "500"
           }}>{tr("Needs attention")}</Text><Text style={{
             color: colors.textSecondary,
             fontSize: 12,
@@ -250,7 +254,7 @@ export default function NgoHome() {
         }}><Text style={{
             color: colors.primary,
             fontSize: 12,
-            fontWeight: "800"
+            fontWeight: "600"
           }}>{tr("View all")}</Text><ArrowRight size={14} color={colors.primary} style={{
             marginLeft: 4
           }} /></PressableBlock></View>
@@ -314,25 +318,28 @@ function Metric({
   icon: Icon,
   label,
   value,
-  colors
+  colors,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12
-  }}><Icon size={17} color={colors.primary} /><Text style={{
+    minHeight: 58,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border,
+    paddingHorizontal: 8
+  }}><Icon size={15} color={colors.textSecondary} /><Text style={{
       color: colors.textPrimary,
       fontSize: 18,
-      fontWeight: "900",
-      marginTop: 11
+      fontWeight: "600",
+      marginTop: 6
     }}>{value}</Text><Text style={{
       color: colors.textSecondary,
       fontSize: 10,
-      marginTop: 3
+      marginTop: 3,
+      textAlign: "center"
     }}>{label}</Text></View>;
 }
 function QuickAction({
@@ -364,7 +371,7 @@ function QuickAction({
       }}><Icon size={18} color={colors.primary} /></View><ArrowRight size={16} color={colors.textSecondary} /></View><Text style={{
       color: colors.textPrimary,
       fontSize: 14,
-      fontWeight: "800",
+      fontWeight: "600",
       marginTop: 13
     }} numberOfLines={1}>{title}</Text><Text style={{
       color: colors.textSecondary,

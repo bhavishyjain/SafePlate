@@ -89,3 +89,19 @@ export async function me(req, res, next) {
     return res.json(user);
   } catch (error) { return next(error); }
 }
+
+export async function updateMe(req, res, next) {
+  try {
+    const { name, phone, organization } = req.body;
+    const normalizedPhone = phone.trim();
+    const phoneOwner = await User.findOne({ phone: normalizedPhone, _id: { $ne: req.user.id } });
+    if (phoneOwner) return next(new AppError(409, "Phone number already exists", "PHONE_ALREADY_EXISTS"));
+    const user = await User.findByIdAndUpdate(req.user.id, {
+      name: name.trim(),
+      phone: normalizedPhone,
+      organization: organization?.trim() || undefined
+    }, { new: true, runValidators: true }).select("-passwordHash");
+    if (!user) return next(new AppError(404, "User not found", "USER_NOT_FOUND"));
+    return res.json(user);
+  } catch (error) { return next(error); }
+}

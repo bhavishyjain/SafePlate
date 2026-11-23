@@ -46,6 +46,14 @@ export function AuthProvider({ children }) {
 
   const register = useCallback(async (values) => (await api.post("/auth/register", values)).data, []);
 
+  const updateProfile = useCallback(async (values) => {
+    const { data: user } = await api.patch("/auth/me", values);
+    const current = await getUserAuth();
+    const next = await setUserAuth({ ...current, ...user, id: user._id || user.id, user });
+    setSession(next);
+    return user;
+  }, []);
+
   const logout = useCallback(async (allDevices = false) => {
     try {
       if (allDevices) await api.post("/auth/logout-all");
@@ -56,7 +64,7 @@ export function AuthProvider({ children }) {
     }
   }, [session?.refreshToken]);
 
-  const value = useMemo(() => ({ session, user: session?.user || session, loading, login, register, logout, restore }), [session, loading, login, register, logout, restore]);
+  const value = useMemo(() => ({ session, user: session?.user || session, loading, login, register, updateProfile, logout, restore }), [session, loading, login, register, updateProfile, logout, restore]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

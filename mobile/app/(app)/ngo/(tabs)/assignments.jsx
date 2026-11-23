@@ -5,10 +5,18 @@ import { ActivityIndicator, RefreshControl, ScrollView, Text, TextInput, View } 
 import AllocationCard from "../../../../components/AllocationCard";
 import PressableBlock from "../../../../components/PressableBlock";
 import { darkColors, lightColors } from "../../../../colors";
-import { ALLOCATION_STATUSES, labelFor } from "../../../../constants/domain";
+import { labelFor } from "../../../../constants/domain";
 import { listAllocations } from "../../../../services/allocations";
 import { useTheme } from "../../../../utils/context/theme";
 import { useTranslation } from "../../../../utils/i18n/LanguageProvider";
+const statusTone = (status, colors) => ({
+  ASSIGNED: colors.info,
+  PICKED_UP: colors.warning,
+  DELIVERED: colors.success,
+  REJECTED: colors.danger,
+  CANCELLED: colors.muted
+})[status] || colors.primary;
+const ACTIVE_STATUSES = ["ASSIGNED", "PICKED_UP"];
 export default function Assignments() {
   const {
     tr
@@ -41,11 +49,8 @@ export default function Assignments() {
   }, [load]));
   const items = useMemo(() => {
     const search = query.trim().toLowerCase();
-    return [...(data?.items || [])].filter(item => !status || item.status === status).filter(item => !search || item.donationId?.items?.some(food => food.name.toLowerCase().includes(search))).sort((a, b) => (new Date(a.assignedAt || a.createdAt) - new Date(b.assignedAt || b.createdAt)) * (oldestFirst ? 1 : -1));
+    return [...(data?.items || [])].filter(item => ACTIVE_STATUSES.includes(item.status)).filter(item => !status || item.status === status).filter(item => !search || item.donationId?.items?.some(food => food.name.toLowerCase().includes(search))).sort((a, b) => (new Date(a.assignedAt || a.createdAt) - new Date(b.assignedAt || b.createdAt)) * (oldestFirst ? 1 : -1));
   }, [data, oldestFirst, query, status]);
-  const all = data?.items || [];
-  const activeCount = all.filter(item => ["ASSIGNED", "PICKED_UP"].includes(item.status)).length;
-  const totalKg = all.reduce((sum, item) => sum + Number(item.donationId?.quantityKg || 0), 0);
   return <ScrollView style={{
     flex: 1,
     backgroundColor: colors.backgroundPrimary
@@ -60,56 +65,6 @@ export default function Assignments() {
     setRefreshing(true);
     load();
   }} colors={[colors.primary]} tintColor={colors.primary} />}>
-    
-    <Text style={{
-      color: colors.textSecondary,
-      fontSize: 13,
-      lineHeight: 19,
-      marginTop: 4,
-      marginBottom: 22
-    }}>{tr("Keep every assigned collection moving from pickup to delivery.")}</Text>
-
-    <View style={{
-      flexDirection: "row",
-      gap: 10,
-      marginBottom: 18
-    }}>
-      <View style={{
-        flex: 1,
-        backgroundColor: colors.backgroundSecondary,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: 14
-      }}><Text style={{
-          color: colors.textSecondary,
-          fontSize: 11
-        }}>{tr("Needs attention")}</Text><Text style={{
-          color: colors.textPrimary,
-          fontSize: 22,
-          fontWeight: "900",
-          marginTop: 4
-        }}>{activeCount}</Text></View>
-      <View style={{
-        flex: 1,
-        backgroundColor: colors.backgroundSecondary,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: 14
-      }}><Text style={{
-          color: colors.textSecondary,
-          fontSize: 11
-        }}>{tr("Food allocated")}</Text><Text style={{
-          color: colors.textPrimary,
-          fontSize: 22,
-          fontWeight: "900",
-          marginTop: 4
-        }}>{totalKg.toFixed(1)} <Text style={{
-            fontSize: 12
-          }}>{tr("kg")}</Text></Text></View>
-    </View>
-
     <View style={{
       flexDirection: "row",
       alignItems: "center",
@@ -148,27 +103,31 @@ export default function Assignments() {
 
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{
       gap: 8,
+      paddingRight: 16,
       paddingBottom: 20
     }}>
       {[{
         label: tr("All"),
         value: ""
-      }, ...ALLOCATION_STATUSES.map(value => ({
+      }, ...ACTIVE_STATUSES.map(value => ({
         label: tr(labelFor(value)),
         value
       }))].map(item => {
         const selected = item.value === status;
+        const tone = statusTone(item.value, colors);
         return <PressableBlock key={item.value || "all"} onPress={() => setStatus(item.value)} style={{
+          minHeight: 40,
+          justifyContent: "center",
           paddingHorizontal: 14,
           paddingVertical: 9,
           borderRadius: 999,
           borderWidth: 1,
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? colors.primary : colors.backgroundSecondary
+          borderColor: selected ? tone : `${tone}66`,
+          backgroundColor: selected ? tone : `${tone}14`
         }}><Text style={{
-            color: selected ? colors.onPrimary : colors.textPrimary,
+            color: selected ? colors.onPrimary : tone,
             fontSize: 12,
-            fontWeight: "800"
+            fontWeight: "600"
           }}>{item.label}</Text></PressableBlock>;
       })}
     </ScrollView>
@@ -181,7 +140,7 @@ export default function Assignments() {
     }}><Text style={{
         color: colors.textPrimary,
         fontSize: 18,
-        fontWeight: "900"
+        fontWeight: "500"
       }}>{status ? tr(labelFor(status)) : tr("Collection queue")}</Text><Text style={{
         color: colors.textSecondary,
         fontSize: 12

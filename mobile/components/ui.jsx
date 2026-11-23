@@ -25,12 +25,12 @@ export function Screen({ children, scroll = true, refreshing = false, onRefresh,
 
 export function Title({ children, subtitle }) {
   const colors = useColors();
-  return <View style={{ marginBottom: 20 }}><Text style={{ color: colors.textPrimary, fontSize: 28, fontWeight: "800" }}>{children}</Text>{subtitle ? <Text style={{ color: colors.textSecondary, marginTop: 5, lineHeight: 20 }}>{subtitle}</Text> : null}</View>;
+  return <View style={{ marginBottom: 20 }}><Text style={{ color: colors.textPrimary, fontSize: 28, fontWeight: "500" }}>{children}</Text>{subtitle ? <Text style={{ color: colors.textSecondary, marginTop: 5, lineHeight: 20 }}>{subtitle}</Text> : null}</View>;
 }
 
 export function Section({ title, children, style }) {
   const colors = useColors();
-  return <View style={[{ marginBottom: 18 }, style]}>{title ? <Text style={{ color: colors.textPrimary, fontSize: 17, fontWeight: "700", marginBottom: 10 }}>{title}</Text> : null}{children}</View>;
+  return <View style={[{ marginBottom: 18 }, style]}>{title ? <Text style={{ color: colors.textPrimary, fontSize: 17, fontWeight: "600", marginBottom: 10 }}>{title}</Text> : null}{children}</View>;
 }
 
 export function Surface({ children, style, onPress, accessibilityLabel }) {
@@ -41,14 +41,14 @@ export function Surface({ children, style, onPress, accessibilityLabel }) {
 
 export function Field({ label, error, multiline, style, rightAccessory, ...props }) {
   const colors = useColors();
-  return <View style={{ marginBottom: 14 }}><Text style={{ color: colors.textSecondary, fontSize: 12, fontWeight: "600", marginBottom: 7 }}>{label}</Text><View style={{ position: "relative" }}><TextInput accessibilityLabel={props.accessibilityLabel || label} {...props} multiline={multiline} placeholderTextColor={colors.placeholder} style={[{ minHeight: multiline ? 92 : 50, color: colors.textPrimary, backgroundColor: colors.backgroundSecondary, borderWidth: 1, borderColor: error ? colors.danger : colors.border, borderRadius: 10, paddingHorizontal: 14, paddingRight: rightAccessory ? 56 : 14, paddingVertical: 12, textAlignVertical: multiline ? "top" : "center" }, style]} />{rightAccessory ? <View style={{ position: "absolute", right: 4, top: 3, minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}>{rightAccessory}</View> : null}</View>{error ? <Text accessibilityRole="alert" style={{ color: colors.danger, fontSize: 12, marginTop: 5 }}>{error}</Text> : null}</View>;
+  return <View style={{ marginBottom: 14 }}><Text style={{ color: colors.textSecondary, fontSize: 12, fontWeight: "500", marginBottom: 7 }}>{label}</Text><View style={{ position: "relative" }}><TextInput accessibilityLabel={props.accessibilityLabel || label} {...props} multiline={multiline} placeholderTextColor={colors.placeholder} style={[{ minHeight: multiline ? 92 : 50, color: colors.textPrimary, backgroundColor: colors.backgroundSecondary, borderWidth: 1, borderColor: error ? colors.danger : colors.border, borderRadius: 10, paddingHorizontal: 14, paddingRight: rightAccessory ? 56 : 14, paddingVertical: 12, textAlignVertical: multiline ? "top" : "center" }, style]} />{rightAccessory ? <View style={{ position: "absolute", right: 4, top: 3, minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}>{rightAccessory}</View> : null}</View>{error ? <Text accessibilityRole="alert" style={{ color: colors.danger, fontSize: 12, marginTop: 5 }}>{error}</Text> : null}</View>;
 }
 
 export function Button({ title, onPress, loading, disabled, variant = "primary", style }) {
   const colors = useColors();
   const backgroundColor = variant === "danger" ? colors.danger : variant === "secondary" ? colors.backgroundSecondary : colors.primary;
   const color = variant === "primary" ? colors.dark : colors.textPrimary;
-  return <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityState={{ disabled: Boolean(disabled || loading), busy: Boolean(loading) }} disabled={disabled || loading} onPress={onPress} style={({ pressed }) => [{ borderRadius: 10, opacity: disabled || loading ? 0.5 : pressed ? 0.78 : 1 }, style]}><View style={{ minHeight: 50, width: "100%", borderRadius: 10, alignItems: "center", justifyContent: "center", paddingHorizontal: 16, backgroundColor, borderWidth: variant === "secondary" ? 1 : 0, borderColor: colors.border }}>{loading ? <ActivityIndicator color={color} /> : <Text style={{ color, fontWeight: "800", fontSize: 15 }}>{title}</Text>}</View></Pressable>;
+  return <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityState={{ disabled: Boolean(disabled || loading), busy: Boolean(loading) }} disabled={disabled || loading} onPress={onPress} style={({ pressed }) => [{ borderRadius: 10, opacity: disabled || loading ? 0.5 : pressed ? 0.78 : 1 }, style]}><View style={{ minHeight: 50, width: "100%", borderRadius: 10, alignItems: "center", justifyContent: "center", paddingHorizontal: 16, backgroundColor, borderWidth: variant === "secondary" ? 1 : 0, borderColor: colors.border }}>{loading ? <ActivityIndicator color={color} /> : <Text style={{ color, fontWeight: "600", fontSize: 15 }}>{title}</Text>}</View></Pressable>;
 }
 
 const statusTone = { PENDING: "warning", ASSIGNED: "info", PICKED_UP: "primary", DELIVERED: "success", DISCARDED: "danger", REJECTED: "danger", CANCELLED: "muted", CATALOG: "success", GEMINI_ESTIMATE: "info", ADMIN_OVERRIDE: "warning", ACTIVE: "success", INACTIVE: "muted", DISABLED: "danger" };

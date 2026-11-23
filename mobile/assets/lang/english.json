@@ -634,6 +634,22 @@
     "Dark": "Dark",
     "Light": "Light",
     "{{theme}} theme is active": "{{theme}} theme is active",
-    "{{rate}}% of donated weight has been assigned": "{{rate}}% of donated weight has been assigned"
+    "{{rate}}% of donated weight has been assigned": "{{rate}}% of donated weight has been assigned",
+    "Food donations": "Food donations",
+    "Donor account": "Donor account",
+    "List the food, check nutrition, and arrange pickup": "List the food, check nutrition, and arrange pickup",
+    "History": "History",
+    "Delivery history": "Delivery history",
+    "Completed collections": "Completed collections",
+    "No completed assignments": "No completed assignments",
+    "NGO account": "NGO account",
+    "Edit profile": "Edit profile",
+    "Account details": "Account details",
+    "Full name": "Full name",
+    "Email address": "Email address",
+    "Email cannot be changed": "Email cannot be changed",
+    "Enter a valid name and phone number": "Enter a valid name and phone number",
+    "Profile updated": "Profile updated",
+    "Could not update profile": "Could not update profile"
   }
 }

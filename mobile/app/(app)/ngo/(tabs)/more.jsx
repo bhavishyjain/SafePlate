@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { Building2, ChevronRight, CircleHelp, ClipboardList, Globe, HeartPulse, LogOut, Moon, ShieldOff, Sun } from "lucide-react-native";
+import { Building2, ChevronRight, CircleHelp, Edit3, Globe, LogOut, Moon, ShieldOff, Sun } from "lucide-react-native";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 import DialogBox from "../../../../components/DialogBox";
@@ -57,7 +57,7 @@ export default function NgoMore() {
     setLoading(true);
     try {
       await logout(dialog === "logout-all");
-      router.replace("/(app)/(auth)/login");
+      router.replace("/login");
     } catch (error) {
       Toast.show({
         type: "error",
@@ -83,61 +83,44 @@ export default function NgoMore() {
       paddingTop: 28,
       paddingBottom: 132
     }} showsVerticalScrollIndicator={false}>
-      
-      <Text style={{
-        color: colors.textSecondary,
-        fontSize: 13,
-        marginTop: 4,
-        marginBottom: 24
-      }}>{tr("Organization tools, preferences and account sessions.")}</Text>
-
       <View style={{
+        flexDirection: "row",
         alignItems: "center",
-        marginBottom: 25
+        marginBottom: 24
       }}><View style={{
-          width: 88,
-          height: 88,
-          borderRadius: 44,
-          backgroundColor: colors.primary,
-          borderWidth: 4,
-          borderColor: colors.backgroundSecondary,
+          width: 56,
+          height: 56,
+          borderRadius: 16,
+          backgroundColor: colors.backgroundSecondary,
+          borderWidth: 1,
+          borderColor: colors.border,
           alignItems: "center",
           justifyContent: "center"
         }}><Text style={{
-            color: colors.onPrimary,
-            fontSize: 34,
-            fontWeight: "900"
-          }}>{initial}</Text></View><Text style={{
+            color: colors.primary,
+            fontSize: 24,
+            fontWeight: "600"
+          }}>{initial}</Text></View><View style={{ flex: 1, marginLeft: 16 }}><Text style={{
           color: colors.textPrimary,
-          fontSize: 19,
-          fontWeight: "900",
-          marginTop: 12,
-          textAlign: "center"
+          fontSize: 20,
+          fontWeight: "600"
         }}>{organization}</Text><Text style={{
           color: colors.textSecondary,
           fontSize: 13,
-          marginTop: 3
-        }}>{user?.email}</Text><View style={{
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-          borderRadius: 999,
-          backgroundColor: `${colors.primary}18`,
-          marginTop: 9
-        }}><Text style={{
-            color: colors.primary,
-            fontSize: 10,
-            fontWeight: "900"
-          }}>{tr("NGO PARTNER")}</Text></View></View>
+          marginTop: 2
+        }}>{user?.email}</Text><Text style={{ color: colors.primary, fontSize: 12, fontWeight: "500", marginTop: 4 }}>{tr("NGO account")}</Text></View><PressableBlock accessibilityLabel={tr("Edit profile")} onPress={() => router.push("/(app)/more/profile")} style={{ width: 42, height: 42, borderRadius: 12, backgroundColor: colors.backgroundSecondary, alignItems: "center", justifyContent: "center" }}><Edit3 size={18} color={colors.textSecondary} /></PressableBlock></View>
 
       <View style={{
         flexDirection: "row",
-        gap: 9,
-        marginBottom: 26
-      }}><ProfileMetric label={tr("Beneficiaries")} value={activity.capacity} colors={colors} loading={!state} /><ProfileMetric label={tr("Active")} value={activity.active} colors={colors} loading={!state} /><ProfileMetric label={tr("Delivered")} value={activity.delivered} colors={colors} loading={!state} /></View>
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 16,
+        marginBottom: 32
+      }}><ProfileMetric label={tr("Beneficiaries")} value={activity.capacity} colors={colors} loading={!state} divider /><ProfileMetric label={tr("Active")} value={activity.active} colors={colors} loading={!state} divider /><ProfileMetric label={tr("Delivered")} value={activity.delivered} colors={colors} loading={!state} /></View>
 
-      <SectionLabel colors={colors}>{tr("Operations")}</SectionLabel>
-      <MenuRow icon={ClipboardList} title={tr("Assignments")} subtitle={tr("Manage pickup and delivery tasks")} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/assignments")} />
-      <MenuRow icon={HeartPulse} title={tr("Nutrition status")} subtitle={tr("Daily calorie and protein coverage")} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/nutrition")} />
+      <SectionLabel colors={colors}>{tr("Organization")}</SectionLabel>
       <MenuRow icon={Building2} title={tr("Organization profile")} subtitle={tr("Beneficiary groups, type and service location")} colors={colors} onPress={() => router.push("/(app)/ngo/(tabs)/profile")} />
 
       <SectionLabel colors={colors}>{tr("Preferences")}</SectionLabel>
@@ -181,26 +164,28 @@ function ProfileMetric({
   label,
   value,
   colors,
-  loading
+  loading,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    paddingVertical: 13,
-    paddingHorizontal: 10,
-    alignItems: "center"
+    minHeight: 56,
+    paddingHorizontal: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border
   }}>{loading ? <ActivityIndicator size="small" color={colors.primary} /> : <Text style={{
       color: colors.textPrimary,
       fontSize: 16,
-      fontWeight: "900"
+      fontWeight: "600",
+      textAlign: "center"
     }} numberOfLines={1}>{value}</Text>}<Text style={{
       color: colors.textSecondary,
       fontSize: 10,
-      marginTop: 4
+      marginTop: 4,
+      textAlign: "center"
     }} numberOfLines={1}>{label}</Text></View>;
 }
 function MenuRow({

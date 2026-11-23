@@ -634,6 +634,22 @@
     "Dark": "डार्क",
     "Light": "लाइट",
     "{{theme}} theme is active": "{{theme}} थीम सक्रिय है",
-    "{{rate}}% of donated weight has been assigned": "दान किए गए वजन का {{rate}}% आवंटित किया गया है"
+    "{{rate}}% of donated weight has been assigned": "दान किए गए वजन का {{rate}}% आवंटित किया गया है",
+    "Food donations": "भोजन दान",
+    "Donor account": "दाता खाता",
+    "List the food, check nutrition, and arrange pickup": "भोजन दर्ज करें, पोषण जांचें और पिकअप तय करें",
+    "History": "इतिहास",
+    "Delivery history": "डिलीवरी इतिहास",
+    "Completed collections": "पूरे हुए संग्रह",
+    "No completed assignments": "कोई पूरा असाइनमेंट नहीं",
+    "NGO account": "एनजीओ खाता",
+    "Edit profile": "प्रोफ़ाइल संपादित करें",
+    "Account details": "खाता विवरण",
+    "Full name": "पूरा नाम",
+    "Email address": "ईमेल पता",
+    "Email cannot be changed": "ईमेल बदला नहीं जा सकता",
+    "Enter a valid name and phone number": "मान्य नाम और फ़ोन नंबर दर्ज करें",
+    "Profile updated": "प्रोफ़ाइल अपडेट की गई",
+    "Could not update profile": "प्रोफ़ाइल अपडेट नहीं हो सकी"
   }
 }

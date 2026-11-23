@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowRight, HeartPulse, Salad, Target, UsersRound } from "lucide-react-native";
+import { ArrowRight, HeartPulse, UsersRound } from "lucide-react-native";
 import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native";
 import PressableBlock from "../../../../components/PressableBlock";
 import { darkColors, lightColors } from "../../../../colors";
@@ -53,19 +53,6 @@ export default function NutritionDetail() {
     setRefreshing(true);
     load();
   }} colors={[colors.primary]} tintColor={colors.primary} />}>
-    <Text style={{
-      color: colors.textPrimary,
-      fontSize: 29,
-      fontWeight: "900"
-    }}>{tr("Today’s nutrition")}</Text>
-    <Text style={{
-      color: colors.textSecondary,
-      fontSize: 13,
-      lineHeight: 19,
-      marginTop: 4,
-      marginBottom: 22
-    }}>{tr("Delivered nutrition against your organization’s daily requirement.")}</Text>
-
     {!state && !error ? <View style={{
       paddingVertical: 60,
       alignItems: "center"
@@ -129,18 +116,22 @@ export default function NutritionDetail() {
 
       <View style={{
         flexDirection: "row",
-        gap: 10,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 16,
         marginBottom: 24
       }}>
-        <Metric icon={Target} label={tr("Calorie gap")} value={Math.round(nutrition.gapCalories).toLocaleString("en-IN")} suffix="kcal" colors={colors} />
-        <Metric icon={Salad} label={tr("Protein gap")} value={nutrition.gapProtein.toFixed(1)} suffix="grams" colors={colors} />
-        <Metric icon={UsersRound} label={tr("People served")} value={state.profile.capacity} suffix="people" colors={colors} />
+        <Metric label={tr("Calorie gap")} value={Math.round(nutrition.gapCalories).toLocaleString("en-IN")} suffix="kcal" colors={colors} divider />
+        <Metric label={tr("Protein gap")} value={nutrition.gapProtein.toFixed(1)} suffix="grams" colors={colors} divider />
+        <Metric label={tr("People served")} value={state.profile.capacity} suffix="people" colors={colors} />
       </View>
 
       <Text style={{
         color: colors.textPrimary,
         fontSize: 19,
-        fontWeight: "900",
+        fontWeight: "500",
         marginBottom: 11
       }}>{tr("Daily progress")}</Text>
       <View style={{
@@ -163,42 +154,12 @@ export default function NutritionDetail() {
       <View style={{
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: `${colors.info}10`,
-        borderWidth: 1,
-        borderColor: `${colors.info}35`,
-        borderRadius: 15,
-        padding: 15,
-        marginBottom: 24
-      }}><View style={{
-          width: 38,
-          height: 38,
-          borderRadius: 12,
-          backgroundColor: `${colors.info}18`,
-          alignItems: "center",
-          justifyContent: "center"
-        }}><Target size={18} color={colors.info} /></View><View style={{
-          flex: 1,
-          marginLeft: 12
-        }}><Text style={{
-            color: colors.textPrimary,
-            fontSize: 13,
-            fontWeight: "800"
-          }}>{tr("Target source")}</Text><Text style={{
-            color: colors.textSecondary,
-            fontSize: 11,
-            lineHeight: 16,
-            marginTop: 2
-          }}>{tr(labelFor(nutrition.targetSource))} · {tr("Resets daily at midnight Asia/Kolkata")}</Text></View></View>
-
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
         justifyContent: "space-between",
         marginBottom: 11
       }}><View><Text style={{
             color: colors.textPrimary,
             fontSize: 19,
-            fontWeight: "900"
+            fontWeight: "500"
           }}>{tr("Beneficiary groups")}</Text><Text style={{
             color: colors.textSecondary,
             fontSize: 12,
@@ -209,7 +170,7 @@ export default function NutritionDetail() {
         }}><Text style={{
             color: colors.primary,
             fontSize: 12,
-            fontWeight: "800"
+            fontWeight: "600"
           }}>{tr("Edit")}</Text><ArrowRight size={14} color={colors.primary} style={{
             marginLeft: 4
           }} /></PressableBlock></View>
@@ -218,12 +179,9 @@ export default function NutritionDetail() {
         return <View key={group.category} style={{
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: colors.backgroundSecondary,
-          borderWidth: 1,
-          borderColor: colors.border,
-          borderRadius: 15,
-          padding: 15,
-          marginBottom: 10
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          paddingVertical: 14
         }}><View style={{
             width: 38,
             height: 38,
@@ -237,7 +195,7 @@ export default function NutritionDetail() {
           }}><Text style={{
               color: colors.textPrimary,
               fontSize: 13,
-              fontWeight: "800"
+              fontWeight: "600"
             }}>{tr(option?.label || labelFor(group.category))}</Text><Text style={{
               color: colors.textSecondary,
               fontSize: 11,
@@ -245,36 +203,37 @@ export default function NutritionDetail() {
             }}>{option?.calories.toLocaleString("en-IN")} kcal · {option?.protein} {tr("g protein per person")}</Text></View><Text style={{
             color: colors.primary,
             fontSize: 19,
-            fontWeight: "900"
+            fontWeight: "600"
           }}>{group.count}</Text></View>;
       })}
     </>}
   </ScrollView>;
 }
 function Metric({
-  icon: Icon,
   label,
   value,
   suffix,
-  colors
+  colors,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12
-  }}><Icon size={17} color={colors.primary} /><Text style={{
+    minHeight: 58,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border
+  }}><Text style={{
       color: colors.textPrimary,
       fontSize: 16,
-      fontWeight: "900",
-      marginTop: 11
+      fontWeight: "600"
     }} numberOfLines={1}>{value}</Text><Text style={{
       color: colors.textSecondary,
       fontSize: 9,
-      marginTop: 3
+      marginTop: 4,
+      textAlign: "center"
     }} numberOfLines={1}>{label}</Text><Text style={{
       color: colors.textTertiary,
       fontSize: 9,

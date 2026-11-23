@@ -148,20 +148,22 @@ export default function AssignmentDetail() {
             color: colors.textPrimary,
             fontSize: 23,
             lineHeight: 29,
-            fontWeight: "900"
+            fontWeight: "600"
           }}>{donation.items.map(item => item.name).join(", ")}</Text><Text style={{
             color: colors.textSecondary,
             fontSize: 12,
             marginTop: 5
-          }}>{tr("Assigned")}{formatDateTime(allocation.assignedAt)}</Text></View><View style={{
-          backgroundColor: `${tone}18`,
-          borderRadius: 8,
-          paddingHorizontal: 9,
-          paddingVertical: 6
+          }}>{tr("Assigned")} · {formatDateTime(allocation.assignedAt)}</Text></View><View style={{
+          backgroundColor: `${tone}14`,
+          borderWidth: 1,
+          borderColor: `${tone}66`,
+          borderRadius: 999,
+          paddingHorizontal: 10,
+          paddingVertical: 5
         }}><Text style={{
             color: tone,
             fontSize: 10,
-            fontWeight: "900"
+            fontWeight: "600"
           }}>{tr(labelFor(allocation.status)).toUpperCase()}</Text></View></View>
 
       <View style={{
@@ -174,7 +176,7 @@ export default function AssignmentDetail() {
       }}><Text style={{
           color: colors.textPrimary,
           fontSize: 16,
-          fontWeight: "900",
+          fontWeight: "600",
           marginBottom: 15
         }}>{tr("Collection progress")}</Text><View style={{
           flexDirection: "row"
@@ -220,14 +222,18 @@ export default function AssignmentDetail() {
 
       <View style={{
         flexDirection: "row",
-        gap: 10,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 14,
         marginBottom: 20
-      }}><Summary icon={Scale} label={tr("Weight")} value={`${donation.quantityKg.toFixed(2)} kg`} colors={colors} /><Summary icon={PackageOpen} label={tr("Food items")} value={donation.items.length} colors={colors} /><Summary icon={CalendarClock} label={tr("Calories")} value={Math.round(totals.calories)} colors={colors} /></View>
+      }}><Summary icon={Scale} label={tr("Weight")} value={`${donation.quantityKg.toFixed(2)} kg`} colors={colors} divider /><Summary icon={PackageOpen} label={tr("Food items")} value={donation.items.length} colors={colors} divider /><Summary icon={CalendarClock} label={tr("Calories")} value={Math.round(totals.calories)} colors={colors} /></View>
 
       <Text style={{
         color: colors.textPrimary,
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "500",
         marginBottom: 11
       }}>{tr("Pickup information")}</Text>
       <View style={{
@@ -253,14 +259,14 @@ export default function AssignmentDetail() {
         marginBottom: 22
       }}><Navigation size={17} color={colors.primary} /><Text style={{
           color: colors.primary,
-          fontWeight: "900",
+          fontWeight: "600",
           marginLeft: 7
         }}>{tr("Open pickup in Maps")}</Text></PressableBlock>
 
       <Text style={{
         color: colors.textPrimary,
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "500",
         marginBottom: 11
       }}>{tr("Food and nutrition")}</Text>
       {donation.items.map(item => <View key={item._id || item.name} style={{
@@ -277,12 +283,12 @@ export default function AssignmentDetail() {
         }}><Text style={{
             color: colors.textPrimary,
             fontSize: 15,
-            fontWeight: "800",
+            fontWeight: "600",
             flex: 1
           }}>{item.name}</Text><Text style={{
             color: colors.primary,
             fontSize: 13,
-            fontWeight: "900"
+            fontWeight: "600"
           }}>{item.quantityGrams} g</Text></View><Text style={{
           color: colors.textSecondary,
           fontSize: 12,
@@ -292,7 +298,7 @@ export default function AssignmentDetail() {
       <Text style={{
         color: colors.textPrimary,
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "500",
         marginTop: 12,
         marginBottom: 11
       }}>{tr("Donor contact")}</Text>
@@ -317,7 +323,7 @@ export default function AssignmentDetail() {
           justifyContent: "center"
         }}><Trash2 size={17} color={colors.danger} /><Text style={{
             color: colors.danger,
-            fontWeight: "900",
+            fontWeight: "600",
             marginLeft: 7
           }}>{tr("Reject assignment")}</Text></PressableBlock></View> : null}
       {allocation.status === "PICKED_UP" ? <SwipeButton type="success" title={tr("Swipe to confirm delivery")} loader={loading} onSwipeSuccess={() => mutate(confirmDelivery, "Delivery confirmed")} /> : null}
@@ -331,21 +337,23 @@ function Summary({
   icon: Icon,
   label,
   value,
-  colors
+  colors,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12
+    minHeight: 58,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border
   }}><Icon size={16} color={colors.primary} /><Text style={{
       color: colors.textPrimary,
       fontSize: 14,
-      fontWeight: "900",
-      marginTop: 10
+      fontWeight: "600",
+      marginTop: 6
     }} numberOfLines={1}>{value}</Text><Text style={{
       color: colors.textSecondary,
       fontSize: 9,

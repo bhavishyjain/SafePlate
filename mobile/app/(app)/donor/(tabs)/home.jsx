@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { ArrowRight, CalendarClock, ChartNoAxesCombined, HandHeart, ListChecks, PackageCheck, Sparkles } from "lucide-react-native";
+import { ArrowRight, ChartNoAxesCombined, HandHeart, ListChecks, PackageCheck } from "lucide-react-native";
 import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native";
 import DonationCard from "../../../../components/DonationCard";
 import PressableBlock from "../../../../components/PressableBlock";
@@ -54,6 +54,7 @@ export default function DonorHome() {
       active,
       delivered,
       totalKg: items.reduce((total, item) => total + Number(item.quantityKg || 0), 0),
+      deliveredKg: delivered.reduce((total, item) => total + Number(item.quantityKg || 0), 0),
       monthCount: thisMonth.length
     };
   }, [data]);
@@ -82,17 +83,15 @@ export default function DonorHome() {
         fontSize: 14,
         fontWeight: "600"
       }}>
-          {greeting}
+          {tr(greeting)}
         </Text>
         <Text style={{
         color: colors.textPrimary,
         fontSize: 30,
         lineHeight: 37,
-        fontWeight: "900",
+        fontWeight: "600",
         marginTop: 1
-      }}>
-          {firstName}
-        </Text>
+      }}>{firstName}</Text>
         <Text style={{
         color: colors.textSecondary,
         fontSize: 14,
@@ -102,51 +101,32 @@ export default function DonorHome() {
       </View>
 
       <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/donate")} style={{
-      overflow: "hidden",
       backgroundColor: colors.primary,
-      borderRadius: 20,
+      borderRadius: 16,
       padding: 20,
-      marginBottom: 20
+      marginBottom: 24
     }}>
         <View style={{
-        position: "absolute",
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        backgroundColor: "rgba(255,255,255,0.10)",
-        right: -45,
-        top: -58
-      }} />
-        <View style={{
-        position: "absolute",
-        width: 86,
-        height: 86,
-        borderRadius: 43,
-        backgroundColor: "rgba(255,255,255,0.10)",
-        right: 54,
-        bottom: -44
-      }} />
-        <View style={{
-        width: 44,
-        height: 44,
-        borderRadius: 14,
-        backgroundColor: "rgba(255,255,255,0.22)",
+        width: 36,
+        height: 36,
+        borderRadius: 10,
+        backgroundColor: "rgba(255,255,255,0.20)",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 20
+        marginBottom: 16
       }}>
-          <HandHeart color={colors.onPrimary} size={23} />
+          <HandHeart color={colors.onPrimary} size={18} strokeWidth={1.7} />
         </View>
         <Text style={{
         color: colors.onPrimary,
-        fontSize: 21,
-        fontWeight: "900"
+        fontSize: 20,
+        fontWeight: "600"
       }}>
           {tr("Share surplus food")}
         </Text>
         <Text style={{
         color: colors.onPrimary,
-        opacity: 0.76,
+        opacity: 0.78,
         fontSize: 13,
         lineHeight: 19,
         marginTop: 5,
@@ -160,7 +140,7 @@ export default function DonorHome() {
           <Text style={{
           color: colors.onPrimary,
           fontSize: 13,
-          fontWeight: "900"
+          fontWeight: "600"
         }}>{tr("Start a donation")}</Text>
           <ArrowRight color={colors.onPrimary} size={17} style={{
           marginLeft: 6
@@ -218,8 +198,8 @@ export default function DonorHome() {
       }}>
             <Text style={{
           color: colors.textPrimary,
-          fontSize: 19,
-          fontWeight: "900"
+          fontSize: 18,
+          fontWeight: "500"
         }}>{tr("At a glance")}</Text>
             <PressableBlock onPress={() => router.push("/(app)/donor/(tabs)/impact")} style={{
           flexDirection: "row",
@@ -237,26 +217,33 @@ export default function DonorHome() {
           </View>
           <View style={{
         flexDirection: "row",
-        gap: 9,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingVertical: 16,
         marginBottom: 24
       }}>
-            <Metric label={tr("Shared")} value={`${summary.totalKg.toFixed(1)} kg`} icon={Sparkles} colors={colors} />
-            <Metric label={tr("Active")} value={summary.active.length} icon={CalendarClock} colors={colors} />
-            <Metric label={tr("Delivered")} value={summary.delivered.length} icon={PackageCheck} colors={colors} />
+            <Metric label={tr("Shared")} value={`${summary.deliveredKg.toFixed(1)} kg`} colors={colors} divider />
+            <Metric label={tr("Active")} value={summary.active.length} colors={colors} divider />
+            <Metric label={tr("Delivered")} value={summary.delivered.length} colors={colors} />
           </View>
 
           <Text style={{
         color: colors.textPrimary,
-        fontSize: 19,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "500",
         marginBottom: 11
       }}>{tr("Quick actions")}</Text>
           <View style={{
-        flexDirection: "row",
-        gap: 10,
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 14,
+        paddingHorizontal: 16,
         marginBottom: 26
       }}>
-            <QuickAction icon={ListChecks} title={tr("Donation history")} subtitle={tr("Track every pickup")} colors={colors} onPress={() => router.push("/(app)/donor/(tabs)/donations")} />
+            <QuickAction icon={ListChecks} title={tr("Donation history")} subtitle={tr("Track every pickup")} colors={colors} divider onPress={() => router.push("/(app)/donor/(tabs)/donations")} />
             <QuickAction icon={ChartNoAxesCombined} title={tr("Your impact")} subtitle={`${summary.monthCount} this month`} colors={colors} onPress={() => router.push("/(app)/donor/(tabs)/impact")} />
           </View>
 
@@ -269,8 +256,8 @@ export default function DonorHome() {
             <View>
               <Text style={{
             color: colors.textPrimary,
-            fontSize: 19,
-            fontWeight: "900"
+            fontSize: 18,
+            fontWeight: "500"
           }}>{tr("Active pickups")}</Text>
               <Text style={{
             color: colors.textSecondary,
@@ -327,33 +314,24 @@ export default function DonorHome() {
 function Metric({
   label,
   value,
-  icon: Icon,
-  colors
+  colors,
+  divider = false
 }) {
   return <View style={{
     flex: 1,
     minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12
+    minHeight: 52,
+    paddingHorizontal: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: divider ? 1 : 0,
+    borderRightColor: colors.border
   }}>
-      <View style={{
-      width: 30,
-      height: 30,
-      borderRadius: 9,
-      backgroundColor: `${colors.primary}15`,
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
-        <Icon size={15} color={colors.primary} />
-      </View>
       <Text style={{
       color: colors.textPrimary,
       fontSize: 17,
-      fontWeight: "900",
-      marginTop: 12
+      fontWeight: "600",
+      textAlign: "center"
     }} numberOfLines={1}>
         {value}
       </Text>
@@ -371,48 +349,41 @@ function QuickAction({
   title,
   subtitle,
   colors,
-  onPress
+  onPress,
+  divider = false
 }) {
   return <PressableBlock onPress={onPress} style={{
-    flex: 1,
-    minWidth: 0,
-    backgroundColor: colors.backgroundSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 16,
-    padding: 15
+    minHeight: 64,
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: divider ? 1 : 0,
+    borderBottomColor: colors.border
   }}>
       <View style={{
-      flexDirection: "row",
+      width: 32,
+      height: 32,
+      borderRadius: 8,
+      backgroundColor: colors.backgroundElevated,
       alignItems: "center",
-      justifyContent: "space-between"
+      justifyContent: "center"
     }}>
-        <View style={{
-        width: 36,
-        height: 36,
-        borderRadius: 11,
-        backgroundColor: `${colors.primary}17`,
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-          <Icon size={18} color={colors.primary} />
-        </View>
-        <ArrowRight size={16} color={colors.textSecondary} />
+          <Icon size={17} strokeWidth={1.7} color={colors.textSecondary} />
       </View>
+      <View style={{ flex: 1, marginLeft: 12 }}>
       <Text style={{
       color: colors.textPrimary,
       fontSize: 14,
-      fontWeight: "800",
-      marginTop: 13
+      fontWeight: "600"
     }} numberOfLines={1}>
         {title}
       </Text>
       <Text style={{
       color: colors.textSecondary,
       fontSize: 11,
-      marginTop: 3
+      marginTop: 2
     }} numberOfLines={1}>
         {subtitle}
       </Text>
+      </View><ArrowRight size={16} color={colors.textSecondary} />
     </PressableBlock>;
 }

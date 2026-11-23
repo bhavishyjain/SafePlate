@@ -178,9 +178,9 @@ After `npm run seed:development`, these accounts are available:
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Donor | `donor@safeplate.dev` | `SafePlate123!` |
-| NGO | `ngo@safeplate.dev` | `SafePlate123!` |
-| Administrator | `admin@safeplate.dev` | `SafePlate123!` |
+| Donor | `donor@example.com` | `123456` |
+| NGO | `ngo@example.com` | `123456` |
+| Administrator | `admin@example.com` | `123456` |
 
 The seed is idempotent and includes linked donations, assignments, nutrition progress, catalog records, dashboard history, and secondary accounts for operational scenarios.
 

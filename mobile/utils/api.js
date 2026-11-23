@@ -15,7 +15,7 @@ export function setAuthFailureHandler(handler) {
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 60000,
   headers: { "User-Agent": USER_AGENT_STRING },
 });
 
