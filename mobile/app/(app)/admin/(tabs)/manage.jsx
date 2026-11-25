@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { ArrowRight, BookOpenCheck, Building2, Database, Salad, ShieldCheck, SlidersHorizontal, Users } from "lucide-react-native";
+import { ArrowRight, BookOpenCheck, Building2, Database, Salad, ShieldCheck, Users } from "lucide-react-native";
 import { Text, View } from "react-native";
 import PressableBlock from "../../../../components/PressableBlock";
 import { Screen, Section, Surface, useColors } from "../../../../components/ui";
@@ -31,52 +31,6 @@ export default function AdminManage() {
   return <Screen contentStyle={{
     paddingBottom: 132
   }}>
-    <Text style={{
-      color: colors.textSecondary,
-      fontSize: 13,
-      lineHeight: 19,
-      marginTop: 4,
-      marginBottom: 22
-    }}>{tr("Keep platform access, partners and nutrition data accurate.")}</Text>
-
-    <View style={{
-      backgroundColor: colors.backgroundSecondary,
-      borderRadius: 21,
-      borderWidth: 1,
-      borderColor: colors.border,
-      padding: 19,
-      marginBottom: 24
-    }}>
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center"
-      }}><View style={{
-          width: 47,
-          height: 47,
-          borderRadius: 15,
-          backgroundColor: `${colors.primary}18`,
-          alignItems: "center",
-          justifyContent: "center"
-        }}><SlidersHorizontal size={22} color={colors.primary} /></View><View style={{
-          flex: 1,
-          marginLeft: 14
-        }}><Text style={{
-            color: colors.textPrimary,
-            fontSize: 18,
-            fontWeight: "900"
-          }}>{tr("Platform administration")}</Text><Text style={{
-            color: colors.textSecondary,
-            fontSize: 12,
-            lineHeight: 17,
-            marginTop: 3
-          }}>{tr("Three areas control matching quality and account safety.")}</Text></View></View>
-      <View style={{
-        flexDirection: "row",
-        gap: 9,
-        marginTop: 18
-      }}><MiniMetric label={tr("Access")} value={tr("Users")} colors={colors} /><MiniMetric label={tr("Partners")} value={tr("NGOs")} colors={colors} /><MiniMetric label={tr("Reference")} value={tr("Foods")} colors={colors} /></View>
-    </View>
-
     <Section title={tr("Administration")}>
       {areaDefinitions.map(area => <ManageCard key={area.title} {...area} title={tr(area.title)} subtitle={tr(area.subtitle)} tone={colors[area.accent]} colors={colors} onPress={() => router.push(area.route)} />)}
     </Section>
@@ -118,29 +72,6 @@ export default function AdminManage() {
         })}</Surface>
     </Section>
   </Screen>;
-}
-function MiniMetric({
-  label,
-  value,
-  colors
-}) {
-  return <View style={{
-    flex: 1,
-    borderRadius: 12,
-    backgroundColor: colors.backgroundPrimary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 11,
-    paddingHorizontal: 10
-  }}><Text style={{
-      color: colors.textSecondary,
-      fontSize: 10
-    }}>{label}</Text><Text style={{
-      color: colors.textPrimary,
-      fontSize: 14,
-      fontWeight: "900",
-      marginTop: 4
-    }}>{value}</Text></View>;
 }
 function ManageCard({
   icon: Icon,

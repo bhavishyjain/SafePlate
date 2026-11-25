@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="24.7.17">
+  <diagram id="safeplate-donation-allocation-activity" name="Donation Allocation Activity Diagram">
+    <mxGraphModel dx="1700" dy="1780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1780" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="SafePlate Donation Allocation Activity Diagram" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=25;fontStyle=1;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="42" width="1200" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Donor submission, matching, NGO fulfillment, and pending-donation expiry" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="92" width="1300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="826" y="145" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="Donor enters food items" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="230" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="System suggests nutrition" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="345" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="Donor confirms?" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;spacing=15;" vertex="1" parent="1">
+          <mxGeometry x="750" y="465" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="revise" value="Donor revises items" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="230" y="485" width="250" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="Donor sets pickup details" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="635" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="Donor reviews and submits" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="740" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="System creates pending donation" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="845" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="System runs allocation" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="680" y="950" width="340" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" value="Eligible NGO?" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;spacing=15;" vertex="1" parent="1">
+          <mxGeometry x="750" y="1070" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="pending" value="Donation remains pending" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="250" y="1110" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="deadline" value="Deadline passed?" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;spacing=15;" vertex="1" parent="1">
+          <mxGeometry x="280" y="1240" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="retry" value="Retry matching" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1258" width="170" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="discard" value="System discards expired donation" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="250" y="1460" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="discard-final" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="366" y="1605" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="discard-final-inner" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="378" y="1617" width="24" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="assign" value="System assigns NGO" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1090" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo-decision" value="NGO response?" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;spacing=15;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1220" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="pickup" value="NGO confirms pickup" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1390" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="delivery" value="NGO confirms delivery" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1495" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="nutrition-log" value="System records delivered nutrition" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1600" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="delivered-final" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1286" y="1705" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="delivered-final-inner" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1298" y="1717" width="24" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="e01" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="start" target="a1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e02" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a1" target="a2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e03" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a2" target="d1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e04" value="No" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="d1" target="revise">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e05" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="revise" target="a1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="355" y="266" />
+            </Array>
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e06" value="Yes" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d1" target="a3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e07" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3" target="a4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e08" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a4" target="a5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e09" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a5" target="a6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a6" target="d2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="No" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="d2" target="pending">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="650" y="1125" />
+              <mxPoint x="650" y="1146" />
+            </Array>
+            <mxPoint x="0" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pending" target="deadline">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="No" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="deadline" target="retry">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="retry" target="a6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="145" y="986" />
+            </Array>
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="Yes" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="deadline" target="discard">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="discard" target="discard-final">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" value="Yes" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="d2" target="assign">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="assign" target="ngo-decision">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" value="Reject" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="ngo-decision" target="pending">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="1275" />
+              <mxPoint x="1090" y="1195" />
+              <mxPoint x="560" y="1195" />
+              <mxPoint x="560" y="1146" />
+            </Array>
+            <mxPoint x="200" y="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="Pickup" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="ngo-decision" target="pickup">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="pickup" target="delivery">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="delivery" target="nutrition-log">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="nutrition-log" target="delivered-final">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

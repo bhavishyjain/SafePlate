@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="24.7.17">
+  <diagram id="safeplate-domain-classes" name="Domain Class Diagram">
+    <mxGraphModel dx="1700" dy="1210" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1210" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="SafePlate Domain Class Diagram" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=26;fontStyle=1;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="43" width="1050" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Core Mongoose models and embedded donation values" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="95" width="1100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="310" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="user-attrs" value="id: ObjectId&lt;br&gt;name: String&lt;br&gt;email: String&lt;br&gt;phone: String&lt;br&gt;role: DONOR | NGO | ADMIN&lt;br&gt;isActive: Boolean" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="user">
+          <mxGeometry x="15" y="54" width="280" height="164" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo" value="NGO" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="710" y="190" width="350" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo-attrs" value="id: ObjectId&lt;br&gt;userId: ObjectId&lt;br&gt;type: String&lt;br&gt;location: GeoJSON Point&lt;br&gt;beneficiaryGroups: Group[]&lt;br&gt;capacity: Number&lt;br&gt;calculatedNutrition: Target&lt;br&gt;nutritionOverride: Override?" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="ngo">
+          <mxGeometry x="15" y="54" width="320" height="214" as="geometry" />
+        </mxCell>
+        <mxCell id="donation" value="Donation" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="540" width="350" height="285" as="geometry" />
+        </mxCell>
+        <mxCell id="donation-attrs" value="id: ObjectId&lt;br&gt;donorId: ObjectId&lt;br&gt;items: DonationItem[]&lt;br&gt;quantityKg: Number&lt;br&gt;preparedAt: Date&lt;br&gt;pickupDeadline: Date&lt;br&gt;location: GeoJSON Point&lt;br&gt;packagingType: String&lt;br&gt;status: DonationStatus" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="donation">
+          <mxGeometry x="15" y="54" width="320" height="219" as="geometry" />
+        </mxCell>
+        <mxCell id="allocation" value="Allocation" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="710" y="540" width="390" height="295" as="geometry" />
+        </mxCell>
+        <mxCell id="allocation-attrs" value="id: ObjectId&lt;br&gt;donationId: ObjectId&lt;br&gt;ngoId: ObjectId&lt;br&gt;status: AllocationStatus&lt;br&gt;matchScore: Number&lt;br&gt;scoreSnapshot: ScoreSnapshot&lt;br&gt;history: HistoryEvent[]&lt;br&gt;deliveryNutritionSnapshot?" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="allocation">
+          <mxGeometry x="15" y="54" width="360" height="229" as="geometry" />
+        </mxCell>
+        <mxCell id="item" value="DonationItem" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="930" width="350" height="215" as="geometry" />
+        </mxCell>
+        <mxCell id="item-attrs" value="name: String&lt;br&gt;quantityGrams: Number&lt;br&gt;nutritionPer100g: Nutrition&lt;br&gt;nutritionSource: String&lt;br&gt;donorConfirmed: Boolean&lt;br&gt;catalogItemId?: ObjectId" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="item">
+          <mxGeometry x="15" y="54" width="320" height="149" as="geometry" />
+        </mxCell>
+        <mxCell id="catalog" value="NutritionCatalogItem" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="710" y="930" width="350" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="catalog-attrs" value="name: String&lt;br&gt;aliases: String[]&lt;br&gt;caloriesPer100g: Number&lt;br&gt;proteinPer100g: Number&lt;br&gt;active: Boolean" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="catalog">
+          <mxGeometry x="15" y="54" width="320" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="log" value="NgoNutritionLog" style="swimlane;html=1;startSize=44;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=19;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="565" width="355" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="log-attrs" value="ngoId: ObjectId&lt;br&gt;date: Date&lt;br&gt;deliveredCalories: Number&lt;br&gt;deliveredProtein: Number" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="log">
+          <mxGeometry x="15" y="54" width="325" height="134" as="geometry" />
+        </mxCell>
+        <mxCell id="user-ngo" value="account profile" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="user" target="ngo">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-donation" value="donates" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.44;entryY=0;" edge="1" parent="1" source="user" target="donation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="58" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-allocation" value="receives" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.45;entryY=0;" edge="1" parent="1" source="ngo" target="allocation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="58" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="donation-allocation" value="matching record" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="donation" target="allocation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="donation-item" value="contains" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;startArrow=diamond;startFill=1;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="donation" target="item">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="62" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="item-catalog" value="catalog reference" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="item" target="catalog">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-log" value="daily progress" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.68;entryX=0;entryY=0.35;" edge="1" parent="1" source="ngo" target="log">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="385" y="284" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="0..1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="665" y="306" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="205" y="427" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="205" y="501" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="885" y="477" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="880" y="508" width="80" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="663" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="0..1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="665" y="663" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="836" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="1..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="894" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" value="0..1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="665" y="1040" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m12" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="392" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m13" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="521" width="55" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="DonationItem and allocation snapshots are embedded values. ObjectId fields identify referenced models." style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1165" width="1330" height="28" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

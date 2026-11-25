@@ -651,6 +651,17 @@
     "Enter a valid name and phone number": "मान्य नाम और फ़ोन नंबर दर्ज करें",
     "Profile updated": "प्रोफ़ाइल अपडेट की गई",
     "Could not update profile": "प्रोफ़ाइल अपडेट नहीं हो सकी",
-    "Confirm nutrition for every item to continue.": "आगे बढ़ने के लिए हर आइटम के पोषण की पुष्टि करें।"
+    "Confirm nutrition for every item to continue.": "आगे बढ़ने के लिए हर आइटम के पोषण की पुष्टि करें।",
+    "Confirm each nutrition estimate first": "पहले हर पोषण अनुमान की पुष्टि करें",
+    "Welcome to SafePlate": "SafePlate में आपका स्वागत है",
+    "Coordinate safe food donations with trusted NGOs.": "विश्वसनीय NGO के साथ सुरक्षित भोजन दान का समन्वय करें।",
+    "Quick demo login": "त्वरित डेमो लॉगिन",
+    "Sign in": "साइन इन करें",
+    "New to SafePlate?": "SafePlate पर नए हैं?",
+    "Hide password": "पासवर्ड छिपाएँ",
+    "Show password": "पासवर्ड दिखाएँ",
+    "SafePlate logo": "SafePlate लोगो",
+    "Sign in as {{role}}": "{{role}} के रूप में साइन इन करें",
+    "The server may be waking up. Check your internet and try again.": "सर्वर शुरू हो रहा हो सकता है। अपना इंटरनेट जाँचें और फिर प्रयास करें।"
   }
 }

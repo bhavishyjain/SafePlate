@@ -46,7 +46,7 @@ export default function AssignmentDetail() {
   useFocusEffect(useCallback(() => {
     load();
   }, [load]));
-  const mutate = async (action, success) => {
+  const mutate = async (action, success, leaveAfterSuccess = false) => {
     setLoading(true);
     try {
       const result = await action(id);
@@ -60,6 +60,7 @@ export default function AssignmentDetail() {
         type: "success",
         text1: tr(success)
       });
+      if (leaveAfterSuccess) router.back();
     } catch (requestError) {
       Toast.show({
         type: "error",
@@ -240,6 +241,21 @@ export default function AssignmentDetail() {
         fontSize: 18,
         fontWeight: "500",
         marginBottom: 11
+      }}>{tr("Donor contact")}</Text>
+      <View style={{
+        backgroundColor: colors.backgroundSecondary,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 16,
+        paddingHorizontal: 16,
+        marginBottom: 22
+      }}><Detail icon={UserRound} label={tr("Donor")} value={donation.donorId?.name || "—"} colors={colors} /><Detail icon={Phone} label={tr("Phone")} value={donation.donorId?.phone || "—"} colors={colors} /><Detail icon={Mail} label={tr("Email")} value={donation.donorId?.email || "—"} colors={colors} last /></View>
+
+      <Text style={{
+        color: colors.textPrimary,
+        fontSize: 18,
+        fontWeight: "500",
+        marginBottom: 11
       }}>{tr("Pickup information")}</Text>
       <View style={{
         backgroundColor: colors.backgroundSecondary,
@@ -300,22 +316,6 @@ export default function AssignmentDetail() {
           marginTop: 8
         }}>{item.nutritionPer100g.calories} kcal · {item.nutritionPer100g.proteinGrams} {tr("g protein / 100 g")}</Text></View>)}
 
-      <Text style={{
-        color: colors.textPrimary,
-        fontSize: 18,
-        fontWeight: "500",
-        marginTop: 12,
-        marginBottom: 11
-      }}>{tr("Donor contact")}</Text>
-      <View style={{
-        backgroundColor: colors.backgroundSecondary,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: 16,
-        paddingHorizontal: 16,
-        marginBottom: 22
-      }}><Detail icon={UserRound} label={tr("Donor")} value={donation.donorId?.name || "—"} colors={colors} /><Detail icon={Phone} label={tr("Phone")} value={donation.donorId?.phone || "—"} colors={colors} /><Detail icon={Mail} label={tr("Email")} value={donation.donorId?.email || "—"} colors={colors} last /></View>
-
       {allocation.status === "ASSIGNED" ? <View style={{
         gap: 12
       }}><SwipeButton title={tr("Swipe to confirm pickup")} loader={loading} onSwipeSuccess={() => mutate(confirmPickup, "Pickup confirmed")} /><PressableBlock onPress={() => setRejecting(true)} style={{
@@ -331,7 +331,7 @@ export default function AssignmentDetail() {
             fontWeight: "600",
             marginLeft: 7
           }}>{tr("Reject assignment")}</Text></PressableBlock></View> : null}
-      {allocation.status === "PICKED_UP" ? <SwipeButton type="success" title={tr("Swipe to confirm delivery")} loader={loading} onSwipeSuccess={() => mutate(confirmDelivery, "Delivery confirmed")} /> : null}
+      {allocation.status === "PICKED_UP" ? <SwipeButton type="success" title={tr("Swipe to confirm delivery")} loader={loading} onSwipeSuccess={() => mutate(confirmDelivery, "Delivery confirmed", true)} /> : null}
     </ScrollView>}
     <DialogBox visible={rejecting} title={tr("Reject assignment?")} message={tr("The donation will return to Pending and SafePlate will try another eligible NGO.")} showInput inputValue={reason} onInputChange={setReason} inputPlaceholder={tr("Reason for rejection")} confirmText={tr("Reject")} onConfirm={reject} onCancel={() => setRejecting(false)} loading={loading} confirmButtonStyle={{
       backgroundColor: colors.danger

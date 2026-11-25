@@ -39,14 +39,6 @@ export default function AdminOperations() {
   return <Screen contentStyle={{
     paddingBottom: 132
   }}>
-    <Text style={{
-      color: colors.textSecondary,
-      fontSize: 13,
-      lineHeight: 19,
-      marginTop: 4,
-      marginBottom: 22
-    }}>{tr("Control matching and monitor the donation lifecycle.")}</Text>
-
     <View style={{
       borderRadius: 22,
       padding: 20,

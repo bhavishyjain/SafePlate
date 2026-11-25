@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" type="device" version="24.7.17">
+  <diagram id="safeplate-dfd-level-0" name="Data Flow Diagram Level 0">
+    <mxGraphModel dx="1550" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1550" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="SafePlate Data Flow Diagram — Level 0" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=25;fontStyle=1;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="45" width="1050" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Context view: external entities and information exchanged with the system" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="94" width="1100" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="donor" value="Donor" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="220" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="ngo" value="NGO" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="555" width="220" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="admin" value="Administrator" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="190" width="220" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="gemini" value="Gemini&lt;br&gt;(optional nutrition service)" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="490" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="resend" value="Resend&lt;br&gt;(optional email service)" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="675" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="system" value="0&lt;br&gt;SafePlate System" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontColor=#000000;fontFamily=Arial;fontSize=23;fontStyle=1;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="565" y="305" width="420" height="270" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="donor-input" value="Donation details" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.32;entryX=0;entryY=0.24;" edge="1" parent="1" source="donor" target="system">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="donor-output" value="Status and suggestions" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.39;entryX=1;entryY=0.73;" edge="1" parent="1" source="system" target="donor">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-input" value="Profile and fulfillment actions" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.32;entryX=0;entryY=0.60;" edge="1" parent="1" source="ngo" target="system">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-output" value="Assignments and progress" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.75;entryX=1;entryY=0.73;" edge="1" parent="1" source="system" target="ngo">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="admin-input" value="Management changes" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.32;entryX=1;entryY=0.24;" edge="1" parent="1" source="admin" target="system">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="admin-output" value="Reports and records" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.39;entryX=0;entryY=0.73;" edge="1" parent="1" source="system" target="admin">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="gemini-input" value="Food names" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.59;entryX=0;entryY=0.34;" edge="1" parent="1" source="system" target="gemini">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="gemini-output" value="Nutrition estimates" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.69;entryX=1;entryY=0.74;" edge="1" parent="1" source="gemini" target="system">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="18" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="resend-input" value="Password reset email" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.89;entryX=0;entryY=0.50;" edge="1" parent="1" source="system" target="resend">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-18" as="offset"/></mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend" value="Rectangles: external entities    |    Ellipse: SafePlate process    |    Arrows: data flows" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=13;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="785" width="900" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

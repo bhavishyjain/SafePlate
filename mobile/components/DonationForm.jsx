@@ -194,9 +194,8 @@ export default function DonationForm({
         name: "",
         quantityGrams: ""
       }])} style={{
-        width: "100%",
-        marginBottom: 20
-      }} /><Button title={tr("Analyse nutrition")} onPress={runAnalysis} loading={loading} style={{ width: "100%" }} /></> : null}
+        width: "100%"
+      }} /><Button title={tr("Analyse nutrition")} onPress={runAnalysis} loading={loading} style={{ width: "100%", marginTop: 12 }} /></> : null}
     {step === 1 ? <><Section title={tr("Confirm nutrition")}>{items.map((item, index) => <Surface key={index} style={{
           marginBottom: 12
         }}><View style={{
@@ -222,12 +221,21 @@ export default function DonationForm({
               backgroundColor: item.donorConfirmed ? `${colors.success}18` : colors.backgroundPrimary
             }}><Text style={{
                 color: item.donorConfirmed ? colors.success : colors.textPrimary,
-                fontWeight: "700"
-            }}>{item.donorConfirmed ? tr("✓ Nutrition confirmed") : tr("Tap to confirm this suggestion")}</Text></Pressable></>}</Surface>)}</Section>{!nutritionReady ? <Text style={{ color: colors.warning, fontSize: 12, lineHeight: 18, marginBottom: 12 }}>{tr("Confirm nutrition for every item to continue.")}</Text> : null}<View style={{
+              fontWeight: "700"
+            }}>{item.donorConfirmed ? tr("✓ Nutrition confirmed") : tr("Tap to confirm this suggestion")}</Text></Pressable></>}</Surface>)}</Section><View style={{
         gap: 12
       }}><Button title={tr("Back")} variant="secondary" onPress={() => setStep(0)} style={{
           width: "100%"
-        }} /><Button title={tr("Pickup details")} disabled={!nutritionReady} onPress={() => setStep(2)} style={{
+        }} /><Button title={tr("Pickup details")} onPress={() => {
+          if (!nutritionReady) {
+            Toast.show({
+              type: "error",
+              text1: tr("Confirm each nutrition estimate first")
+            });
+            return;
+          }
+          setStep(2);
+        }} style={{
           width: "100%"
         }} /></View></> : null}
     {step === 2 ? <><Section title={tr("Preparation")}><View style={{

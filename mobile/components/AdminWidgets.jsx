@@ -1,5 +1,6 @@
+import { Fragment } from "react";
 import { Text, View } from "react-native";
-import Svg, { Line, Polyline, Text as SvgText } from "react-native-svg";
+import Svg, { Circle, Line, Path, Text as SvgText } from "react-native-svg";
 import { Button, Surface, useColors } from "./ui";
 import { useTranslation } from "../utils/i18n/LanguageProvider";
 export function MetricGrid({
@@ -79,10 +80,26 @@ export function WeightTrend({
   const colors = useColors();
   if (!data.length) return null;
   const width = 320;
-  const height = 150;
-  const pad = 24;
+  const height = 176;
+  const horizontalPad = 28;
+  const topPad = 18;
+  const bottomPad = 30;
   const max = Math.max(1, ...data.flatMap(item => [item.donatedKg, item.deliveredKg]));
-  const points = key => data.map((item, index) => `${pad + index * (width - pad * 2) / Math.max(1, data.length - 1)},${height - pad - item[key] / max * (height - pad * 2)}`).join(" ");
+  const coordinates = key => data.map((item, index) => ({
+    x: horizontalPad + index * (width - horizontalPad * 2) / Math.max(1, data.length - 1),
+    y: height - bottomPad - Number(item[key] || 0) / max * (height - topPad - bottomPad)
+  }));
+  const smoothPath = points => {
+    if (!points.length) return "";
+    if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+    return points.slice(1).reduce((path, point, index) => {
+      const previous = points[index];
+      const midpoint = (previous.x + point.x) / 2;
+      return `${path} C ${midpoint} ${previous.y}, ${midpoint} ${point.y}, ${point.x} ${point.y}`;
+    }, `M ${points[0].x} ${points[0].y}`);
+  };
+  const donated = coordinates("donatedKg");
+  const delivered = coordinates("deliveredKg");
   return <Surface style={{
     marginBottom: 18
   }}><Text style={{
@@ -94,7 +111,15 @@ export function WeightTrend({
       color: colors.textSecondary,
       fontSize: 12,
       marginBottom: 14
-    }}>{tr("Food donated and successfully delivered")}</Text><Svg accessibilityLabel={tr("Daily donated versus delivered kilograms chart")} width="100%" height={height} viewBox={`0 0 ${width} ${height}`}><Line x1={pad} y1={height - pad} x2={width - pad} y2={height - pad} stroke={colors.border} /><Polyline points={points("donatedKg")} fill="none" stroke={colors.primary} strokeWidth="3" /><Polyline points={points("deliveredKg")} fill="none" stroke={colors.success} strokeWidth="3" /><SvgText x={pad} y={14} fill={colors.primary} fontSize="10">{tr("Donated")}</SvgText><SvgText x={90} y={14} fill={colors.success} fontSize="10">{tr("Delivered")}</SvgText></Svg><View style={{
+    }}>{tr("Food donated and successfully delivered")}</Text><View style={{
+      flexDirection: "row",
+      gap: 16,
+      marginBottom: 4
+    }}><View style={{ flexDirection: "row", alignItems: "center" }}><View style={{ width: 16, height: 3, borderRadius: 2, backgroundColor: colors.primary, marginRight: 6 }} /><Text style={{ color: colors.textSecondary, fontSize: 11 }}>{tr("Donated")}</Text></View><View style={{ flexDirection: "row", alignItems: "center" }}><View style={{ width: 16, height: 3, borderRadius: 2, backgroundColor: colors.success, marginRight: 6 }} /><Text style={{ color: colors.textSecondary, fontSize: 11 }}>{tr("Delivered")}</Text></View></View><Svg accessibilityLabel={tr("Daily donated versus delivered kilograms chart")} width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>{[0, 0.5, 1].map((ratio, index) => {
+      const y = topPad + ratio * (height - topPad - bottomPad);
+      const value = Math.round(max * (1 - ratio));
+      return <Fragment key={index}><Line x1={horizontalPad} y1={y} x2={width - horizontalPad} y2={y} stroke={colors.border} strokeWidth="1" /><SvgText x={horizontalPad - 5} y={y + 3} textAnchor="end" fill={colors.textTertiary} fontSize="8">{value}</SvgText></Fragment>;
+    })}<Path d={smoothPath(donated)} fill="none" stroke={colors.primary} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /><Path d={smoothPath(delivered)} fill="none" stroke={colors.success} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />{donated.map((point, index) => <Circle key={`d-${index}`} cx={point.x} cy={point.y} r="2.5" fill={colors.backgroundSecondary} stroke={colors.primary} strokeWidth="2" />)}{delivered.map((point, index) => <Circle key={`v-${index}`} cx={point.x} cy={point.y} r="2.5" fill={colors.backgroundSecondary} stroke={colors.success} strokeWidth="2" />)}</Svg><View style={{
       flexDirection: "row",
       justifyContent: "space-between"
     }}><Text style={{

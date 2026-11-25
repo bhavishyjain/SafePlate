@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
 import { ArrowRight, Building2, CircleGauge, Clock3, HandHeart, Network, PackageCheck, Truck } from "lucide-react-native";
 import { Text, View } from "react-native";
@@ -46,14 +46,17 @@ export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const latestRequest = useRef(0);
   const load = useCallback(async () => {
+    const requestId = ++latestRequest.current;
     try {
       setError(null);
-      setData(await getDashboard(appliedRange));
+      const nextData = await getDashboard(appliedRange);
+      if (requestId === latestRequest.current) setData(nextData);
     } catch (requestError) {
-      setError(requestError);
+      if (requestId === latestRequest.current) setError(requestError);
     } finally {
-      setRefreshing(false);
+      if (requestId === latestRequest.current) setRefreshing(false);
     }
   }, [appliedRange]);
   useFocusEffect(useCallback(() => {
@@ -61,7 +64,10 @@ export default function AdminDashboard() {
   }, [load]));
   const selectPreset = value => {
     setPreset(value);
-    if (value !== "CUSTOM") setAppliedRange(rangeFor(value));
+    if (value !== "CUSTOM") {
+      setData(null);
+      setAppliedRange(rangeFor(value));
+    }
   };
   const deliveryRate = Math.round((data?.deliverySuccessRate || 0) * 100);
   const assignedRate = data?.kgDonated ? Math.min(100, Math.round(data.kgAssigned / data.kgDonated * 100)) : 0;
@@ -109,9 +115,10 @@ export default function AdminDashboard() {
       }))} placeholder={tr("YYYY-MM-DD")} /><Field label={tr("To date")} value={custom.to} onChangeText={to => setCustom(current => ({
         ...current,
         to
-      }))} placeholder={tr("YYYY-MM-DD")} /><Button title={tr("Apply range")} onPress={() => setAppliedRange({
-        ...custom
-      })} /></Surface> : null}
+      }))} placeholder={tr("YYYY-MM-DD")} /><Button title={tr("Apply range")} onPress={() => {
+        setData(null);
+        setAppliedRange({ ...custom });
+      }} /></Surface> : null}
 
     {!data && !error ? <LoadingState label={tr("Loading platform activity…")} /> : error ? <ErrorState message={error.message} onRetry={load} /> : <>
       <View style={{

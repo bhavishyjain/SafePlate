@@ -52,3 +52,11 @@ app-example
 /presentation-assets
 /presentation-output
 /.ppt-build
+
+# Generated report workspace
+/report-work/
+/report/diagrams/export_drawio.py
+/report/screenshots/
+
+# Local Android packages
+*.apk

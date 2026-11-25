@@ -125,7 +125,7 @@ export default function DonationDetail() {
             color: colors.textSecondary,
             fontSize: 12,
             marginTop: 5
-          }}>{tr("Created")}{formatDateTime(donation.createdAt)}</Text></View>
+          }}>{formatDateTime(donation.createdAt)}</Text></View>
         <View style={{
           backgroundColor: `${statusTone}18`,
           borderRadius: 8,

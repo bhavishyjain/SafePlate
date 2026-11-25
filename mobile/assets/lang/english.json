@@ -651,6 +651,17 @@
     "Enter a valid name and phone number": "Enter a valid name and phone number",
     "Profile updated": "Profile updated",
     "Could not update profile": "Could not update profile",
-    "Confirm nutrition for every item to continue.": "Confirm nutrition for every item to continue."
+    "Confirm nutrition for every item to continue.": "Confirm nutrition for every item to continue.",
+    "Confirm each nutrition estimate first": "Confirm each nutrition estimate first",
+    "Welcome to SafePlate": "Welcome to SafePlate",
+    "Coordinate safe food donations with trusted NGOs.": "Coordinate safe food donations with trusted NGOs.",
+    "Quick demo login": "Quick demo login",
+    "Sign in": "Sign in",
+    "New to SafePlate?": "New to SafePlate?",
+    "Hide password": "Hide password",
+    "Show password": "Show password",
+    "SafePlate logo": "SafePlate logo",
+    "Sign in as {{role}}": "Sign in as {{role}}",
+    "The server may be waking up. Check your internet and try again.": "The server may be waking up. Check your internet and try again."
   }
 }

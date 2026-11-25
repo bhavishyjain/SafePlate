@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="24.7.17">
+  <diagram id="safeplate-entity-relationships" name="Entity Relationship Diagram">
+    <mxGraphModel dx="1760" dy="1260" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1260" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="SafePlate Entity Relationship Diagram" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=26;fontStyle=1;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="42" width="1150" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="MongoDB collections, ObjectId references, and cardinalities" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="94" width="1200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="refresh" value="RefreshToken" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="180" width="310" height="185" as="geometry" />
+        </mxCell>
+        <mxCell id="refresh-fields" value="_id: ObjectId (PK)&lt;br&gt;userId: ObjectId (FK)&lt;br&gt;tokenHash: String (UQ)&lt;br&gt;familyId: String&lt;br&gt;expiresAt: Date" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="refresh">
+          <mxGeometry x="15" y="52" width="280" height="123" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="680" y="160" width="350" height="255" as="geometry" />
+        </mxCell>
+        <mxCell id="user-fields" value="_id: ObjectId (PK)&lt;br&gt;email: String (UQ)&lt;br&gt;phone: String (UQ)&lt;br&gt;name: String&lt;br&gt;role: String&lt;br&gt;isActive: Boolean" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="user">
+          <mxGeometry x="15" y="52" width="320" height="193" as="geometry" />
+        </mxCell>
+        <mxCell id="reset" value="PasswordResetToken" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="180" width="330" height="185" as="geometry" />
+        </mxCell>
+        <mxCell id="reset-fields" value="_id: ObjectId (PK)&lt;br&gt;userId: ObjectId (FK)&lt;br&gt;tokenHash: String (UQ)&lt;br&gt;expiresAt: Date&lt;br&gt;usedAt: Date?" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="reset">
+          <mxGeometry x="15" y="52" width="300" height="123" as="geometry" />
+        </mxCell>
+        <mxCell id="donation" value="Donation" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="500" width="350" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="donation-fields" value="_id: ObjectId (PK)&lt;br&gt;donorId: ObjectId (FK)&lt;br&gt;items: DonationItem[] (embedded)&lt;br&gt;status: String&lt;br&gt;pickupDeadline: Date&lt;br&gt;location: GeoJSON Point" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="donation">
+          <mxGeometry x="15" y="52" width="320" height="238" as="geometry" />
+        </mxCell>
+        <mxCell id="allocation" value="Allocation" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="680" y="570" width="350" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="allocation-fields" value="_id: ObjectId (PK)&lt;br&gt;donationId: ObjectId (FK, UQ)&lt;br&gt;ngoId: ObjectId (FK)&lt;br&gt;status: String&lt;br&gt;matchScore: Number&lt;br&gt;history: Event[] (embedded)" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="allocation">
+          <mxGeometry x="15" y="52" width="320" height="208" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo" value="NGO" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="500" width="330" height="265" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo-fields" value="_id: ObjectId (PK)&lt;br&gt;userId: ObjectId (FK, UQ)&lt;br&gt;type: String&lt;br&gt;location: GeoJSON Point&lt;br&gt;capacity: Number&lt;br&gt;beneficiaryGroups: Group[]" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="ngo">
+          <mxGeometry x="15" y="52" width="300" height="203" as="geometry" />
+        </mxCell>
+        <mxCell id="catalog" value="NutritionCatalogItem" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="950" width="350" height="195" as="geometry" />
+        </mxCell>
+        <mxCell id="catalog-fields" value="_id: ObjectId (PK)&lt;br&gt;name: String (UQ)&lt;br&gt;caloriesPer100g: Number&lt;br&gt;proteinPer100g: Number&lt;br&gt;active: Boolean" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="catalog">
+          <mxGeometry x="15" y="52" width="320" height="133" as="geometry" />
+        </mxCell>
+        <mxCell id="log" value="NgoNutritionLog" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.6;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="950" width="330" height="195" as="geometry" />
+        </mxCell>
+        <mxCell id="log-fields" value="_id: ObjectId (PK)&lt;br&gt;ngoId: ObjectId (FK)&lt;br&gt;date: Date&lt;br&gt;deliveredCalories: Number&lt;br&gt;deliveredProtein: Number&lt;br&gt;(ngoId, date): unique" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=5;" vertex="1" parent="log">
+          <mxGeometry x="15" y="52" width="300" height="133" as="geometry" />
+        </mxCell>
+        <mxCell id="user-refresh" value="refresh sessions" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.4;entryX=1;entryY=0.47;" edge="1" parent="1" source="user" target="refresh">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-reset" value="password resets" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.4;entryX=0;entryY=0.47;" edge="1" parent="1" source="user" target="reset">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-donation" value="donates" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.2;exitY=1;entryX=0.9;entryY=0;" edge="1" parent="1" source="user" target="donation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-ngo" value="NGO profile" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.8;exitY=1;entryX=0.1;entryY=0;" edge="1" parent="1" source="user" target="ngo">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="donation-allocation" value="allocation record" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="donation" target="allocation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-allocation" value="receives" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0;exitY=0.5;entryX=1;entryY=0.3;" edge="1" parent="1" source="ngo" target="allocation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ngo-log" value="daily nutrition" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="ngo" target="log">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="donation-catalog" value="items[].catalogItemId" style="edgeStyle=none;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;endArrow=none;fontColor=#000000;fontFamily=Arial;fontSize=14;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=1;dashPattern=7 5;" edge="1" parent="1" source="donation" target="catalog">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="390" y="255" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="625" y="255" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="255" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="255" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="685" y="424" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="468" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="975" y="424" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="0..1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="468" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="620" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="0..1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="625" y="620" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="620" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m12" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="620" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m13" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1475" y="777" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="m14" value="0..*" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=14;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1475" y="908" width="60" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="PK = primary key   FK = ObjectId reference   UQ = unique index   Dashed line = optional reference inside embedded items" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1195" width="1560" height="36" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

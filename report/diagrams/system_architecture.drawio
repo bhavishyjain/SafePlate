@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="24.7.17">
+  <diagram id="safeplate-architecture" name="Figure 3.1 System Architecture">
+    <mxGraphModel dx="1500" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="SafePlate System Architecture" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=26;fontStyle=1;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="48" width="850" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="users" value="Users" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="245" width="190" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="donor" value="Donor" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=16;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="users">
+          <mxGeometry x="15" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ngo" value="NGO" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=16;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="users">
+          <mxGeometry x="15" y="138" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="administrator" value="Administrator" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=16;fontColor=#000000;strokeColor=none;fillColor=none;" vertex="1" parent="users">
+          <mxGeometry x="15" y="216" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="users-divider-1" value="" style="shape=line;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="users">
+          <mxGeometry x="15" y="120" width="160" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="users-divider-2" value="" style="shape=line;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="users">
+          <mxGeometry x="15" y="198" width="160" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="client" value="Expo Application" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="365" y="230" width="225" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="client-content" value="Android · iOS · web&lt;br&gt;&lt;br&gt;Role-specific screens&lt;br&gt;&lt;br&gt;Donation and assignment workflows&lt;br&gt;&lt;br&gt;Axios API client" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=10;" vertex="1" parent="client">
+          <mxGeometry x="15" y="62" width="195" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="Express API · Node.js" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="695" y="170" width="380" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="request-layer" value="/api/v1 routes · validation · authentication" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontFamily=Arial;fontSize=15;spacing=8;" vertex="1" parent="api">
+          <mxGeometry x="25" y="68" width="330" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="application-layer" value="Controllers · domain services" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontFamily=Arial;fontSize=15;spacing=8;" vertex="1" parent="api">
+          <mxGeometry x="25" y="155" width="330" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="engines" value="Allocation and nutrition engines" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontFamily=Arial;fontSize=15;spacing=8;" vertex="1" parent="api">
+          <mxGeometry x="25" y="242" width="330" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="jobs" value="Scheduled allocation and expiry jobs" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1;fontColor=#000000;fontFamily=Arial;fontSize=15;spacing=8;" vertex="1" parent="api">
+          <mxGeometry x="25" y="329" width="330" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="database" value="MongoDB" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="230" width="230" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="database-content" value="Mongoose models&lt;br&gt;&lt;br&gt;Users · NGOs&lt;br&gt;Donations · Allocations&lt;br&gt;Catalog · Nutrition logs&lt;br&gt;Tokens · Optimization lock" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=8;" vertex="1" parent="database">
+          <mxGeometry x="12" y="58" width="206" height="148" as="geometry" />
+        </mxCell>
+        <mxCell id="optional" value="External Services" style="swimlane;html=1;startSize=42;horizontal=1;rounded=0;container=1;collapsible=0;whiteSpace=wrap;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontColor=#000000;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="535" width="230" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="optional-content" value="Gemini · nutrition suggestions&lt;br&gt;&lt;br&gt;Resend · password reset email" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Arial;fontSize=15;fontColor=#000000;strokeColor=none;fillColor=none;spacing=8;" vertex="1" parent="optional">
+          <mxGeometry x="12" y="56" width="206" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="users-to-client" value="uses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=13;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="users" target="client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="client-to-api" value="HTTP / JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.5;startArrow=block;startFill=1;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=13;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="client" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="api-to-database" value="Mongoose" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.5;startArrow=block;startFill=1;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=13;exitX=1;exitY=0.38;entryX=0;entryY=0.5;" edge="1" parent="1" source="api" target="database">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="api-to-optional" value="optional" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.5;dashed=1;dashPattern=7 5;endArrow=block;endFill=1;fontColor=#000000;fontFamily=Arial;fontSize=13;exitX=1;exitY=0.78;entryX=0;entryY=0.5;" edge="1" parent="1" source="api" target="optional">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
