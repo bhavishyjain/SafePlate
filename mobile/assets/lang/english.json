@@ -650,6 +650,7 @@
     "Email cannot be changed": "Email cannot be changed",
     "Enter a valid name and phone number": "Enter a valid name and phone number",
     "Profile updated": "Profile updated",
-    "Could not update profile": "Could not update profile"
+    "Could not update profile": "Could not update profile",
+    "Confirm nutrition for every item to continue.": "Confirm nutrition for every item to continue."
   }
 }

@@ -650,6 +650,7 @@
     "Email cannot be changed": "ईमेल बदला नहीं जा सकता",
     "Enter a valid name and phone number": "मान्य नाम और फ़ोन नंबर दर्ज करें",
     "Profile updated": "प्रोफ़ाइल अपडेट की गई",
-    "Could not update profile": "प्रोफ़ाइल अपडेट नहीं हो सकी"
+    "Could not update profile": "प्रोफ़ाइल अपडेट नहीं हो सकी",
+    "Confirm nutrition for every item to continue.": "आगे बढ़ने के लिए हर आइटम के पोषण की पुष्टि करें।"
   }
 }

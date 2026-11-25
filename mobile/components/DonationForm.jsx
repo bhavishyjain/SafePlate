@@ -194,8 +194,9 @@ export default function DonationForm({
         name: "",
         quantityGrams: ""
       }])} style={{
+        width: "100%",
         marginBottom: 20
-      }} /><Button title={tr("Analyse nutrition")} onPress={runAnalysis} loading={loading} /></> : null}
+      }} /><Button title={tr("Analyse nutrition")} onPress={runAnalysis} loading={loading} style={{ width: "100%" }} /></> : null}
     {step === 1 ? <><Section title={tr("Confirm nutrition")}>{items.map((item, index) => <Surface key={index} style={{
           marginBottom: 12
         }}><View style={{
@@ -222,13 +223,12 @@ export default function DonationForm({
             }}><Text style={{
                 color: item.donorConfirmed ? colors.success : colors.textPrimary,
                 fontWeight: "700"
-              }}>{item.donorConfirmed ? tr("✓ Nutrition confirmed") : tr("Tap to confirm this suggestion")}</Text></Pressable></>}</Surface>)}</Section><View style={{
-        flexDirection: "row",
-        gap: 10
+            }}>{item.donorConfirmed ? tr("✓ Nutrition confirmed") : tr("Tap to confirm this suggestion")}</Text></Pressable></>}</Surface>)}</Section>{!nutritionReady ? <Text style={{ color: colors.warning, fontSize: 12, lineHeight: 18, marginBottom: 12 }}>{tr("Confirm nutrition for every item to continue.")}</Text> : null}<View style={{
+        gap: 12
       }}><Button title={tr("Back")} variant="secondary" onPress={() => setStep(0)} style={{
-          flex: 1
+          width: "100%"
         }} /><Button title={tr("Pickup details")} disabled={!nutritionReady} onPress={() => setStep(2)} style={{
-          flex: 2
+          width: "100%"
         }} /></View></> : null}
     {step === 2 ? <><Section title={tr("Preparation")}><View style={{
           flexDirection: "row",
@@ -236,12 +236,11 @@ export default function DonationForm({
         }}><DateTimePickerModal mode="date" value={preparedDate} onChange={setPreparedDate} label={tr("Prepared date")} /><DateTimePickerModal mode="time" value={preparedTime} onChange={setPreparedTime} label={tr("Prepared time")} /></View></Section><Section title={tr("Pickup deadline")}><View style={{
           flexDirection: "row",
           gap: 10
-        }}><DateTimePickerModal mode="date" value={deadlineDate} onChange={setDeadlineDate} label={tr("Deadline date")} disablePastDates /><DateTimePickerModal mode="time" value={deadlineTime} onChange={setDeadlineTime} label={tr("Deadline time")} /></View></Section><Section title={tr("Packaging")}><CustomPicker data={PACKAGING_OPTIONS} value={packagingType} onChange={item => setPackagingType(item.value)} placeholder={tr("Packaging type")} searchPlaceholder="" /></Section><LocationField value={location} onChange={setLocation} /><View style={{
-        flexDirection: "row",
-        gap: 10,
+      }}><DateTimePickerModal mode="date" value={deadlineDate} onChange={setDeadlineDate} label={tr("Deadline date")} disablePastDates /><DateTimePickerModal mode="time" value={deadlineTime} onChange={setDeadlineTime} label={tr("Deadline time")} /></View></Section><Section title={tr("Packaging")}><CustomPicker data={PACKAGING_OPTIONS} value={packagingType} onChange={item => setPackagingType(item.value)} placeholder={tr("Packaging type")} searchPlaceholder="" /></Section><LocationField value={location} onChange={setLocation} /><View style={{
+        gap: 12,
         marginTop: 16
       }}><Button title={tr("Back")} variant="secondary" onPress={() => setStep(1)} style={{
-          flex: 1
+          width: "100%"
         }} /><Button title={tr("Review")} onPress={() => {
           const error = validateLogistics();
           if (error) Toast.show({
@@ -249,7 +248,7 @@ export default function DonationForm({
             text1: error
           });else setStep(3);
         }} style={{
-          flex: 2
+          width: "100%"
         }} /></View></> : null}
     {step === 3 ? <><Surface style={{
         marginBottom: 16
@@ -275,12 +274,11 @@ export default function DonationForm({
           color: colors.textSecondary,
           marginTop: 4
         }}>{tr("Packaging: {{type}}", { type: tr(PACKAGING_OPTIONS.find(item => item.value === packagingType)?.label || "") })}</Text></Surface><View style={{
-        flexDirection: "row",
-        gap: 10
+        gap: 12
       }}><Button title={tr("Back")} variant="secondary" onPress={() => setStep(2)} style={{
-          flex: 1
+          width: "100%"
         }} /><Button title={donation ? tr("Save changes") : tr("Submit donation")} loading={loading} onPress={submit} style={{
-          flex: 2
+          width: "100%"
         }} /></View></> : null}
   </Screen>;
 }

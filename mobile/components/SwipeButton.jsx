@@ -33,7 +33,7 @@ export default function SwipeButton({
 
   return (
     <RNSwipeButton
-      title={loader ? <ActivityIndicator size={20} color={textColor} /> : title}
+      title={title}
       disabled={loader}
       titleStyles={{
         color: textColor,

@@ -13,12 +13,24 @@ import { nutritionCatalogSeedData } from "../seeds/nutritionCatalog.js";
 import { calculateNgoNutrition } from "../services/ngoNutritionService.js";
 import { donationNutrition } from "../engines/AllocationEngine.js";
 import { startOfOperationalDay } from "../utils/date.js";
+import { optimizeAllocations } from "../services/allocationService.js";
 
 dotenv.config();
 
-const DEMO_PASSWORD = "SafePlate123!";
+const DEMO_PASSWORD = "123456";
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
+// Stable demo points across Indore. GeoJSON uses [longitude, latitude].
+const INDORE = {
+  medicapsUniversity: [75.79952, 22.61748],
+  rau: [75.8077, 22.6354],
+  bhanwarkuan: [75.8667, 22.6908],
+  rajwada: [75.8577, 22.7196],
+  palasia: [75.8834, 22.7244],
+  vijayNagar: [75.8937, 22.7533],
+  airport: [75.8011, 22.7218],
+  superCorridor: [75.8072, 22.7603],
+};
 
 const donationIds = Array.from(
   { length: 8 },
@@ -154,6 +166,25 @@ async function run() {
   if (config.isProduction) throw new Error("Development demo data cannot be seeded in production");
   await connectDB(config.mongoUri);
 
+  // This is the single authoritative demo seed. Clear prior SafePlate data so
+  // unique emails/phones and allocation history are deterministic on every run.
+  const demoCollections = [
+    "allocations",
+    "donations",
+    "ngonutritionlogs",
+    "ngos",
+    "refreshtokens",
+    "passwordresettokens",
+    "optimizationlocks",
+    "nutritioncatalogitems",
+    "users",
+  ];
+  for (const name of demoCollections) {
+    if ((await mongoose.connection.db.listCollections({ name }).toArray()).length) {
+      await mongoose.connection.db.collection(name).deleteMany({});
+    }
+  }
+
   await NutritionCatalogItem.bulkWrite(
     nutritionCatalogSeedData.map((item) => ({
       updateOne: { filter: { name: item.name }, update: { $set: { ...item, active: true } }, upsert: true },
@@ -164,12 +195,12 @@ async function run() {
 
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
   const [donor, secondDonor, ngoUser, partnerNgoUser, admin, disabledUser] = await Promise.all([
-    upsertUser({ name: "Aarav Donor", phone: "+919000000001", email: "donor@safeplate.dev", role: "DONOR", organization: "Aarav Foods", isActive: true }, passwordHash),
-    upsertUser({ name: "Meera Donor", phone: "+919000000002", email: "donor.partner@safeplate.dev", role: "DONOR", organization: "Community Kitchen", isActive: true }, passwordHash),
-    upsertUser({ name: "Anaya NGO Coordinator", phone: "+919000000003", email: "ngo@safeplate.dev", role: "NGO", organization: "Hope Community Centre", isActive: true }, passwordHash),
-    upsertUser({ name: "Kabir NGO Coordinator", phone: "+919000000004", email: "ngo.partner@safeplate.dev", role: "NGO", organization: "Sunrise Shelter", isActive: true }, passwordHash),
-    upsertUser({ name: "SafePlate Administrator", phone: "+919000000005", email: "admin@safeplate.dev", role: "ADMIN", organization: "SafePlate", isActive: true }, passwordHash),
-    upsertUser({ name: "Disabled Demo User", phone: "+919000000006", email: "disabled@safeplate.dev", role: "DONOR", organization: "Archived Partner", isActive: false }, passwordHash),
+    upsertUser({ name: "Aarav Donor", phone: "+919000000001", email: "donor@example.com", role: "DONOR", organization: "Aarav Foods", isActive: true }, passwordHash),
+    upsertUser({ name: "Meera Donor", phone: "+919000000002", email: "donor.partner@example.com", role: "DONOR", organization: "Community Kitchen", isActive: true }, passwordHash),
+    upsertUser({ name: "Anaya NGO Coordinator", phone: "+919000000003", email: "ngo@example.com", role: "NGO", organization: "Hope Community Centre", isActive: true }, passwordHash),
+    upsertUser({ name: "Kabir NGO Coordinator", phone: "+919000000004", email: "ngo.partner@example.com", role: "NGO", organization: "Sunrise Shelter", isActive: true }, passwordHash),
+    upsertUser({ name: "SafePlate Administrator", phone: "+919000000005", email: "admin@example.com", role: "ADMIN", organization: "SafePlate", isActive: true }, passwordHash),
+    upsertUser({ name: "Disabled Demo User", phone: "+919000000006", email: "disabled@example.com", role: "DONOR", organization: "Archived Partner", isActive: false }, passwordHash),
   ]);
 
   const now = new Date();
@@ -177,7 +208,7 @@ async function run() {
     upsertNgo({
       userId: ngoUser._id,
       type: "SHELTER",
-      location: { type: "Point", coordinates: [77.6033, 12.9767] },
+      location: { type: "Point", coordinates: INDORE.vijayNagar },
       beneficiaryGroups: [
         { category: "CHILD_6_TO_9", count: 12 },
         { category: "ADULT_19_TO_29", count: 18 },
@@ -194,7 +225,7 @@ async function run() {
     upsertNgo({
       userId: partnerNgoUser._id,
       type: "ORPHANAGE",
-      location: { type: "Point", coordinates: [77.6162, 12.9668] },
+      location: { type: "Point", coordinates: INDORE.medicapsUniversity },
       beneficiaryGroups: [
         { category: "CHILD_1_TO_5", count: 10 },
         { category: "CHILD_10_TO_12", count: 15 },
@@ -204,14 +235,14 @@ async function run() {
   ]);
 
   const records = [
-    donation({ _id: donationIds[0], donorId: donor._id, items: [foodItem(catalogByName, "Cooked Rice", 5000), foodItem(catalogByName, "Dal", 2500)], preparedAt: at(now, -HOUR), pickupDeadline: at(now, 8 * HOUR), coordinates: [77.5946, 12.9716], packagingType: "CLOSED_CONTAINER", status: "PENDING", createdAt: at(now, -30 * 60 * 1000) }),
-    donation({ _id: donationIds[1], donorId: donor._id, items: [foodItem(catalogByName, "Chapati", 4000), foodItem(catalogByName, "Mixed Vegetable Curry", 3000)], preparedAt: at(now, -2 * HOUR), pickupDeadline: at(now, 7 * HOUR), coordinates: [77.5901, 12.9698], packagingType: "SEALED_PACKAGED", status: "ASSIGNED", createdAt: at(now, -90 * 60 * 1000) }),
-    donation({ _id: donationIds[2], donorId: donor._id, items: [foodItem(catalogByName, "Khichdi", 6500)], preparedAt: at(now, -5 * HOUR), pickupDeadline: at(now, 3 * HOUR), coordinates: [77.6060, 12.9780], packagingType: "CLOSED_CONTAINER", status: "PICKED_UP", createdAt: at(now, -5 * HOUR) }),
-    donation({ _id: donationIds[3], donorId: donor._id, items: [foodItem(catalogByName, "Idli", 5000), foodItem(catalogByName, "Fresh Fruit", 2500)], preparedAt: at(now, -9 * HOUR), pickupDeadline: at(now, -3 * HOUR), coordinates: [77.5975, 12.9730], packagingType: "SEALED_PACKAGED", status: "DELIVERED", createdAt: at(now, -9 * HOUR) }),
-    donation({ _id: donationIds[4], donorId: donor._id, items: [foodItem(catalogByName, "Bread", 3000), foodItem(catalogByName, "Milk", 3000)], preparedAt: at(now, -2 * DAY), pickupDeadline: at(now, -2 * DAY + 5 * HOUR), coordinates: [77.5880, 12.9650], packagingType: "SEALED_PACKAGED", status: "DISCARDED", discardReason: "Pickup deadline expired before a volunteer was available", createdAt: at(now, -2 * DAY) }),
-    donation({ _id: donationIds[5], donorId: donor._id, items: [foodItem(catalogByName, "Packaged Meal", 4500)], preparedAt: at(now, -3 * HOUR), pickupDeadline: at(now, 10 * HOUR), coordinates: [77.5920, 12.9700], packagingType: "SEALED_PACKAGED", status: "PENDING", createdAt: at(now, -3 * HOUR) }),
-    donation({ _id: donationIds[6], donorId: donor._id, items: [foodItem(catalogByName, "Cooked Rice", 3500), foodItem(catalogByName, "Mixed Vegetable Curry", 2500)], preparedAt: at(now, -4 * HOUR), pickupDeadline: at(now, 9 * HOUR), coordinates: [77.6000, 12.9680], packagingType: "OPEN_OR_BULK", status: "PENDING", createdAt: at(now, -4 * HOUR) }),
-    donation({ _id: donationIds[7], donorId: secondDonor._id, items: [foodItem(catalogByName, "Chapati", 5000), foodItem(catalogByName, "Dal", 4000)], preparedAt: at(now, -DAY - 8 * HOUR), pickupDeadline: at(now, -DAY - 2 * HOUR), coordinates: [77.6120, 12.9690], packagingType: "CLOSED_CONTAINER", status: "DELIVERED", createdAt: at(now, -DAY - 8 * HOUR) }),
+    donation({ _id: donationIds[0], donorId: donor._id, items: [foodItem(catalogByName, "Cooked Rice", 5000), foodItem(catalogByName, "Dal", 2500)], preparedAt: at(now, -HOUR), pickupDeadline: at(now, 8 * HOUR), coordinates: INDORE.medicapsUniversity, packagingType: "CLOSED_CONTAINER", status: "PENDING", createdAt: at(now, -30 * 60 * 1000) }),
+    donation({ _id: donationIds[1], donorId: donor._id, items: [foodItem(catalogByName, "Chapati", 4000), foodItem(catalogByName, "Mixed Vegetable Curry", 3000)], preparedAt: at(now, -2 * HOUR), pickupDeadline: at(now, 7 * HOUR), coordinates: INDORE.rajwada, packagingType: "SEALED_PACKAGED", status: "ASSIGNED", createdAt: at(now, -90 * 60 * 1000) }),
+    donation({ _id: donationIds[2], donorId: donor._id, items: [foodItem(catalogByName, "Khichdi", 6500)], preparedAt: at(now, -5 * HOUR), pickupDeadline: at(now, 3 * HOUR), coordinates: INDORE.palasia, packagingType: "CLOSED_CONTAINER", status: "PICKED_UP", createdAt: at(now, -5 * HOUR) }),
+    donation({ _id: donationIds[3], donorId: donor._id, items: [foodItem(catalogByName, "Idli", 5000), foodItem(catalogByName, "Fresh Fruit", 2500)], preparedAt: at(now, -9 * HOUR), pickupDeadline: at(now, -3 * HOUR), coordinates: INDORE.vijayNagar, packagingType: "SEALED_PACKAGED", status: "DELIVERED", createdAt: at(now, -9 * HOUR) }),
+    donation({ _id: donationIds[4], donorId: donor._id, items: [foodItem(catalogByName, "Bread", 3000), foodItem(catalogByName, "Milk", 3000)], preparedAt: at(now, -2 * DAY), pickupDeadline: at(now, -2 * DAY + 5 * HOUR), coordinates: INDORE.airport, packagingType: "SEALED_PACKAGED", status: "DISCARDED", discardReason: "Pickup deadline expired before a volunteer was available", createdAt: at(now, -2 * DAY) }),
+    donation({ _id: donationIds[5], donorId: donor._id, items: [foodItem(catalogByName, "Packaged Meal", 4500)], preparedAt: at(now, -3 * HOUR), pickupDeadline: at(now, 10 * HOUR), coordinates: INDORE.rau, packagingType: "SEALED_PACKAGED", status: "PENDING", createdAt: at(now, -3 * HOUR) }),
+    donation({ _id: donationIds[6], donorId: donor._id, items: [foodItem(catalogByName, "Cooked Rice", 3500), foodItem(catalogByName, "Mixed Vegetable Curry", 2500)], preparedAt: at(now, -4 * HOUR), pickupDeadline: at(now, 9 * HOUR), coordinates: INDORE.superCorridor, packagingType: "OPEN_OR_BULK", status: "PENDING", createdAt: at(now, -4 * HOUR) }),
+    donation({ _id: donationIds[7], donorId: secondDonor._id, items: [foodItem(catalogByName, "Chapati", 5000), foodItem(catalogByName, "Dal", 4000)], preparedAt: at(now, -DAY - 8 * HOUR), pickupDeadline: at(now, -DAY - 2 * HOUR), coordinates: INDORE.bhanwarkuan, packagingType: "CLOSED_CONTAINER", status: "DELIVERED", createdAt: at(now, -DAY - 8 * HOUR) }),
   ];
 
   await Allocation.deleteMany({ _id: { $in: allocationIds } });
@@ -233,6 +264,7 @@ async function run() {
     allocation({ _id: allocationIds[5], donationRecord: records[7], ngoId: partnerNgo._id, status: "DELIVERED", performedBy: partnerNgoUser._id, assignedAt: at(now, -DAY - 7 * HOUR), pickupAt: at(now, -DAY - 5 * HOUR), deliveredAt: at(now, -DAY - 3 * HOUR) }),
   ];
   await Allocation.insertMany(allocations);
+  const automaticMatching = await optimizeAllocations({ performedBy: admin._id });
 
   // Rebuild demo nutrition totals from delivered allocations so re-seeding across
   // an operational-day boundary never leaves stale or incorrectly dated logs.
@@ -257,6 +289,7 @@ async function run() {
     { role: "ADMIN", email: admin.email, password: DEMO_PASSWORD },
   ]);
   console.log(`Created/refreshed: 6 users, 2 NGO profiles, ${records.length} donations, ${allocations.length} allocations, ${deliveredByNgoAndDay.size} nutrition logs, and ${catalog.length} catalog items.`);
+  console.log(`Automatic demo matching assigned ${automaticMatching.allocationsCreatedCount} pending donation(s) across Indore.`);
   console.log(`Disabled account for admin testing: ${disabledUser.email}`);
 }
 

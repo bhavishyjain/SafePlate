@@ -55,6 +55,7 @@ export function getConfig(env = process.env) {
     geminiModel: env.GEMINI_MODEL || "gemini-2.5-flash",
     operationalTimeZone: "Asia/Kolkata",
     expiryCron: env.EXPIRY_CRON || "*/5 * * * *",
+    allocationCron: env.ALLOCATION_CRON || "*/2 * * * *",
     maximumPickupRadiusKm: parseNumberInRange(env.MAXIMUM_PICKUP_RADIUS_KM, 25, "MAXIMUM_PICKUP_RADIUS_KM", 0.1, 500),
     nutritionWeight,
     distanceWeight,

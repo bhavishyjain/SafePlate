@@ -3,6 +3,7 @@ import { createApp } from "./app.js";
 import { connectDB, disconnectDB } from "./config/db.js";
 import { getConfig } from "./config/env.js";
 import { startExpiryScheduler } from "./jobs/expiryScheduler.js";
+import { startAllocationScheduler } from "./jobs/allocationScheduler.js";
 
 dotenv.config();
 
@@ -11,8 +12,10 @@ async function startServer() {
   await connectDB(config.mongoUri);
   const app = createApp(config);
   let expiryTask;
+  let allocationTask;
   const server = app.listen(config.port, () => {
     expiryTask = startExpiryScheduler(config.expiryCron);
+    allocationTask = startAllocationScheduler(config.allocationCron);
     console.log(`SafePlate Backend API running on port ${config.port}`);
   });
   server.on("error", async (error) => {
@@ -25,6 +28,7 @@ async function startServer() {
     console.log(`${signal} received; shutting down`);
     server.close(async () => {
       expiryTask?.stop();
+      allocationTask?.stop();
       await disconnectDB();
       process.exit(0);
     });

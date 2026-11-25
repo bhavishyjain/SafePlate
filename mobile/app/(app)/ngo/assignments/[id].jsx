@@ -49,12 +49,17 @@ export default function AssignmentDetail() {
   const mutate = async (action, success) => {
     setLoading(true);
     try {
-      await action(id);
+      const result = await action(id);
+      const nextStatus = result?.allocation?.status;
+      if (nextStatus) setState(current => current ? {
+        ...current,
+        allocation: { ...current.allocation, status: nextStatus },
+        donation: { ...current.donation, status: nextStatus }
+      } : current);
       Toast.show({
         type: "success",
-        text1: success
+        text1: tr(success)
       });
-      await load();
     } catch (requestError) {
       Toast.show({
         type: "error",

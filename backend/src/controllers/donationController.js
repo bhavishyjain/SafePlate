@@ -4,9 +4,18 @@ import { NGO } from "../models/NGO.js";
 import { AppError } from "../middleware/errors.js";
 import { paginationFromQuery, paginatedResult } from "../utils/pagination.js";
 import { parseOperationalDateBoundary } from "../utils/date.js";
+import { optimizeAllocations } from "../services/allocationService.js";
 
 export async function createDonation(req, res, next) {
-  try { return res.status(201).json(await Donation.create({ ...req.body, donorId: req.user.id, status: "PENDING" })); }
+  try {
+    const donation = await Donation.create({ ...req.body, donorId: req.user.id, status: "PENDING" });
+    try {
+      await optimizeAllocations({ performedBy: req.user.id, donationIds: [donation._id] });
+    } catch (allocationError) {
+      if (allocationError.code !== "OPTIMIZATION_IN_PROGRESS") console.error(`Automatic allocation failed for ${donation._id}:`, allocationError.message);
+    }
+    return res.status(201).json(await Donation.findById(donation._id));
+  }
   catch (error) { return next(error); }
 }
 
